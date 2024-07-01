@@ -24,10 +24,7 @@ public enum Role {
   ),
   WORKER(
           Set.of(
-                  Permission.MANAGER_READ,
-                  Permission.MANAGER_UPDATE,
-                  Permission.MANAGER_DELETE,
-                  Permission.MANAGER_CREATE
+
           )
   ),
   CLIENT(

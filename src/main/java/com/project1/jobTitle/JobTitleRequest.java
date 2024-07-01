@@ -1,4 +1,4 @@
-package com.project1.auth;
+package com.project1.jobTitle;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AdminLoginRequest {
+public class JobTitleRequest {
+    private String title;
 
-  private String email;
-  private String password;
 }
