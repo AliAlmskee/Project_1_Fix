@@ -1,4 +1,4 @@
-package com.project1.Sms;
+package com.project1.sms;
 import com.project1.user.User;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -54,7 +54,7 @@ public class SMSService {
             throw new Exception("Network error occurred", e);
         }
 
-        // Process the response
+        // Process the responseS
         int statusCode = response.getStatusLine().getStatusCode();
         String responseBody = EntityUtils.toString(response.getEntity());
 

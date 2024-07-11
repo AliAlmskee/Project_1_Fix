@@ -13,22 +13,23 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.validation.ConstraintViolationException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseBody
-    public Map<String, String> handleValidationException(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleMethodArgumentException(MethodArgumentNotValidException exception) {
+        Map<String, String> errorMap = new HashMap<>();
+        exception.getBindingResult().getFieldErrors().forEach(error -> {
+            errorMap.put(error.getField(), error.getDefaultMessage());
         });
-        return errors;
+
+        return errorMap;
     }
+
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(DataIntegrityViolationException.class)
@@ -38,11 +39,26 @@ public class GlobalExceptionHandler {
         return errors;
     }
 
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Map<String, String>> handleConstraintViolationException(ConstraintViolationException ex) {
+        Map<String, String> errors = new HashMap<>();
+
+        ex.getConstraintViolations().forEach(violation -> {
+            String propertyPath = violation.getPropertyPath().toString();
+            String message = violation.getMessage();
+            errors.put(propertyPath, message);
+        });
+
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
 
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<String> handleResponseStatusException(ResponseStatusException ex) {
         return ResponseEntity.status(ex.getStatusCode()).body(ex.getReason());
     }
+
 
 
 

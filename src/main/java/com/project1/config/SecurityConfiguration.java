@@ -13,6 +13,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
+import static com.project1.user.Role.ADMIN;
+import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
@@ -35,10 +37,12 @@ public class SecurityConfiguration {
             "/ws/**",
             "/plain-ws",
             "/api/v1/messages/**",
-            "/api/v1/chat",
-            "/api/v1/job-titles/**",
-            "/api/v1/category/**",
-            "/api/v1/skill/**",
+            "/api/v1/chat/**",
+           // "/api/v1/job-titles/**",
+            //"/api/v1/category/**",
+           // "/api/v1/skill/**",
+            "/api/v1/file/**",
+
 
 
     };
@@ -54,8 +58,10 @@ public class SecurityConfiguration {
                         req.requestMatchers(WHITE_LIST_URL)
                                 .permitAll()
 //                                .requestMatchers("/api/v1/management/**").hasAnyRole(ADMIN.name(), MANAGER.name())
-//                                .requestMatchers(GET, "/api/v1/management/**").hasAnyAuthority(ADMIN_READ.name(), MANAGER_READ.name())
-//                                .requestMatchers(POST, "/api/v1/management/**").hasAnyAuthority(ADMIN_CREATE.name(), MANAGER_CREATE.name())
+                               .requestMatchers(GET, "/api/v1/skill").permitAll()
+                                .requestMatchers(GET, "/api/v1/category").permitAll()
+                                .requestMatchers(GET, "/api/v1/job-titles").permitAll()
+
 //                                .requestMatchers(PUT, "/api/v1/management/**").hasAnyAuthority(ADMIN_UPDATE.name(), MANAGER_UPDATE.name())
 //                                .requestMatchers(DELETE, "/api/v1/management/**").hasAnyAuthority(ADMIN_DELETE.name(), MANAGER_DELETE.name())
                                 .anyRequest()

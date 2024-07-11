@@ -1,13 +1,15 @@
 package com.project1.category;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.project1.profile.WorkerProfile;
+import com.project1.token.Token;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -18,5 +20,10 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private String name;
+    private String photoPath;
+
+    @OneToMany(mappedBy = "category")
+    private List<WorkerProfile> workerProfiles;
+
 
 }

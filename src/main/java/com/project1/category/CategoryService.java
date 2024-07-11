@@ -25,6 +25,7 @@ public class CategoryService {
     public ResponseEntity<CategoryResponse> createCategory(CategoryRequest categoryRequest) {
         Category category = new Category();
         category.setName(categoryRequest.getName());
+        category.setPhotoPath(categoryRequest.getPhotoPath());
         categoryRepository.save(category);
         return ResponseEntity.ok(mapToResponse(category));
     }
@@ -42,6 +43,7 @@ public class CategoryService {
         return CategoryResponse.builder()
                 .id(category.getId())
                 .name(category.getName())
+                .photoPath(category.getPhotoPath())
                 .build();
     }
 }

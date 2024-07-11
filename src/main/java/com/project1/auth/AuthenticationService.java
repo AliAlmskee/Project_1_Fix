@@ -1,6 +1,6 @@
 package com.project1.auth;
 
-import com.project1.Sms.SMSService;
+import com.project1.sms.SMSService;
 import com.project1.config.JwtService;
 import com.project1.token.Token;
 import com.project1.token.TokenRepository;

@@ -1,5 +1,7 @@
 package com.project1.user;
 
+import com.project1.profile.ClientProfile;
+import com.project1.profile.WorkerProfile;
 import com.project1.token.Token;
 import com.project1.verification.Verification;
 import jakarta.persistence.*;
@@ -24,7 +26,7 @@ public class User implements UserDetails {
 
   @Id
   @GeneratedValue
-  private Integer id;
+  private Long id;
   private String firstname;
   private String lastname;
 
@@ -48,6 +50,13 @@ public class User implements UserDetails {
 
   @OneToMany(mappedBy = "user")
   private List<Verification> Verification_codes;
+
+  @OneToMany(mappedBy = "user")
+  private List<WorkerProfile> workerProfiles;
+
+  @OneToMany(mappedBy = "user")
+  private List<ClientProfile> clientProfiles;
+
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {

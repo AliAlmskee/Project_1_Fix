@@ -14,12 +14,14 @@ public class DatabaseSeeder implements CommandLineRunner {
     private final JobTitleSeeder jobTitleSeeder;
     private final CategorySeeder categorySeeder;
     private final SkillSeeder skillSeeder;
+    private final UserSeeder userSeeder;
 
     @Override
     public void run(String... args) throws Exception {
                 jobTitleSeeder.seed();
                 categorySeeder.seed();
                 skillSeeder.seed();
+                userSeeder.seed();
 
     }
 }

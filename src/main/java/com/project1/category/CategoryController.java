@@ -1,5 +1,6 @@
 package com.project1.category;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,7 +23,7 @@ public class CategoryController {
     @PreAuthorize("hasRole('ADMIN')")
 
     @PostMapping
-    public ResponseEntity<CategoryResponse> createCategory(@RequestBody CategoryRequest categoryRequest) {
+    public ResponseEntity<CategoryResponse> createCategory(@Valid  @RequestBody CategoryRequest categoryRequest) {
         return categoryService.createCategory(categoryRequest);
     }
 

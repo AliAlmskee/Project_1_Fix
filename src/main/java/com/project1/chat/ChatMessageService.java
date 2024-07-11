@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 @Service
 @RequiredArgsConstructor
@@ -20,6 +21,7 @@ public class ChatMessageService {
                         true)
                 .orElseThrow();
         chatMessage.setChatId(chatId);
+        chatMessage.setTimestamp(new Date());
         repository.save(chatMessage);
         return chatMessage;
     }

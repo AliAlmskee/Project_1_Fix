@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -40,7 +41,7 @@ public class AuthenticationController {
 
   @PostMapping("/admin-login")
   public ResponseEntity<AuthenticationResponse> admin_authenticate(
-          @RequestBody AdminLoginRequest request
+         @RequestBody AdminLoginRequest request
   ) {
     return ResponseEntity.ok(service.adminLogin(request));
   }

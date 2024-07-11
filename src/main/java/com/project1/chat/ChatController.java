@@ -5,14 +5,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
-
+//@RequestMapping("/api/v1")
 public class ChatController {
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatMessageService chatMessageService;
@@ -21,6 +21,8 @@ public class ChatController {
 
     @MessageMapping("/chat")
     public void processMessage(@Payload ChatMessage chatMessage) {
+        System.out.println();
+        System.out.println("ali");
         ChatMessage savedMsg = chatMessageService.save(chatMessage);
         messagingTemplate.convertAndSendToUser(
                 chatMessage.getRecipientId(), "/queue/messages",
