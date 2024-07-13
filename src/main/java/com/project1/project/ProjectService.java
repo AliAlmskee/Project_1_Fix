@@ -21,6 +21,7 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
 
     public List<ProjectResponse> getAllFiltered(String search, List<Category> categories, List<Skill> skills, Long minBudget, Long maxBudget, Long duration, ProjectSortTypes sortBy, Boolean sortDes) {
+        //TODO: merge 3 features? query not done.
         return projectMapper.entityToResponse(projectRepository.findAll());
     }
 
@@ -28,12 +29,14 @@ public class ProjectService {
         return projectMapper.entityToDetailsResponse(projectRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found")));
     }
 
-    public List<ProjectResponse> getByUser(Integer id) { // TODO: do merge profiles (worker and client too)? if so do grouping?
+    public List<ProjectResponse> getByUser(Integer id) {
+        // TODO: do merge profiles (worker and client too)? if so do grouping?
         final User user = User.builder().id(id).build();
         return projectMapper.entityToResponse(projectRepository.findAllByClientOrWorker(user, user));
     }
 
-    public ProjectDetailsResponse create(CreateProjectRequest createProjectRequest) { //TODO test id entity trick (update, updateInternal, getByUser)
+    public ProjectDetailsResponse create(CreateProjectRequest createProjectRequest) {
+        //TODO test id entity trick (update, updateInternal, getByUser)
         Project project = projectMapper.toEntity(createProjectRequest);
         project.setClient(User.builder().id(createProjectRequest.clientId()).build());
         project.setWorker(User.builder().id(createProjectRequest.workerId()).build());
@@ -70,6 +73,8 @@ public class ProjectService {
 
 
     //-------Internal--------
+
+    //for updating status in progress
     public Project updateInternal(Long projectId, ProjectStatus projectStatus, Integer clientId) throws ResponseStatusException{
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found"));
         if(projectStatus != null){
