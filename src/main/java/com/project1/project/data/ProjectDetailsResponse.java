@@ -1,0 +1,27 @@
+package com.project1.project.data;
+
+import com.project1.category.Category;
+import com.project1.skill.Skill;
+import com.project1.user.User;
+import jakarta.annotation.Nullable;
+import lombok.Builder;
+
+import java.util.Date;
+import java.util.Set;
+
+@Builder
+public record ProjectDetailsResponse(
+    Long id,
+    String name,
+    String description,
+    Long minBudget,
+    Long maxBudget,
+    Long ExpectedDuration,
+    ProjectStatus status,
+    Date createDate,
+    User client,
+    @Nullable
+    User worker,
+    Set<Category> projectCategories,
+    Set<Skill> projectSkill
+){}
