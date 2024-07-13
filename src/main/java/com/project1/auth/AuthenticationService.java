@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,7 +40,9 @@ public class AuthenticationService {
   private final JwtService jwtService;
   private final AuthenticationManager authenticationManager;
   private final SMSService smsService;
-  public String register(RegisterRequest request) throws Exception {
+
+
+  public ResponseEntity<String> register(RegisterRequest request) throws Exception {
     var user = User.builder()
             .firstname(request.getFirstname())
             .lastname(request.getLastname())
@@ -53,10 +56,10 @@ public class AuthenticationService {
 
     var savedUser = repository.save(user);
     if(user.getRole()==Role.ADMIN)
-      return "Register successfully";
+      return ResponseEntity.ok("Register successfully");
     sendVerificationSMS(user);
 
-    return "A code has been sent to your phone";
+    return ResponseEntity.ok( "A code has been sent to your phone");
   }
 
   public String firstStepLogin(FirstStepLoginRequest request) throws Exception {

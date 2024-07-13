@@ -19,7 +19,7 @@ public class AuthenticationController {
   private final AuthenticationService service;
 
   @PostMapping("/register")
-  public String register(
+  public ResponseEntity<String> register(
           @Valid @RequestBody RegisterRequest request
   ) throws Exception {
     return service.register(request);

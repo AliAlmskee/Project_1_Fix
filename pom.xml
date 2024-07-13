@@ -55,11 +55,6 @@
 			</dependency>
 
 			<!--			 MapStruct-->
-<!--			<dependency>-->
-<!--				<groupId>org.projectlombok</groupId>-->
-<!--				<artifactId>lombok-mapstruct-binding</artifactId>-->
-<!--				<version>0.2.0</version>-->
-<!--			</dependency>-->
 			<dependency>
 				<groupId>org.mapstruct</groupId>
 				<artifactId>mapstruct</artifactId>
