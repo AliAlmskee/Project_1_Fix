@@ -1,5 +1,6 @@
 package com.project1.profile;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,7 +22,7 @@ public class ClientProfileController {
     }
    // @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT', 'WORKER', 'CLIENT_WORKER')")
     @PostMapping
-    public ResponseEntity<ClientProfileDTO> createClientProfile(@RequestBody ClientProfileRequest clientProfile) {
+    public ResponseEntity<ClientProfileDTO> createClientProfile(@Valid @RequestBody  ClientProfileRequest clientProfile) {
 
         return clientProfileService.save(clientProfile);
     }
@@ -42,7 +43,11 @@ public class ClientProfileController {
 
     @PostMapping("/add-photo")
     public ResponseEntity<String> addPhotoToClientProfile(@RequestBody AddPhotoToClientProfileRequest request) {
-        return clientProfileService.addPhotoToClientProfile(request.getClientId(), request.getPhotoId());
+        return clientProfileService.addPhotoToClientProfile(request.getClientProfileId(), request.getPhotoId());
+    }
+    @PostMapping("/add-skill")
+    public ResponseEntity<String> addSkillToClientProfile(@RequestBody AddSkillToClientProfileRequest request) {
+        return clientProfileService.addSkillToClientProfile(request.getClientProfileId(), request.getSkillId());
     }
 
 

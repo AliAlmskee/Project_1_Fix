@@ -11,6 +11,7 @@ public interface ClientProfileMapper {
     @Mapping(source = "user", target = "userDTO")
     @Mapping(source = "jobTitle", target = "jobTitleDTO")
     @Mapping(source = "photos", target = "photoDTOs")
+    @Mapping(source = "skills", target = "skillDTOs")
     @Mapping(source = "id", target = "id")
     ClientProfileDTO toDto(ClientProfile clientProfile);
 

@@ -2,6 +2,7 @@ package com.project1.profile;
 import com.project1.category.Category;
 import com.project1.fileSystem.Photo;
 import com.project1.jobTitle.JobTitle;
+import com.project1.skill.Skill;
 import com.project1.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -49,4 +50,12 @@ public class ClientProfile {
             inverseJoinColumns = @JoinColumn(name = "photo_id")
     )
     private List<Photo> photos;
+
+    @ManyToMany
+    @JoinTable(
+            name = "client_profile_skills",
+            joinColumns = @JoinColumn(name = "client_profile_id"),
+            inverseJoinColumns = @JoinColumn(name = "skill_id")
+    )
+    private List<Skill> skills;
 }

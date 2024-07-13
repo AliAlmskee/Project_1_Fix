@@ -2,6 +2,7 @@ package com.project1.profile;
 
 import com.project1.fileSystem.PhotoDTO;
 import com.project1.jobTitle.JobTitleDTO;
+import com.project1.skill.SkillDTO;
 import com.project1.user.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +23,8 @@ public class ClientProfileDTO {
     private double rate;
     private JobTitleDTO jobTitleDTO;
     private List<PhotoDTO> photoDTOs;
+    private List<SkillDTO> skillDTOs;
+
     private UserDTO userDTO;
 
 }
