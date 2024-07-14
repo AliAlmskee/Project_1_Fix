@@ -2,6 +2,7 @@ package com.project1.skill;
 
 import com.project1.category.Category;
 import com.project1.profile.ClientProfile;
+import com.project1.profile.WorkerProfile;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,4 +30,7 @@ public class Skill {
 
     @ManyToMany(mappedBy = "skills")
     private List<ClientProfile> clientProfiles;
+
+    @ManyToMany(mappedBy = "skills")
+    private List<WorkerProfile> workerProfiles;
 }

@@ -19,9 +19,10 @@ public class FileService {
 
     private final String photoUploadDirectory = "upload/photos";
     private final PhotoRepository photoRepository;
+    private PhotoMapper photoMapper;
 
     @Transactional
-    public String storePhoto(MultipartFile file) throws IOException {
+    public PhotoDTO storePhoto(MultipartFile file) throws IOException {
         String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
 
         Path directory = Paths.get(photoUploadDirectory);
@@ -34,9 +35,10 @@ public class FileService {
 
         Photo photo = new Photo();
         photo.setPhoto(fileName);
-        photoRepository.save(photo);
+        photo = photoRepository.save(photo);
 
-        return fileName;
+        PhotoDTO photoDTO = photoMapper.toDto(photo);
+        return photoDTO;
     }
 
     public byte[] getPhoto(String photoName) throws IOException {

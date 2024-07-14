@@ -20,7 +20,7 @@ public class ClientProfileController {
     public List<ClientProfileDTO> getClientProfilesByUserId(@PathVariable Long user_id) {
        return clientProfileService.findAllByUserId(user_id);
     }
-   // @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT', 'WORKER', 'CLIENT_WORKER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT','CLIENT_WORKER')")
     @PostMapping
     public ResponseEntity<ClientProfileDTO> createClientProfile(@Valid @RequestBody  ClientProfileRequest clientProfile) {
 

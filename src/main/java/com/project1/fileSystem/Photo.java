@@ -1,6 +1,7 @@
 package com.project1.fileSystem;
 
 import com.project1.profile.ClientProfile;
+import com.project1.profile.WorkerProfile;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -25,5 +26,8 @@ public class Photo {
 
     @ManyToMany(mappedBy = "photos")
     private List<ClientProfile> clientProfiles;
+
+    @ManyToMany(mappedBy = "photos")
+    private List<WorkerProfile> workerProfiles;
 
 }

@@ -26,7 +26,7 @@ public class ClientProfileService {
     private final JobTitleRepository jobTitleRepository;
     private final ClientProfileMapper clientProfileMapper;
     private final ApplicationAuditAware auditAware;
-    private SkillRepository skillRepository;
+    private final SkillRepository skillRepository;
 
 
     public List<ClientProfileDTO> findAllByUserId(Long userId) {

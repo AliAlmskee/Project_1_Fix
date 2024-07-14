@@ -8,6 +8,7 @@ import org.mapstruct.Mapping;
 public interface PhotoMapper {
 
     @Mapping(source = "photo", target = "photo")
+    @Mapping(source = "id", target = "id")
     PhotoDTO toDto(Photo photo);
     Photo toEntity(PhotoDTO photoDTO);
 

@@ -1,18 +1,27 @@
 package com.project1.profile;
+
 import com.project1.category.Category;
+import com.project1.fileSystem.Photo;
 import com.project1.jobTitle.JobTitle;
+import com.project1.skill.Skill;
 import com.project1.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
+import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@DynamicInsert
+@DynamicUpdate
 public class WorkerProfile {
 
     @Id
@@ -20,21 +29,37 @@ public class WorkerProfile {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    User user ;
+    @JoinColumn(name = "userId")
+    User user;
 
-    String bio ;
+    String bio;
 
-    double rate ;
+    double rate;
 
     boolean is_verified;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
-    Category category ;
+    @JoinColumn(name = "jobTitleId")
+    JobTitle jobTitle;
 
     @ManyToOne
-    @JoinColumn(name = "jobTitle_id")
-    JobTitle jobTitle ;
+    @JoinColumn(name = "categoryId")
+    Category category;
 
+
+    @ManyToMany
+    @JoinTable(
+            name = "worker_profile_photos",
+            joinColumns = @JoinColumn(name = "worker_profile_id"),
+            inverseJoinColumns = @JoinColumn(name = "photo_id")
+    )
+    private List<Photo> photos;
+
+    @ManyToMany
+    @JoinTable(
+            name = "worker_profile_skills",
+            joinColumns = @JoinColumn(name = "worker_profile_id"),
+            inverseJoinColumns = @JoinColumn(name = "skill_id")
+    )
+    private List<Skill> skills;
 }

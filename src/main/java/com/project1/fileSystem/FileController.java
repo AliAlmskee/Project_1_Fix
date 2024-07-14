@@ -21,30 +21,20 @@ public class FileController {
 
     private final FileService fileService;
 
-   @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/photo")
-    public ResponseEntity<UploadResponse> uploadPhoto(@RequestParam("file") MultipartFile file) {
-        if (file.isEmpty()) {
-            UploadResponse errorResponse = new UploadResponse("Please select a file to upload");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(errorResponse);
-        }
+ //  @PreAuthorize("hasRole('ADMIN')")
+ @PostMapping("/photo")
+ public ResponseEntity<PhotoDTO> uploadPhoto(@RequestParam("file") MultipartFile file) {
+     if (file.isEmpty()) {
+         return ResponseEntity.badRequest().build();
+     }
 
-        try {
-            String fileName = fileService.storePhoto(file);
-            UploadResponse successResponse = new UploadResponse(fileName);
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(successResponse);
-        } catch (IOException e) {
-            UploadResponse errorResponse = new UploadResponse("Failed to upload file: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(errorResponse);
-        }
-    }
-
+     try {
+         PhotoDTO photoDTO = fileService.storePhoto(file);
+         return ResponseEntity.status(HttpStatus.CREATED).body(photoDTO);
+     } catch (IOException e) {
+         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new PhotoDTO(null, "Failed to upload file: " + e.getMessage()));
+     }
+ }
    @GetMapping("/photo/{photoName}")
     public ResponseEntity<Resource> downloadPhoto(@PathVariable("photoName") String photoName) {
         try {
