@@ -1,16 +1,19 @@
 package com.project1.project;
 
+import com.project1.category.CategoryMapper;
+import com.project1.jobTitle.JobTitle;
 import com.project1.profile.ClientProfile;
 import com.project1.profile.ClientProfileDTO;
 import com.project1.profile.ClientProfileMapper;
 import com.project1.project.data.*;
+import com.project1.skill.SkillMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = ClientProfileMapper.class)
+@Mapper(componentModel = "spring", uses = {ClientProfileMapper.class, SkillMapper.class, CategoryMapper.class})
 public abstract class ProjectMapper {
     abstract ProjectResponse entityToResponse(Project project);
 

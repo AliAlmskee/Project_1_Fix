@@ -28,10 +28,11 @@ public class ProjectController {
             @RequestParam @Nullable Long minBudget,
             @RequestParam @Nullable Long maxBudget,
             @RequestParam @Nullable Long duration,
+            @RequestParam @Nullable ProjectStatus status,
             @RequestParam @Nullable ProjectSortTypes sortBy,
             @RequestParam @Nullable Boolean sortDes
             ) {
-        return ResponseEntity.ok(projectService.getAllFiltered(search, categories, skills, minBudget, maxBudget, duration, sortBy, sortDes));
+        return ResponseEntity.ok(projectService.getAllFiltered(search, categories, skills, minBudget, maxBudget, duration, status, sortBy, sortDes));
     }
 
     @GetMapping("/{id}")
@@ -46,7 +47,7 @@ public class ProjectController {
 
 
     @PostMapping
-    public ResponseEntity<ProjectDetailsResponse> create(@RequestBody CreateProjectRequest createProjectRequest) {
+    public ResponseEntity<ProjectResponse> create(@RequestBody CreateProjectRequest createProjectRequest) {
         return ResponseEntity.ok(projectService.create(createProjectRequest));
     }
 

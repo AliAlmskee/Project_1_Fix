@@ -1,10 +1,12 @@
 package com.project1.project.data;
 
 import com.project1.category.Category;
+import com.project1.category.CategoryDTO;
 import com.project1.profile.ClientProfileDTO;
 import com.project1.profile.WorkerProfile;
 import com.project1.profile.WorkerProfileDTO;
 import com.project1.skill.Skill;
+import com.project1.skill.SkillDTO;
 import com.project1.user.User;
 import jakarta.annotation.Nullable;
 import lombok.Builder;
@@ -25,6 +27,6 @@ public record ProjectDetailsResponse(
     ClientProfileDTO client,
     @Nullable
     WorkerProfileDTO worker,
-    Set<Category> projectCategories,
-    Set<Skill> projectSkill
+    Set<CategoryDTO> projectCategories,
+    Set<SkillDTO> projectSkill
 ){}

@@ -24,7 +24,7 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final ApplicationAuditAware auditAware;
 
-    public List<ProjectResponse> getAllFiltered(String search, List<Category> categories, List<Skill> skills, Long minBudget, Long maxBudget, Long duration, ProjectSortTypes sortBy, Boolean sortDes) {
+    public List<ProjectResponse> getAllFiltered(String search, List<Category> categories, List<Skill> skills, Long minBudget, Long maxBudget, Long duration, ProjectStatus status,ProjectSortTypes sortBy, Boolean sortDes) {
         //TODO: merge 3 features? query not done.
         return projectMapper.entityToResponse(projectRepository.findAll());
     }
@@ -39,7 +39,7 @@ public class ProjectService {
         return projectMapper.entityToResponse(projectRepository.findAllByClientOrWorker(user, user));
     }
 
-    public ProjectDetailsResponse create(CreateProjectRequest createProjectRequest) {
+    public ProjectResponse create(CreateProjectRequest createProjectRequest) {
         //TODO test id entity trick (update, updateInternal, getByUser)
         Integer userId = auditAware.getCurrentAuditor().orElseThrow(() -> new RuntimeException("Auditor ID not found"));
         Project project = projectMapper.toEntity(createProjectRequest);
@@ -47,7 +47,7 @@ public class ProjectService {
         project.setStatus(ProjectStatus.open);
         project.setProjectCategories(createProjectRequest.projectCategoriesIds().stream().map(id -> Category.builder().id(id).build()).collect(Collectors.toSet()));
         project.setProjectSkill(createProjectRequest.projectSkillIds().stream().map(id -> Skill.builder().id(id).build()).collect(Collectors.toSet()));
-        return projectMapper.entityToDetailsResponse(projectRepository.save(project));
+        return projectMapper.entityToResponse(projectRepository.save(project));
     }
     public ProjectDetailsResponse update(Long projectId, UpdateProjectRequest updateProjectRequest) throws ResponseStatusException{
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found"));
