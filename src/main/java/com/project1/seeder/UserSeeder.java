@@ -5,6 +5,7 @@ import com.project1.user.Role;
 import com.project1.user.User;
 import com.project1.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserSeeder {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public void seed() {
         if (userRepository.count() == 0) {
@@ -37,7 +39,26 @@ public class UserSeeder {
             admin2.setRole(Role.ADMIN);
             users.add(admin2);
 
-          //  userRepository.saveAll(users);
+
+            User client = new User();
+            client.setFirstname("Kara");
+            client.setLastname("Pham");
+            client.setEmail("KaraPham23s@example.com");
+            client.setPhone("0912312345");
+            client.setPassword(passwordEncoder.encode("secure+password"));
+            client.setRole(Role.CLIENT);
+            users.add(client);
+
+            User worker = new User();
+            worker.setFirstname("Mavis");
+            worker.setLastname("Wilkins");
+            worker.setEmail("MavisWilkins98@example.com");
+            worker.setPhone("0912345645");
+            worker.setPassword(passwordEncoder.encode("secure+password"));
+            worker.setRole(Role.WORKER);
+            users.add(worker);
+
+            userRepository.saveAll(users);
         }
     }
 }

@@ -9,10 +9,8 @@ public record CreateProjectRequest(
     Long minBudget,
     Long maxBudget,
     Long ExpectedDuration,
-    ProjectStatus status,
     Date createDate,
-    Integer clientId,
-    Integer workerId,
+    Long clientProfileId,
     Set<Long> projectSkillIds,
     Set<Long> projectCategoriesIds
 ){}

@@ -1,5 +1,7 @@
 package com.project1.project.data;
 
+import com.project1.profile.ClientProfileDTO;
+import com.project1.profile.WorkerProfileDTO;
 import com.project1.user.User;
 import jakarta.annotation.Nullable;
 import lombok.Builder;
@@ -16,7 +18,7 @@ public record ProjectResponse (
     Long ExpectedDuration,
     ProjectStatus status,
     Date createDate,
-    User client,
+    ClientProfileDTO client,
     @Nullable
-    User worker
+    WorkerProfileDTO worker
 ){}

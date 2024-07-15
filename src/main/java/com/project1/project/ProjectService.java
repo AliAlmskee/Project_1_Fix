@@ -1,6 +1,9 @@
 package com.project1.project;
 
+import com.project1.auditing.ApplicationAuditAware;
 import com.project1.category.Category;
+import com.project1.profile.ClientProfile;
+import com.project1.profile.WorkerProfile;
 import com.project1.project.data.*;
 import com.project1.skill.Skill;
 import com.project1.user.User;
@@ -19,6 +22,7 @@ import java.util.stream.Collectors;
 public class ProjectService {
     private final ProjectMapper projectMapper;
     private final ProjectRepository projectRepository;
+    private final ApplicationAuditAware auditAware;
 
     public List<ProjectResponse> getAllFiltered(String search, List<Category> categories, List<Skill> skills, Long minBudget, Long maxBudget, Long duration, ProjectSortTypes sortBy, Boolean sortDes) {
         //TODO: merge 3 features? query not done.
@@ -37,9 +41,10 @@ public class ProjectService {
 
     public ProjectDetailsResponse create(CreateProjectRequest createProjectRequest) {
         //TODO test id entity trick (update, updateInternal, getByUser)
+        Integer userId = auditAware.getCurrentAuditor().orElseThrow(() -> new RuntimeException("Auditor ID not found"));
         Project project = projectMapper.toEntity(createProjectRequest);
-        project.setClient(User.builder().id(createProjectRequest.clientId()).build());
-        project.setWorker(User.builder().id(createProjectRequest.workerId()).build());
+        project.setClient(ClientProfile.builder().id(createProjectRequest.clientProfileId()).build());
+        project.setStatus(ProjectStatus.open);
         project.setProjectCategories(createProjectRequest.projectCategoriesIds().stream().map(id -> Category.builder().id(id).build()).collect(Collectors.toSet()));
         project.setProjectSkill(createProjectRequest.projectSkillIds().stream().map(id -> Skill.builder().id(id).build()).collect(Collectors.toSet()));
         return projectMapper.entityToDetailsResponse(projectRepository.save(project));
@@ -57,9 +62,12 @@ public class ProjectService {
     }
 
     public Map<String, String> delete(Long projectId) throws ResponseStatusException{
-        Project project = projectRepository.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found"));
-        if(project.getStatus().equals(ProjectStatus.open)){
-            projectRepository.delete(project);
+        Integer userId = auditAware.getCurrentAuditor().orElseThrow(() -> new RuntimeException("Auditor ID not found"));
+        boolean deleted = projectRepository.deleteByIdAndStatusAndClient(projectId, ProjectStatus.open, User.builder().id(userId).build());
+//        Project project = projectRepository.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found"));
+//        if(project.getStatus().equals(ProjectStatus.open)){
+        if(deleted){
+//            projectRepository.delete(project);
             return Map.of("message", "Project Deleted");
         }
         throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cannot Delete project after it settled.");
@@ -75,13 +83,13 @@ public class ProjectService {
     //-------Internal--------
 
     //for updating status in progress
-    public Project updateInternal(Long projectId, ProjectStatus projectStatus, Integer clientId) throws ResponseStatusException{
+    public Project updateInternal(Long projectId, ProjectStatus projectStatus, Long workerId) throws ResponseStatusException{
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found"));
         if(projectStatus != null){
             project.setStatus(projectStatus);
         }
-        if(clientId != null){
-            project.setClient(User.builder().id(clientId).build());
+        if(workerId != null){
+            project.setWorker(WorkerProfile.builder().id(workerId).build());
         }
         return projectRepository.save(project);
     }

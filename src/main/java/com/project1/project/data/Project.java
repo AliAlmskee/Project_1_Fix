@@ -1,6 +1,8 @@
 package com.project1.project.data;
 
 import com.project1.category.Category;
+import com.project1.profile.ClientProfile;
+import com.project1.profile.WorkerProfile;
 import com.project1.project.data.ProjectStatus;
 import com.project1.skill.Skill;
 import com.project1.user.User;
@@ -30,11 +32,11 @@ public class Project {
     private ProjectStatus status;
     private Date createDate;
     @ManyToOne
-    @JoinColumn(name="client_id")
-    private User client;
+    @JoinColumn(name="client_profile_id")
+    private ClientProfile client;
     @ManyToOne
-    @JoinColumn(name="worker_id")
-    private User worker;
+    @JoinColumn(name="worker_profile_id")
+    private WorkerProfile worker;
     @ManyToMany
     @JoinTable(
             name="ProjectCategory",
