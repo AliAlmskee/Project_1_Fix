@@ -1,6 +1,7 @@
 package com.project1.handler;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,17 @@ import javax.validation.ConstraintViolationException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+
+    @ExceptionHandler(JwtException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Map<String, String> handleExpiredJwtException(JwtException ex) {
+        Map<String, String> errorMap = new HashMap<>();
+        errorMap.put("error", "token_expired");
+        errorMap.put("message", "Token has expired. Please authenticate again.");
+
+        return errorMap;
+    }
+
     @ExceptionHandler(ExpiredJwtException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public Map<String, String> handleExpiredJwtException(ExpiredJwtException ex) {
@@ -29,6 +41,8 @@ public class GlobalExceptionHandler {
 
         return errorMap;
     }
+
+
 
     @ExceptionHandler(UsernameNotFoundException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)

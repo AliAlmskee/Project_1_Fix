@@ -23,6 +23,7 @@ public class FileService {
 
     @Transactional
     public PhotoDTO storePhoto(MultipartFile file) throws IOException {
+
         String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
 
         Path directory = Paths.get(photoUploadDirectory);

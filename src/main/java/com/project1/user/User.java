@@ -1,5 +1,6 @@
 package com.project1.user;
 
+import com.project1.job.Job;
 import com.project1.profile.ClientProfile;
 import com.project1.profile.WorkerProfile;
 import com.project1.token.Token;
@@ -59,6 +60,11 @@ public class User implements UserDetails {
   @OneToMany(mappedBy = "user")
   private List<ClientProfile> clientProfiles;
 
+  @ManyToMany(mappedBy = "viewedBy")
+  private List<Job> viewedJobs;
+
+  @ManyToMany(mappedBy = "likedBy")
+  private List<Job>   likedJobs;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {

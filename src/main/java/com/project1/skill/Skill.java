@@ -1,6 +1,7 @@
 package com.project1.skill;
 
 import com.project1.category.Category;
+import com.project1.job.Job;
 import com.project1.profile.ClientProfile;
 import com.project1.profile.WorkerProfile;
 import jakarta.persistence.*;
@@ -33,4 +34,6 @@ public class Skill {
 
     @ManyToMany(mappedBy = "skills")
     private List<WorkerProfile> workerProfiles;
+    @ManyToMany(mappedBy = "skills")
+    private List<Job> jobs;
 }

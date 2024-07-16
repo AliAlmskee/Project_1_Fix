@@ -6,7 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/workerProfiles")
@@ -15,9 +17,12 @@ public class WorkerProfileController {
 
     private final WorkerProfileService workerProfileService;
 
-    @GetMapping("/{user_id}")
-    public List<WorkerProfileDTO> getWorkerProfilesByUserId(@PathVariable Long user_id) {
-        return workerProfileService.findAllByUserId(user_id);
+    @GetMapping("/workers/{user_id}")
+    public Map<String, List<WorkerProfileDTO>> getWorkerProfilesByUserId(@PathVariable Long user_id) {
+        List<WorkerProfileDTO> workerProfiles = workerProfileService.findAllByUserId(user_id);
+        Map<String, List<WorkerProfileDTO>> result = new HashMap<>();
+        result.put("workerProfiles", workerProfiles);
+        return result;
     }
 
     @PostMapping

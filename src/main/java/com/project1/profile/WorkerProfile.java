@@ -2,6 +2,7 @@ package com.project1.profile;
 
 import com.project1.category.Category;
 import com.project1.fileSystem.Photo;
+import com.project1.job.Job;
 import com.project1.jobTitle.JobTitle;
 import com.project1.skill.Skill;
 import com.project1.user.User;
@@ -62,4 +63,8 @@ public class WorkerProfile {
             inverseJoinColumns = @JoinColumn(name = "skill_id")
     )
     private List<Skill> skills;
+
+    @OneToMany(mappedBy = "workerProfile")
+    private List<Job> jobs;
+
 }
