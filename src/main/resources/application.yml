@@ -3,13 +3,13 @@ spring:
     error:
       include-message: always
   datasource:
-    url: jdbc:postgresql://localhost:5432/student
+    url: jdbc:postgresql://localhost:5432/project1
     username: postgres
-    password: ali123
+    password: adminadmin
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create-drop
+#      ddl-auto: create-drop
     show-sql: false
     properties:
       hibernate:
