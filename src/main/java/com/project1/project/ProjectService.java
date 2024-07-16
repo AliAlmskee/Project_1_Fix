@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,8 +26,7 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final ApplicationAuditAware auditAware;
 
-    public List<ProjectResponse> getAllFiltered(String search, List<Category> categories, List<Skill> skills, Long minBudget, Long maxBudget, Long duration, ProjectStatus status,ProjectSortTypes sortBy, Boolean sortDes) {
-        //TODO: merge 3 features? query not done.
+    public List<ProjectResponse> getAllFiltered(String search, List<Long> categories, List<Long> skills, Long minBudget, Long maxBudget, Long duration, ProjectStatus status,ProjectSortTypes sortBy, Boolean sortDes) {
         return projectMapper.entityToResponse(projectRepository.findAll());
     }
 
@@ -34,20 +35,26 @@ public class ProjectService {
     }
 
     public List<ProjectResponse> getByUser(Integer id) {
-        // TODO: do merge profiles (worker and client too)? if so do grouping?
         final User user = User.builder().id(id).build();
-        return projectMapper.entityToResponse(projectRepository.findAllByClientOrWorker(user, user));
+        return projectMapper.entityToResponse(projectRepository.findAllByClient_UserOrWorker_User(user, user));
+    }
+    public List<ProjectResponse> getByProfile(Long clientId, Long workerId) {
+        if(workerId == null && clientId == null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "no profile id given (clientId or workerId)");
+        }
+        if(clientId != null){
+            return projectMapper.entityToResponse(projectRepository.findAllByClient(ClientProfile.builder().id(clientId).build()));
+        }
+        return projectMapper.entityToResponse(projectRepository.findAllByWorker(WorkerProfile.builder().id(workerId).build()));
     }
 
     public ProjectResponse create(CreateProjectRequest createProjectRequest) {
-        //TODO test id entity trick (update, updateInternal, getByUser)
+        //TODO check wallet
         Integer userId = auditAware.getCurrentAuditor().orElseThrow(() -> new RuntimeException("Auditor ID not found"));
         Project project = projectMapper.toEntity(createProjectRequest);
-        project.setClient(ClientProfile.builder().id(createProjectRequest.clientProfileId()).build());
+        project.setCreateDate(Date.from(Instant.now()));
         project.setStatus(ProjectStatus.open);
-        project.setProjectCategories(createProjectRequest.projectCategoriesIds().stream().map(id -> Category.builder().id(id).build()).collect(Collectors.toSet()));
-        project.setProjectSkill(createProjectRequest.projectSkillIds().stream().map(id -> Skill.builder().id(id).build()).collect(Collectors.toSet()));
-        return projectMapper.entityToResponse(projectRepository.save(project));
+         return projectMapper.entityToResponse(projectRepository.save(project));
     }
     public ProjectDetailsResponse update(Long projectId, UpdateProjectRequest updateProjectRequest) throws ResponseStatusException{
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found"));
@@ -63,11 +70,22 @@ public class ProjectService {
 
     public Map<String, String> delete(Long projectId) throws ResponseStatusException{
         Integer userId = auditAware.getCurrentAuditor().orElseThrow(() -> new RuntimeException("Auditor ID not found"));
-        boolean deleted = projectRepository.deleteByIdAndStatusAndClient(projectId, ProjectStatus.open, User.builder().id(userId).build());
-//        Project project = projectRepository.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found"));
-//        if(project.getStatus().equals(ProjectStatus.open)){
+        if(!projectRepository.existsByClient_UserId(userId)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Project does not belong to the user");
+        }
+        boolean deleted = projectRepository.deleteByIdAndStatus(projectId, ProjectStatus.open);
         if(deleted){
-//            projectRepository.delete(project);
+            return Map.of("message", "Project Deleted");
+        }
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cannot Delete project after it settled.");
+    }
+    public Map<String, String> close(Long projectId) throws ResponseStatusException{
+        Integer userId = auditAware.getCurrentAuditor().orElseThrow(() -> new RuntimeException("Auditor ID not found"));
+        if(!projectRepository.existsByClient_UserId(userId)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Project does not belong to the user");
+        }
+        boolean closed = projectRepository.updateStatusByProjectIdAndStatus(ProjectStatus.closed, projectId, ProjectStatus.open);
+        if(closed){
             return Map.of("message", "Project Deleted");
         }
         throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cannot Delete project after it settled.");
@@ -85,6 +103,15 @@ public class ProjectService {
     //for updating status in progress
     public Project updateInternal(Long projectId, ProjectStatus projectStatus, Long workerId) throws ResponseStatusException{
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found"));
+        if(projectStatus != null){
+            project.setStatus(projectStatus);
+        }
+        if(workerId != null){
+            project.setWorker(WorkerProfile.builder().id(workerId).build());
+        }
+        return projectRepository.save(project);
+    }public Project updateInternalFromOffer(Long offerId, ProjectStatus projectStatus, Long workerId) throws ResponseStatusException{
+        Project project = projectRepository.findByOfferId(offerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found"));
         if(projectStatus != null){
             project.setStatus(projectStatus);
         }

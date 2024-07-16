@@ -1,10 +1,8 @@
-package com.project1.project;
+package com.project1.projectProgress;
 
 import com.project1.category.Category;
 import com.project1.category.CategoryMapper;
-import com.project1.jobTitle.JobTitle;
 import com.project1.profile.ClientProfile;
-import com.project1.profile.ClientProfileDTO;
 import com.project1.profile.ClientProfileMapper;
 import com.project1.project.data.*;
 import com.project1.skill.Skill;
@@ -18,7 +16,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", uses = {ClientProfileMapper.class, SkillMapper.class, CategoryMapper.class})
-public abstract class ProjectMapper {
+public abstract class ProjectProgressMapper {
     abstract ProjectResponse entityToResponse(Project project);
 
     abstract ProjectDetailsResponse entityToDetailsResponse(Project project);

@@ -5,6 +5,7 @@ import com.project1.project.data.*;
 import com.project1.skill.Skill;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +24,8 @@ public class ProjectController {
     @GetMapping
     public ResponseEntity<List<ProjectResponse>> getAllFiltered(
             @RequestParam @Nullable String search,
-            @RequestParam @Nullable List<Category> categories,
-            @RequestParam @Nullable List<Skill> skills,
+            @RequestParam @Nullable List<Long> categories,
+            @RequestParam @Nullable List<Long> skills,
             @RequestParam @Nullable Long minBudget,
             @RequestParam @Nullable Long maxBudget,
             @RequestParam @Nullable Long duration,
@@ -44,26 +45,33 @@ public class ProjectController {
     public ResponseEntity<List<ProjectResponse>> getByUser(@PathVariable Integer id) {
         return ResponseEntity.ok(projectService.getByUser(id));
     }
-
+    @GetMapping("/byProfile")
+    public ResponseEntity<List<ProjectResponse>> getByProfile(@RequestParam Long clientId, @RequestParam Long workerId) {
+        return ResponseEntity.ok(projectService.getByProfile(clientId, workerId));
+    }
 
     @PostMapping
     public ResponseEntity<ProjectResponse> create(@RequestBody CreateProjectRequest createProjectRequest) {
         return ResponseEntity.ok(projectService.create(createProjectRequest));
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<ProjectDetailsResponse> update(@PathVariable Long projectId, @RequestBody UpdateProjectRequest updateProjectRequest) throws ResponseStatusException {
         return  ResponseEntity.ok(projectService.update(projectId, updateProjectRequest));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, String>> delete(@PathVariable Long projectId) throws ResponseStatusException{
-        return  ResponseEntity.ok(projectService.delete(projectId));
+    public ResponseEntity<Map<String, String>> delete(@PathVariable Long id) throws ResponseStatusException{
+        return  ResponseEntity.ok(projectService.delete(id));
+    }
+    @PostMapping("/close/{id}")
+    public ResponseEntity<Map<String, String>> close(@PathVariable Long id) throws ResponseStatusException{
+        return  ResponseEntity.ok(projectService.close(id));
     }
 
     @DeleteMapping("/admin/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Map<String, String>> adminDelete(@PathVariable Long projectId) throws ResponseStatusException{
-        return  ResponseEntity.ok(projectService.adminDelete(projectId));
+    public ResponseEntity<Map<String, String>> adminDelete(@PathVariable Long id) throws ResponseStatusException{
+        return  ResponseEntity.ok(projectService.adminDelete(id));
     }
 }

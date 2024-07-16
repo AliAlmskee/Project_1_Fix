@@ -1,6 +1,10 @@
 package com.project1.seeder;
 
 import com.project1.category.Category;
+import com.project1.config.JwtService;
+import com.project1.token.Token;
+import com.project1.token.TokenRepository;
+import com.project1.token.TokenType;
 import com.project1.user.Role;
 import com.project1.user.User;
 import com.project1.user.UserRepository;
@@ -15,7 +19,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserSeeder {
     private final UserRepository userRepository;
+    private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     public void seed() {
         if (userRepository.count() == 0) {
@@ -59,6 +65,21 @@ public class UserSeeder {
             users.add(worker);
 
             userRepository.saveAll(users);
+            makeToken(client);
+            makeToken(worker);
         }
+    }
+
+    void makeToken(User user){
+        var jwtToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+        var token = Token.builder()
+                .user(user)
+                .token(jwtToken)
+                .tokenType(TokenType.BEARER)
+                .expired(false)
+                .revoked(false)
+                .build();
+        tokenRepository.save(token);
     }
 }
