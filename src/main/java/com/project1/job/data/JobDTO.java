@@ -1,4 +1,4 @@
-package com.project1.job;
+package com.project1.job.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,11 +14,12 @@ import java.util.List;
 @AllArgsConstructor
 public class JobDTO {
     private Long id;
+    private Long workerProfileId;
     private String name;
     private String description;
     private int viewsNo;
     private int likeNo;
     private Date date;
-    private List<String> photoUrls;
-    private List<String> skillNames;
+    private List<Long> photoIds;
+    private List<Long> skillIds;
 }

@@ -1,14 +1,20 @@
 package com.project1.job;
 
+import com.project1.job.data.AddLikeToJobRequest;
+import com.project1.job.data.JobDTO;
+import com.project1.job.data.JobRequest;
+import com.project1.profile.AddPhotoToClientProfileRequest;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/jobs")
+@RequestMapping("/api/v1/jobs")
 @AllArgsConstructor
 public class JobController {
 
@@ -22,8 +28,8 @@ public class JobController {
     }
 
     @PostMapping
-    public ResponseEntity<JobDTO> createJob(@RequestBody JobDTO jobDTO) {
-        JobDTO createdJob = jobService.createJob(jobDTO);
+    public ResponseEntity<JobDTO> createJob(@RequestBody JobRequest jobRequest) {
+        JobDTO createdJob = jobService.createJob(jobRequest);
         return new ResponseEntity<>(createdJob, HttpStatus.CREATED);
     }
 
@@ -39,15 +45,24 @@ public class JobController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/{id}/views")
-    public ResponseEntity<Integer> getJobViews(@PathVariable Long id) {
-        int views = jobService.getJobViews(id);
-        return new ResponseEntity<>(views, HttpStatus.OK);
+
+    @PreAuthorize("hasAnyRole('WORKER','CLIENT_WORKER','CLIENT','ADMIN')")
+    @PostMapping("/add-like")
+    public ResponseEntity<String> addLikeToJob(@RequestBody @Valid AddLikeToJobRequest request) {
+        return jobService.addLikeToJob(request.getJobId());
+    }
+    @PreAuthorize("hasAnyRole('WORKER','CLIENT_WORKER','CLIENT','ADMIN')")
+    @GetMapping("/is-liked")
+    public ResponseEntity<Boolean> hasUserLikedJob(@RequestBody @Valid AddLikeToJobRequest request) {
+        boolean hasLiked = jobService.hasUserLikedJob(request.getJobId());
+        return ResponseEntity.ok(hasLiked);
     }
 
-    @GetMapping("/{id}/likes")
-    public ResponseEntity<Integer> getJobLikes(@PathVariable Long id) {
-        int likes = jobService.getJobLikes(id);
-        return new ResponseEntity<>(likes, HttpStatus.OK);
+    @PreAuthorize("hasAnyRole('WORKER','CLIENT_WORKER','CLIENT','ADMIN')")
+    @PostMapping("/add-view")
+    public ResponseEntity<String> addViewToJob(@RequestBody @Valid AddLikeToJobRequest request) {
+        return jobService.addViewToJob(request.getJobId());
     }
+
+
 }

@@ -1,6 +1,6 @@
 package com.project1.user;
 
-import com.project1.job.Job;
+import com.project1.job.data.Job;
 import com.project1.profile.ClientProfile;
 import com.project1.profile.WorkerProfile;
 import com.project1.token.Token;
@@ -26,7 +26,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class User implements UserDetails {
 
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Integer id;
   private String firstname;
 
@@ -63,7 +63,7 @@ public class User implements UserDetails {
   @ManyToMany(mappedBy = "viewedBy")
   private List<Job> viewedJobs;
 
-  @ManyToMany(mappedBy = "likedBy")
+  @ManyToMany(fetch = FetchType.EAGER)
   private List<Job>   likedJobs;
 
   @Override

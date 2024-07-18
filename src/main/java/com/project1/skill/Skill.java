@@ -1,7 +1,7 @@
 package com.project1.skill;
 
 import com.project1.category.Category;
-import com.project1.job.Job;
+import com.project1.job.data.Job;
 import com.project1.profile.ClientProfile;
 import com.project1.profile.WorkerProfile;
 import jakarta.persistence.*;

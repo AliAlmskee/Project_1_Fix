@@ -44,7 +44,7 @@ public class SecurityConfiguration {
             "/api/v1/file/**",
             "/api/v1/clientProfiles/**",
             "/api/v1/workerProfiles/**",
-
+            "/api/v1/jobs/**",
 
 
     };

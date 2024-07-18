@@ -1,4 +1,4 @@
-package com.project1.job;
+package com.project1.job.data;
 
 import com.project1.fileSystem.Photo;
 import com.project1.profile.WorkerProfile;
@@ -44,15 +44,17 @@ public class Job {
     @JoinTable(
             name = "job_view",
             joinColumns = @JoinColumn(name = "job_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
+            inverseJoinColumns = @JoinColumn(name = "user_id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "job_id"})
     )
     private List<User> viewedBy;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "job_like",
             joinColumns = @JoinColumn(name = "job_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
+            inverseJoinColumns = @JoinColumn(name = "user_id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "job_id"})
     )
     private List<User> likedBy;
     @ManyToMany

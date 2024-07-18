@@ -1,5 +1,6 @@
 package com.project1.job;
 
+import com.project1.job.data.Job;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

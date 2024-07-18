@@ -80,6 +80,7 @@ public class UserSeeder {
                 .expired(false)
                 .revoked(false)
                 .build();
+        System.out.println(jwtToken);
         tokenRepository.save(token);
     }
 }
