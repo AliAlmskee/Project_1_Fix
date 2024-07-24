@@ -17,7 +17,7 @@ public class WorkerProfileController {
 
     private final WorkerProfileService workerProfileService;
 
-    @GetMapping("/workers/{user_id}")
+    @GetMapping("/{user_id}")
     public Map<String, List<WorkerProfileDTO>> getWorkerProfilesByUserId(@PathVariable Long user_id) {
         List<WorkerProfileDTO> workerProfiles = workerProfileService.findAllByUserId(user_id);
         Map<String, List<WorkerProfileDTO>> result = new HashMap<>();

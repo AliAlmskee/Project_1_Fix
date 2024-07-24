@@ -5,6 +5,7 @@ import com.project1.profile.ClientProfile;
 import com.project1.profile.WorkerProfile;
 import com.project1.token.Token;
 import com.project1.verification.Verification;
+import com.project1.wallet.data.Wallet;
 import jakarta.persistence.*;
 
 import java.util.Collection;
@@ -54,6 +55,11 @@ public class User implements UserDetails {
   @OneToMany(mappedBy = "user")
   private List<Verification> Verification_codes;
 
+  @OneToOne()
+  @JoinColumn(name = "wallet_id", referencedColumnName = "id")
+  private Wallet wallet;
+
+
   @OneToMany(mappedBy = "user")
   private List<WorkerProfile> workerProfiles;
 
@@ -70,6 +76,7 @@ public class User implements UserDetails {
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return role.getAuthorities();
   }
+
 
   @Override
   public String getPassword() {
