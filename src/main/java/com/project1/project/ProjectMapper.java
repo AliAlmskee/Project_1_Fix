@@ -20,9 +20,11 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring", uses = {ClientProfileMapper.class, SkillMapper.class, CategoryMapper.class})
 public abstract class ProjectMapper {
     abstract ProjectResponse entityToResponse(Project project);
+    abstract ProjectWithOfferCountResponse entityToResponse(ProjectWithOfferCount project);
 
     abstract ProjectDetailsResponse entityToDetailsResponse(Project project);
     abstract List<ProjectResponse> entityToResponse(List<Project> project);
+    abstract List<ProjectWithOfferCountResponse> entityWithOffersToResponse(List<ProjectWithOfferCount> project);
 
     @Mapping(source = "projectSkillIds", target = "projectSkill")
     @Mapping(source = "projectCategoriesIds", target = "projectCategories")

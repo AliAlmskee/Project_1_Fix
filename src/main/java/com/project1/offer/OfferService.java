@@ -92,7 +92,7 @@ public class OfferService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Project does not belong to the user");
         }
         //TODO transfer money + is there extra logic?
-//        updateProjectFromOffer(id, ProjectStatus.delivered);
+        projectService.updateInternalFromOffer(id, ProjectStatus.delivered, null);
         return Map.of("message", "Project Completed");
     }
 

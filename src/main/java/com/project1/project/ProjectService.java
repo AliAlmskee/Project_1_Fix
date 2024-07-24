@@ -26,8 +26,73 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final ApplicationAuditAware auditAware;
 
-    public List<ProjectResponse> getAllFiltered(String search, List<Long> categories, List<Long> skills, Long minBudget, Long maxBudget, Long duration, ProjectStatus status,ProjectSortTypes sortBy, Boolean sortDes) {
-        return projectMapper.entityToResponse(projectRepository.findAll());
+    public List<ProjectWithOfferCountResponse> getAllFiltered(
+            String search, List<Long> categories,
+            List<Long> skills, Long minBudget,
+            Long maxBudget, Long duration,
+            ProjectStatus status, ProjectSortTypes sortBy,
+            Boolean sortDes) {
+        return projectMapper.entityWithOffersToResponse(projectRepository.findFilteredProjects(search, categories, skills, minBudget, maxBudget, duration, status, sortBy.name(), sortDes? "DESC" : "ASC"));
+    }
+
+    public List<Project> getFilteredProjects(String namePattern, List<Long> categoryIds, List<Long> skillIds,
+                                             Long minBudget, Long maxBudget, Long duration, ProjectStatus status,
+                                             ProjectSortTypes sortBy, boolean sortDes) {
+
+        StringBuilder queryBuilder = new StringBuilder("SELECT p.*, " +
+                "(SELECT COUNT(*) FROM OrderOffer oo WHERE oo.order_id = p.id) AS offer_count " +
+                "FROM Project p " +
+                "LEFT JOIN ProjectCategory pc ON p.id = pc.project_id " +
+                "LEFT JOIN ProjectSkill ps ON p.id = ps.project_id " +
+                "WHERE 1=1 ");
+
+        if (namePattern != null && !namePattern.isEmpty()) {
+            queryBuilder.append("AND LOWER(p.name) LIKE LOWER(CONCAT('%', :namePattern, '%')) ");
+        }
+        if (categoryIds != null && !categoryIds.isEmpty()) {
+            queryBuilder.append("AND pc.category_id IN (:categoryIds) ");
+        }
+        if (skillIds != null && !skillIds.isEmpty()) {
+            queryBuilder.append("AND ps.skill_id IN (:skillIds) ");
+        }
+        if (minBudget != null && maxBudget != null) {
+            queryBuilder.append("AND ((p.minBudget BETWEEN :minBudget AND :maxBudget) " +
+                    "OR (p.maxBudget BETWEEN :minBudget AND :maxBudget) " +
+                    "OR (:minBudget BETWEEN p.minBudget AND p.maxBudget) " +
+                    "OR (:maxBudget BETWEEN p.minBudget AND p.maxBudget)) ");
+        }
+        if (duration != null) {
+            queryBuilder.append("AND p.ExpectedDuration <= :duration ");
+        }
+        if (status != null) {
+            queryBuilder.append("AND p.status = :status ");
+        }
+
+        String sortDirection = sortDes? "DESC" : "ASC";
+        // Add sorting
+        queryBuilder.append("ORDER BY ");
+        if (sortBy.equals(ProjectSortTypes.NoOfOffers)) {
+            queryBuilder.append("offer_count ").append(sortDirection);
+        } else if(sortBy.equals(ProjectSortTypes.CreateDate)){
+            queryBuilder.append("p.").append("createDate").append(" ").append(sortDirection);
+        } else if(sortBy.equals(ProjectSortTypes.Budget)){
+            queryBuilder.append("p.").append("ExpectedDuration").append(" ").append(sortDirection);
+        } else if(sortBy.equals(ProjectSortTypes.Duration)){
+            queryBuilder.append("p.").append("minBudget").append(" ").append(sortDirection);
+        }
+
+        String query = queryBuilder.toString();
+
+        // Replace parameters in the query string
+        query = query.replace(":namePattern", namePattern != null ? namePattern : "")
+                .replace(":categoryIds", categoryIds != null ? categoryIds.stream().map(String::valueOf).collect(Collectors.joining(",")) : "")
+                .replace(":skillIds", skillIds != null ? skillIds.stream().map(String::valueOf).collect(Collectors.joining(",")) : "")
+                .replace(":minBudget", minBudget != null ? minBudget.toString() : "")
+                .replace(":maxBudget", maxBudget != null ? maxBudget.toString() : "")
+                .replace(":duration", duration != null ? duration.toString() : "")
+                .replace(":status", status != null ? "'" + status.name() + "'" : "");
+
+        return projectRepository.findFilteredProjectsQ(query);
     }
 
     public ProjectDetailsResponse get(Long id) {
@@ -38,7 +103,7 @@ public class ProjectService {
         final User user = User.builder().id(id).build();
         return projectMapper.entityToResponse(projectRepository.findAllByClient_UserOrWorker_User(user, user));
     }
-    public List<ProjectResponse> getByProfile(Long clientId, Long workerId) {
+    public List<ProjectResponse> getByPreofil(Long clientId, Long workerId) {
         if(workerId == null && clientId == null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "no profile id given (clientId or workerId)");
         }
