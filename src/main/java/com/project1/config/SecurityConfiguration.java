@@ -63,7 +63,8 @@ public class SecurityConfiguration {
                                .requestMatchers(GET, "/api/v1/skill").permitAll()
                                 .requestMatchers(GET, "/api/v1/category").permitAll()
                                 .requestMatchers(GET, "/api/v1/job-titles").permitAll()
-
+                                .requestMatchers(GET, "/api/v1/projects/**").permitAll()
+                                .requestMatchers(GET, "/api/v1/offers/**").permitAll()
 //                                .requestMatchers(PUT, "/api/v1/management/**").hasAnyAuthority(ADMIN_UPDATE.name(), MANAGER_UPDATE.name())
 //                                .requestMatchers(DELETE, "/api/v1/management/**").hasAnyAuthority(ADMIN_DELETE.name(), MANAGER_DELETE.name())
                                 .anyRequest()
