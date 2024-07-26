@@ -12,6 +12,7 @@ import com.project1.user.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project1.verification.Verification;
 import com.project1.verification.VerificationRepository;
+import com.project1.wallet.WalletService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,7 @@ public class AuthenticationService {
   private final JwtService jwtService;
   private final AuthenticationManager authenticationManager;
   private final SMSService smsService;
-
+  private final WalletService walletService;
 
   public ResponseEntity<String> register(RegisterRequest request) throws Exception {
     var user = User.builder()
@@ -55,6 +56,8 @@ public class AuthenticationService {
             .build();
 
     var savedUser = repository.save(user);
+    walletService.createNewWallet(savedUser);
+
     if(user.getRole()==Role.ADMIN)
       return ResponseEntity.ok("Register successfully");
     sendVerificationSMS(user);

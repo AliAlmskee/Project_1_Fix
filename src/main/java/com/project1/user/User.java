@@ -1,5 +1,6 @@
 package com.project1.user;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project1.job.data.Job;
 import com.project1.profile.ClientProfile;
 import com.project1.profile.WorkerProfile;
@@ -55,8 +56,9 @@ public class User implements UserDetails {
   @OneToMany(mappedBy = "user")
   private List<Verification> Verification_codes;
 
-  @OneToOne()
+  @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "wallet_id", referencedColumnName = "id")
+  @JsonManagedReference
   private Wallet wallet;
 
 

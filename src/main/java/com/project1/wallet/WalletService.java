@@ -1,5 +1,6 @@
 package com.project1.wallet;
 
+import com.project1.user.User;
 import com.project1.wallet.WalletRepository;
 import com.project1.wallet.data.Wallet;
 import com.project1.wallet.data.WalletDTO;
@@ -17,27 +18,75 @@ public class WalletService {
     private WalletMapper walletMapper;
 
 
-    public List<Wallet> getAllWallets() {
-        return walletRepository.findAll();
-    }
+   // public List<Wallet> getAllWallets() {
+    //    return walletRepository.findAll();
+  //  }
 
-    public Wallet getWalletById(Long id) {
-        Optional<Wallet> optionalWallet = walletRepository.findById(id);
+    public Wallet getWalletByUserId(int id) {
+        Optional<Wallet> optionalWallet = walletRepository.findByUserId(id);
         return optionalWallet.orElseThrow();
     }
 
-    public Wallet createWallet(WalletDTO walletDTO) {
-        return walletRepository.save(walletMapper.walletDTOToWallet(walletDTO));
+    public Wallet createNewWallet(User user){
+        WalletDTO walletDTO = new WalletDTO(0.0, 0.0);
+        Wallet wallet = walletMapper.walletDTOToWallet(walletDTO);
+        wallet.setUser(user);
+        user.setWallet(wallet);
+        return walletRepository.save(wallet);
     }
 
-    public Wallet updateWallet(Long id, Wallet wallet) {
-        Wallet existingWallet = getWalletById(id);
-        existingWallet.setTotalBalance(wallet.getTotalBalance());
-        existingWallet.setTotalHeldBalance(wallet.getTotalHeldBalance());
-        return walletRepository.save(existingWallet);
+
+
+    public Wallet addTotalBalance(Long id, double amount) {
+        Optional<Wallet> existingWalletOptional = walletRepository.findById(id);
+        if (existingWalletOptional.isPresent()) {
+            Wallet existingWallet = existingWalletOptional.get();
+            existingWallet.setTotalBalance(existingWallet.getTotalBalance()+ amount);
+            return walletRepository.save(existingWallet);
+        } else {
+            throw new RuntimeException("Wallet with id " + id + " not found");
+        }
     }
 
-    public void deleteWallet(Long id) {
-        walletRepository.deleteById(id);
+    public Wallet subtractTotalBalance(Long id, double amount) {
+        Optional<Wallet> existingWalletOptional = walletRepository.findById(id);
+        if (existingWalletOptional.isPresent()) {
+            Wallet existingWallet = existingWalletOptional.get();
+            if (existingWallet.getTotalBalance()  + amount >= 0) {
+                existingWallet.setTotalBalance(existingWallet.getTotalBalance() - amount);
+                return walletRepository.save(existingWallet);
+            } else {
+                throw new RuntimeException("Insufficient balance");
+            }
+        } else {
+            throw new RuntimeException("Wallet with id " + id + " not found");
+        }
     }
+
+    public Wallet addTotalHeldBalance(Long id, double amount) {
+        Optional<Wallet> existingWalletOptional = walletRepository.findById(id);
+        if (existingWalletOptional.isPresent()) {
+            Wallet existingWallet = existingWalletOptional.get();
+            existingWallet.setTotalHeldBalance(existingWallet.getTotalHeldBalance()+ amount);
+            return walletRepository.save(existingWallet);
+        } else {
+            throw new RuntimeException("Wallet with id " + id + " not found");
+        }
+    }
+
+    public Wallet subtractTotalHeldBalance(Long id, double amount) {
+        Optional<Wallet> existingWalletOptional = walletRepository.findById(id);
+        if (existingWalletOptional.isPresent()) {
+            Wallet existingWallet = existingWalletOptional.get();
+            if (existingWallet.getTotalHeldBalance()- amount >= 0) {
+                existingWallet.setTotalHeldBalance(existingWallet.getTotalHeldBalance()-amount);
+                return walletRepository.save(existingWallet);
+            } else {
+                throw new RuntimeException("Insufficient held balance");
+            }
+        } else {
+            throw new RuntimeException("Wallet with id " + id + " not found");
+        }
+    }
+
 }

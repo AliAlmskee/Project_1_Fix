@@ -17,29 +17,37 @@ public class WalletController {
 
 
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Wallet> getWalletById(@PathVariable Long id) {
-        Wallet wallet = walletService.getWalletById(id);
+    @GetMapping("/{user-id}")
+    public ResponseEntity<Wallet> getWalletByUserId(@PathVariable("user-id") int userId) {
+        Wallet wallet = walletService.getWalletByUserId(userId);
         return new ResponseEntity<>(wallet, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping
-    public ResponseEntity<Wallet> createWallet(@RequestBody WalletDTO wallet) {
-        Wallet newWallet = walletService.createWallet(wallet);
-        return new ResponseEntity<>(newWallet, HttpStatus.CREATED);
-    }
+//    @PreAuthorize("hasRole('ADMIN')")
+//    @PostMapping
+//    public ResponseEntity<Wallet> createWallet(@RequestBody WalletDTO wallet) {
+//        Wallet newWallet = walletService.createWallet(wallet);
+//        return new ResponseEntity<>(newWallet, HttpStatus.CREATED);
+//    }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/{id}")
-    public ResponseEntity<Wallet> updateWallet(@PathVariable Long id, @RequestBody Wallet wallet) {
-        Wallet updatedWallet = walletService.updateWallet(id, wallet);
-        return new ResponseEntity<>(updatedWallet, HttpStatus.OK);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteWallet(@PathVariable Long id) {
-        walletService.deleteWallet(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+//    @PreAuthorize("hasRole('ADMIN')")
+//    @PostMapping("/add-total-balance")
+//    public Wallet addTotalBalance(@RequestBody AddBalanceRequest request) {
+//        return walletService.addTotalBalance(request.getId(), request.getAmount());
+//    }
+//    @PreAuthorize("hasRole('ADMIN')")
+//    @PostMapping("/subtract-total-balance")
+//    public Wallet subtractTotalBalance(@RequestBody SubtractBalanceRequest request) {
+//        return walletService.subtractTotalBalance(request.getId(), request.getAmount());
+//    }
+//    @PreAuthorize("hasRole('ADMIN')")
+//    @PostMapping("/add-total-held-balance")
+//    public Wallet addTotalHeldBalance(@RequestBody AddBalanceRequest request) {
+//        return walletService.addTotalHeldBalance(request.getId(), request.getAmount());
+//    }
+//    @PreAuthorize("hasRole('ADMIN')")
+//    @PostMapping("/subtract-total-held-balance")
+//    public Wallet subtractTotalHeldBalance(@RequestBody SubtractBalanceRequest request) {
+//        return walletService.subtractTotalHeldBalance(request.getId(), request.getAmount());
+//    }
 }

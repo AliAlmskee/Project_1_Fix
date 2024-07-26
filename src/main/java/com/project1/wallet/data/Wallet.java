@@ -1,6 +1,8 @@
 package com.project1.wallet.data;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project1.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,7 +21,8 @@ public class Wallet {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @OneToOne(mappedBy = "wallet")
+    @OneToOne(mappedBy = "wallet",fetch = FetchType.LAZY)
+    @JsonBackReference
     private User user;
 
     private double totalBalance ;

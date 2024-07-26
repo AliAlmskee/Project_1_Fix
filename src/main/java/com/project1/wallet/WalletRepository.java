@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface WalletRepository extends JpaRepository<Wallet, Long> {
-    Optional<Wallet> findByUserId(Long id);
+    Optional<Wallet> findByUserId(int id);
     Optional<Wallet> findById(Long id);
 
 }

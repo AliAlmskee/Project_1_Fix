@@ -1,5 +1,6 @@
 package com.project1.skill;
 
+import com.project1.profile.ClientProfileDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
@@ -8,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/skill")
@@ -18,9 +21,13 @@ public class SkillController {
     private final SkillService skillService;
 
     @GetMapping
-    public ResponseEntity<List<SkillResponse>> getAllSkills() {
-        return skillService.getAllSkills();
+    public  ResponseEntity<Map<String, Object>> getAllSkills() {
+        ResponseEntity<List<SkillResponse>> skills =  skillService.getAllSkills();
+        Map<String, Object> response = new HashMap<>();
+        response.put("clientProfiles", skills);
+        return ResponseEntity.ok(response);
     }
+
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
