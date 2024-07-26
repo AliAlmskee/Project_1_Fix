@@ -5,6 +5,5 @@ public enum TransactionType {
     WITHDRAW,
     TRANSFER,
     HOLD,
-    UNHOLD,
-    TRANSFER_HELD
+    UNHOLD
 }

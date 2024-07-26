@@ -8,6 +8,7 @@ import com.project1.token.TokenType;
 import com.project1.user.Role;
 import com.project1.user.User;
 import com.project1.user.UserRepository;
+import com.project1.wallet.WalletService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,7 @@ public class UserSeeder {
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final WalletService walletService;
 
     public void seed() {
         if (userRepository.count() == 0) {
@@ -65,6 +67,9 @@ public class UserSeeder {
             users.add(worker);
 
             userRepository.saveAll(users);
+            for (User savedUser : users) {
+                walletService.createNewWallet(savedUser);
+            }
             makeToken(client);
             makeToken(worker);
         }

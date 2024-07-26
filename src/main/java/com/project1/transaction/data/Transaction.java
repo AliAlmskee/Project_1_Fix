@@ -26,7 +26,7 @@ public class Transaction {
     private Long receiverUserId;
     private Double amount;
     private Date transactionDate;
-    private TransactionType type; // Enum for deposit, withdraw, transfer, hold, unhold, transfer_held
+    private TransactionType type; // Enum for deposit, withdraw, transfer, hold, unhold
     private Long transactionNumber;
     private Double postBalance;
 }

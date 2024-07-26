@@ -47,6 +47,8 @@ public class SecurityConfiguration {
             "/api/v1/jobs/**",
             "/api/v1/transactions/**",
             "/api/v1/wallets/**",
+            "/api/v1/auditor/**",
+
 
     };
     private final JwtAuthenticationFilter jwtAuthFilter;

@@ -44,8 +44,6 @@ public class TransactionService {
                 return holdTransaction(transaction);
             case UNHOLD:
                 return unholdTransaction(transaction);
-            case TRANSFER_HELD:
-                return transferHeldTransaction(transaction);
             default:
                 throw new UnsupportedOperationException("Unsupported transaction type: " + transaction.getType());
         }
@@ -55,8 +53,6 @@ public class TransactionService {
         switch (transaction.getType()) {
             case HOLD:
                 return holdTransaction(transaction);
-            case TRANSFER_HELD:
-                return transferHeldTransaction(transaction);
             default:
                 throw new UnsupportedOperationException("Unsupported transaction type: " + transaction.getType());
         }
