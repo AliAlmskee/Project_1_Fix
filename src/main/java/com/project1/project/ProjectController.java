@@ -22,7 +22,7 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @GetMapping
-    public ResponseEntity<List<ProjectResponse>> getAllFiltered(
+    public ResponseEntity<List<ProjectWithOfferCountResponse>> getAllFiltered(
             @RequestParam @Nullable String search,
             @RequestParam @Nullable List<Long> categories,
             @RequestParam @Nullable List<Long> skills,
@@ -33,7 +33,7 @@ public class ProjectController {
             @RequestParam @Nullable ProjectSortTypes sortBy,
             @RequestParam @Nullable Boolean sortDes
             ) {
-        return ResponseEntity.ok(projectService.getAllFiltered(search, categories, skills, minBudget, maxBudget, duration, status, sortBy, sortDes));
+        return ResponseEntity.ok(projectService.getFilteredProjects(search, categories, skills, minBudget, maxBudget, duration, status, sortBy, sortDes));
     }
 
     @GetMapping("/{id}")
