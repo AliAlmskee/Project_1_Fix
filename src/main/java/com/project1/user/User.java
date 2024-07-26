@@ -71,8 +71,8 @@ public class User implements UserDetails {
   @ManyToMany(mappedBy = "viewedBy")
   private List<Job> viewedJobs;
 
-  @ManyToMany(fetch = FetchType.EAGER)
-  private List<Job>   likedJobs;
+//  @ManyToMany(fetch = FetchType.EAGER)
+//  private List<Job>   likedJobs;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
