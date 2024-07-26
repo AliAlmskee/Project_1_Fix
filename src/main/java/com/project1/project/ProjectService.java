@@ -35,7 +35,7 @@ public class ProjectService {
         return projectMapper.entityWithOffersToResponse(projectRepository.findFilteredProjects(search, categories, skills, minBudget, maxBudget, duration, status, sortBy.name(), sortDes? "DESC" : "ASC"));
     }
 
-    public List<Project> getFilteredProjects(String namePattern, List<Long> categoryIds, List<Long> skillIds,
+    public List<ProjectWithOfferCountResponse> getFilteredProjects(String namePattern, List<Long> categoryIds, List<Long> skillIds,
                                              Long minBudget, Long maxBudget, Long duration, ProjectStatus status,
                                              ProjectSortTypes sortBy, boolean sortDes) {
 
@@ -92,7 +92,7 @@ public class ProjectService {
                 .replace(":duration", duration != null ? duration.toString() : "")
                 .replace(":status", status != null ? "'" + status.name() + "'" : "");
 
-        return projectRepository.findFilteredProjectsQ(query);
+        return projectMapper.entityWithOffersToResponse(projectRepository.findFilteredProjectsQ(query));
     }
 
     public ProjectDetailsResponse get(Long id) {
@@ -103,7 +103,7 @@ public class ProjectService {
         final User user = User.builder().id(id).build();
         return projectMapper.entityToResponse(projectRepository.findAllByClient_UserOrWorker_User(user, user));
     }
-    public List<ProjectResponse> getByPreofil(Long clientId, Long workerId) {
+    public List<ProjectResponse> getByProfile(Long clientId, Long workerId) {
         if(workerId == null && clientId == null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "no profile id given (clientId or workerId)");
         }

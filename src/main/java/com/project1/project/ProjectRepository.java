@@ -54,7 +54,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
                                                      @Param("sortBy") String sortBy,
                                                      @Param("sortDirection") String sortDirection);
     @Query(value = ":query", nativeQuery = true)
-    List<Project> findFilteredProjectsQ(@Param("query") String query);
+    List<ProjectWithOfferCount> findFilteredProjectsQ(@Param("query") String query);
 
     List<Project> findAllByClient_UserOrWorker_User(User user, User user1);
 

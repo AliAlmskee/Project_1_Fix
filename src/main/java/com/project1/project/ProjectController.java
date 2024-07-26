@@ -21,20 +21,20 @@ public class ProjectController {
 
     private final ProjectService projectService;
 
-//    @GetMapping
-//    public ResponseEntity<List<ProjectWithOfferCountResponse>> getAllFiltered(
-//            @RequestParam @Nullable String search,
-//            @RequestParam @Nullable List<Long> categories,
-//            @RequestParam @Nullable List<Long> skills,
-//            @RequestParam @Nullable Long minBudget,
-//            @RequestParam @Nullable Long maxBudget,
-//            @RequestParam @Nullable Long duration,
-//            @RequestParam @Nullable ProjectStatus status,
-//            @RequestParam @Nullable ProjectSortTypes sortBy,
-//            @RequestParam @Nullable Boolean sortDes
-//            ) {
-//        return ResponseEntity.ok(projectService.getFilteredProjects(search, categories, skills, minBudget, maxBudget, duration, status, sortBy, sortDes));
-//    }
+    @GetMapping
+    public ResponseEntity<List<ProjectWithOfferCountResponse>> getAllFiltered(
+            @RequestParam @Nullable String search,
+            @RequestParam @Nullable List<Long> categories,
+            @RequestParam @Nullable List<Long> skills,
+            @RequestParam @Nullable Long minBudget,
+            @RequestParam @Nullable Long maxBudget,
+            @RequestParam @Nullable Long duration,
+            @RequestParam @Nullable ProjectStatus status,
+            @RequestParam @Nullable ProjectSortTypes sortBy,
+            @RequestParam @Nullable Boolean sortDes
+            ) {
+        return ResponseEntity.ok(projectService.getFilteredProjects(search, categories, skills, minBudget, maxBudget, duration, status, sortBy, sortDes));
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProjectDetailsResponse> get(@PathVariable Long id) {
@@ -45,10 +45,10 @@ public class ProjectController {
     public ResponseEntity<List<ProjectResponse>> getByUser(@PathVariable Integer id) {
         return ResponseEntity.ok(projectService.getByUser(id));
     }
-//    @GetMapping("/byProfile")
-//    public ResponseEntity<List<ProjectResponse>> getByProfile(@RequestParam Long clientId, @RequestParam Long workerId) {
-//        return ResponseEntity.ok(projectService.getByProfile(clientId, workerId));
-//    }
+    @GetMapping("/byProfile")
+    public ResponseEntity<List<ProjectResponse>> getByProfile(@RequestParam Long clientId, @RequestParam Long workerId) {
+        return ResponseEntity.ok(projectService.getByProfile(clientId, workerId));
+    }
 
     @PostMapping
     public ResponseEntity<ProjectResponse> create(@RequestBody CreateProjectRequest createProjectRequest) {
