@@ -22,7 +22,7 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @GetMapping
-    public ResponseEntity<List<ProjectWithOfferCountResponse>> getAllFiltered(
+    public ResponseEntity<List<ProjectResponse>> getAllFiltered(
             @RequestParam @Nullable String search,
             @RequestParam @Nullable List<Long> categories,
             @RequestParam @Nullable List<Long> skills,

@@ -17,6 +17,7 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,64 +36,68 @@ public class ProjectService {
         return projectMapper.entityWithOffersToResponse(projectRepository.findFilteredProjects(search, categories, skills, minBudget, maxBudget, duration, status, sortBy.name(), sortDes? "DESC" : "ASC"));
     }
 
-    public List<ProjectWithOfferCountResponse> getFilteredProjects(String namePattern, List<Long> categoryIds, List<Long> skillIds,
+    public List<ProjectResponse> getFilteredProjects(String namePattern, List<Long> categoryIds, List<Long> skillIds,
                                              Long minBudget, Long maxBudget, Long duration, ProjectStatus status,
-                                             ProjectSortTypes sortBy, boolean sortDes) {
+                                             ProjectSortTypes sortBy, Boolean sortDes) {
 
-        StringBuilder queryBuilder = new StringBuilder("SELECT p.*, " +
-                "(SELECT COUNT(*) FROM OrderOffer oo WHERE oo.order_id = p.id) AS offer_count " +
-                "FROM Project p " +
-                "LEFT JOIN ProjectCategory pc ON p.id = pc.project_id " +
-                "LEFT JOIN ProjectSkill ps ON p.id = ps.project_id " +
-                "WHERE 1=1 ");
+//        StringBuilder queryBuilder = new StringBuilder("SELECT p.* " + "FROM Project p");
+////                "(SELECT COUNT(*) FROM OrderOffer oo WHERE oo.order_id = p.id) AS offer_count " +
+////                "FROM Project p " +
+////                "LEFT JOIN ProjectCategory pc ON p.id = pc.project_id " +
+////                "LEFT JOIN ProjectSkill ps ON p.id = ps.project_id " +
+////                "WHERE 1=1 ");
+//
+//        if (namePattern != null && !namePattern.isEmpty()) {
+//            queryBuilder.append("AND LOWER(p.name) LIKE LOWER(CONCAT('%', :namePattern, '%')) ");
+//        }
+//        if (categoryIds != null && !categoryIds.isEmpty()) {
+//            queryBuilder.append("AND pc.category_id IN (:categoryIds) ");
+//        }
+//        if (skillIds != null && !skillIds.isEmpty()) {
+//            queryBuilder.append("AND ps.skill_id IN (:skillIds) ");
+//        }
+//        if (minBudget != null && maxBudget != null) {
+//            queryBuilder.append("AND ((p.minBudget BETWEEN :minBudget AND :maxBudget) " +
+//                    "OR (p.maxBudget BETWEEN :minBudget AND :maxBudget) " +
+//                    "OR (:minBudget BETWEEN p.minBudget AND p.maxBudget) " +
+//                    "OR (:maxBudget BETWEEN p.minBudget AND p.maxBudget)) ");
+//        }
+//        if (duration != null) {
+//            queryBuilder.append("AND p.ExpectedDuration <= :duration ");
+//        }
+//        if (status != null) {
+//            queryBuilder.append("AND p.status = :status ");
+//        }
+//
+//        String sortDirection = "DESC";
+//        if (Objects.equals(sortDes, false)) {
+//            sortDirection = "ASC";
+//        }
+//        if(sortBy != null){
+//            queryBuilder.append("ORDER BY ");
+//        }
+//        if (ProjectSortTypes.NoOfOffers.equals(sortBy)) {
+//            queryBuilder.append("offer_count ").append(sortDirection);
+//        } else if(ProjectSortTypes.CreateDate.equals(sortBy)){
+//            queryBuilder.append("p.").append("createDate").append(" ").append(sortDirection);
+//        } else if(ProjectSortTypes.Budget.equals(sortBy)){
+//            queryBuilder.append("p.").append("ExpectedDuration").append(" ").append(sortDirection);
+//        } else if(ProjectSortTypes.Duration.equals(sortBy)){
+//            queryBuilder.append("p.").append("minBudget").append(" ").append(sortDirection);
+//        }
+//
+//        String query = queryBuilder.toString();
+//
+//        // Replace parameters in the query string
+//        query = query.replace(":namePattern", namePattern != null ? namePattern : "")
+//                .replace(":categoryIds", categoryIds != null ? categoryIds.stream().map(String::valueOf).collect(Collectors.joining(",")) : "")
+//                .replace(":skillIds", skillIds != null ? skillIds.stream().map(String::valueOf).collect(Collectors.joining(",")) : "")
+//                .replace(":minBudget", minBudget != null ? minBudget.toString() : "")
+//                .replace(":maxBudget", maxBudget != null ? maxBudget.toString() : "")
+//                .replace(":duration", duration != null ? duration.toString() : "")
+//                .replace(":status", status != null ? "'" + status.name() + "'" : "");
 
-        if (namePattern != null && !namePattern.isEmpty()) {
-            queryBuilder.append("AND LOWER(p.name) LIKE LOWER(CONCAT('%', :namePattern, '%')) ");
-        }
-        if (categoryIds != null && !categoryIds.isEmpty()) {
-            queryBuilder.append("AND pc.category_id IN (:categoryIds) ");
-        }
-        if (skillIds != null && !skillIds.isEmpty()) {
-            queryBuilder.append("AND ps.skill_id IN (:skillIds) ");
-        }
-        if (minBudget != null && maxBudget != null) {
-            queryBuilder.append("AND ((p.minBudget BETWEEN :minBudget AND :maxBudget) " +
-                    "OR (p.maxBudget BETWEEN :minBudget AND :maxBudget) " +
-                    "OR (:minBudget BETWEEN p.minBudget AND p.maxBudget) " +
-                    "OR (:maxBudget BETWEEN p.minBudget AND p.maxBudget)) ");
-        }
-        if (duration != null) {
-            queryBuilder.append("AND p.ExpectedDuration <= :duration ");
-        }
-        if (status != null) {
-            queryBuilder.append("AND p.status = :status ");
-        }
-
-        String sortDirection = sortDes? "DESC" : "ASC";
-        // Add sorting
-        queryBuilder.append("ORDER BY ");
-        if (sortBy.equals(ProjectSortTypes.NoOfOffers)) {
-            queryBuilder.append("offer_count ").append(sortDirection);
-        } else if(sortBy.equals(ProjectSortTypes.CreateDate)){
-            queryBuilder.append("p.").append("createDate").append(" ").append(sortDirection);
-        } else if(sortBy.equals(ProjectSortTypes.Budget)){
-            queryBuilder.append("p.").append("ExpectedDuration").append(" ").append(sortDirection);
-        } else if(sortBy.equals(ProjectSortTypes.Duration)){
-            queryBuilder.append("p.").append("minBudget").append(" ").append(sortDirection);
-        }
-
-        String query = queryBuilder.toString();
-
-        // Replace parameters in the query string
-        query = query.replace(":namePattern", namePattern != null ? namePattern : "")
-                .replace(":categoryIds", categoryIds != null ? categoryIds.stream().map(String::valueOf).collect(Collectors.joining(",")) : "")
-                .replace(":skillIds", skillIds != null ? skillIds.stream().map(String::valueOf).collect(Collectors.joining(",")) : "")
-                .replace(":minBudget", minBudget != null ? minBudget.toString() : "")
-                .replace(":maxBudget", maxBudget != null ? maxBudget.toString() : "")
-                .replace(":duration", duration != null ? duration.toString() : "")
-                .replace(":status", status != null ? "'" + status.name() + "'" : "");
-
-        return projectMapper.entityWithOffersToResponse(projectRepository.findFilteredProjectsQ(query));
+        return projectMapper.entityToResponse(projectRepository.findAll());
     }
 
     public ProjectDetailsResponse get(Long id) {

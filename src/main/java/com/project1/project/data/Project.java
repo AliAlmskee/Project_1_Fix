@@ -11,6 +11,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
+import org.springframework.data.annotation.ReadOnlyProperty;
 
 import java.util.Date;
 import java.util.Set;
@@ -51,4 +53,8 @@ public class Project {
             inverseJoinColumns = @JoinColumn(name = "skill_id")
     )
     private Set<Skill> projectSkill;
+
+    @Formula("(SELECT COUNT(*) FROM Offer offer WHERE offer.project_id = id)")
+    @ReadOnlyProperty
+    private Integer offerCount;
 }
