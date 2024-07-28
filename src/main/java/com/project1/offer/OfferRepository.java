@@ -32,4 +32,8 @@ public interface OfferRepository extends JpaRepository<Offer, Long> {
     boolean existsByProject_Client_UserId(Integer id);
 
     boolean deleteByIdAndStatus(Long projectId, OfferStatus offerStatus);
+
+    boolean existsByWorker_UserId(Integer userId);
+
+    boolean existsByIdAndStatus(Long id, OfferStatus offerStatus);
 }

@@ -45,26 +45,31 @@ public class ProjectController {
     public ResponseEntity<List<ProjectResponse>> getByUser(@PathVariable Integer id) {
         return ResponseEntity.ok(projectService.getByUser(id));
     }
+
     @GetMapping("/byProfile")
-    public ResponseEntity<List<ProjectResponse>> getByProfile(@RequestParam Long clientId, @RequestParam Long workerId) {
+    public ResponseEntity<List<ProjectResponse>> getByProfile(@RequestParam(required = false) Long clientId, @RequestParam(required = false) Long workerId) {
         return ResponseEntity.ok(projectService.getByProfile(clientId, workerId));
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('CLIENT','CLIENT_WORKER')")
     public ResponseEntity<ProjectResponse> create(@RequestBody CreateProjectRequest createProjectRequest) {
         return ResponseEntity.ok(projectService.create(createProjectRequest));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ProjectDetailsResponse> update(@PathVariable Long projectId, @RequestBody UpdateProjectRequest updateProjectRequest) throws ResponseStatusException {
-        return  ResponseEntity.ok(projectService.update(projectId, updateProjectRequest));
+    @PreAuthorize("hasAnyRole('CLIENT','CLIENT_WORKER')")
+    public ResponseEntity<ProjectDetailsResponse> update(@PathVariable Long id, @RequestBody UpdateProjectRequest updateProjectRequest) throws ResponseStatusException {
+        return  ResponseEntity.ok(projectService.update(id, updateProjectRequest));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('CLIENT','CLIENT_WORKER')")
     public ResponseEntity<Map<String, String>> delete(@PathVariable Long id) throws ResponseStatusException{
         return  ResponseEntity.ok(projectService.delete(id));
     }
     @PostMapping("/close/{id}")
+    @PreAuthorize("hasAnyRole('CLIENT','CLIENT_WORKER')")
     public ResponseEntity<Map<String, String>> close(@PathVariable Long id) throws ResponseStatusException{
         return  ResponseEntity.ok(projectService.close(id));
     }

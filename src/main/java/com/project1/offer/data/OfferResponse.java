@@ -9,6 +9,7 @@ import java.util.Date;
 
 @Builder
 public record OfferResponse(
+        Integer id,
         String message,
         Long cost,
         Long deliveryTime,
