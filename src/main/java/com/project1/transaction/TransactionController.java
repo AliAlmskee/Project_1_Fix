@@ -3,11 +3,12 @@ package com.project1.transaction;
 
 import com.project1.transaction.data.Transaction;
 import com.project1.transaction.data.TransactionDTO;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,14 +46,14 @@ public class TransactionController {
 
     @PostMapping("/admin")
     @PreAuthorize("hasRole('ADMIN')")
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public ResponseEntity<Transaction> createAdminTransaction(@RequestBody TransactionDTO transaction) {
         Transaction createdTransaction = transactionService.createAdminTransaction(transaction);
         return new ResponseEntity<>(createdTransaction, HttpStatus.CREATED);
     }
 
     @PostMapping
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public ResponseEntity<Transaction> createTransaction(@RequestBody Transaction transaction) {
         Transaction createdTransaction = transactionService.createTransaction(transaction);
         return new ResponseEntity<>(createdTransaction, HttpStatus.CREATED);

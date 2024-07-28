@@ -40,4 +40,9 @@ public class RegisterRequest {
   private String phone;
 
   private Role role;
+
+  @NotNull
+  @NotBlank
+  private String device_token;
+
 }

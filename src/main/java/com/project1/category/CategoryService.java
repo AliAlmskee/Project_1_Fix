@@ -14,12 +14,12 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    public ResponseEntity<List<CategoryResponse>> getAllCategories() {
+    public List<CategoryResponse> getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
         List<CategoryResponse> responses = categories.stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(responses);
+        return responses;
     }
 
     public ResponseEntity<CategoryResponse> createCategory(CategoryRequest categoryRequest) {

@@ -13,4 +13,5 @@ public class FirstStepLoginRequest {
 
   private String phone;
   String password;
+
 }

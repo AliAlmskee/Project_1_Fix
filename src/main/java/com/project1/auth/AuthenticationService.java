@@ -53,6 +53,7 @@ public class AuthenticationService {
             .role(request.getRole())
             .points(0)
             .status(Status.ACTIVE)
+            .device_token(request.getDevice_token())
             .build();
 
     var savedUser = repository.save(user);

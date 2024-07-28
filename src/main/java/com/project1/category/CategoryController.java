@@ -6,7 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -16,10 +18,12 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<List<CategoryResponse>> getAllCategories() {
-        return categoryService.getAllCategories();
+    public ResponseEntity<Map<String, Object>> getAllCategories() {
+        List<CategoryResponse> categories = categoryService.getAllCategories();
+        Map<String, Object> response = new HashMap<>();
+        response.put("categories", categories);
+        return ResponseEntity.ok(response);
     }
-
     @PreAuthorize("hasRole('ADMIN')")
 
     @PostMapping
