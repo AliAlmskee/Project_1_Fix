@@ -39,6 +39,11 @@ public class OfferController {
         return ResponseEntity.ok(offerService.create(createOfferRequest));
     }
 
+    @PostMapping("/submit/{id}")
+    @PreAuthorize("hasAnyRole('WORKER','CLIENT_WORKER')")
+    public ResponseEntity<Map<String, String>> submit(@PathVariable Long id) throws ResponseStatusException{
+        return  ResponseEntity.ok(offerService.submit(id));
+    }
     @PatchMapping("/{id}")
     @PreAuthorize("hasAnyRole('WORKER','CLIENT_WORKER')")
     public ResponseEntity<OfferResponse> update(@PathVariable @Parameter Long id, @RequestBody UpdateOfferRequest updateOfferRequest) throws ResponseStatusException {
@@ -69,9 +74,8 @@ public class OfferController {
     public ResponseEntity<Map<String, String>> reject(@PathVariable Long id) throws ResponseStatusException{
         return  ResponseEntity.ok(offerService.reject(id));
     }
-
     @PostMapping("/complete/{id}")
-    @PreAuthorize("hasAnyRole('CLIENT','CLIENT_WORKER')")
+    @PreAuthorize("hasAnyRole('Client','CLIENT_WORKER')")
     public ResponseEntity<Map<String, String>> complete(@PathVariable Long id) throws ResponseStatusException{
         return  ResponseEntity.ok(offerService.complete(id));
     }

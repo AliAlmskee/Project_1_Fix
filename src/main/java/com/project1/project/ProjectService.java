@@ -129,10 +129,10 @@ public class ProjectService {
     public ProjectDetailsResponse update(Long projectId, UpdateProjectRequest updateProjectRequest) throws ResponseStatusException{
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found"));
         projectMapper.updateFromDto(project, updateProjectRequest);
-        if(project.getProjectCategories() != null){
+        if(updateProjectRequest.projectCategoriesIds() != null){
             project.setProjectCategories(updateProjectRequest.projectCategoriesIds().stream().map(id -> Category.builder().id(id).build()).collect(Collectors.toSet()));
         }
-        if(project.getProjectSkill() != null) {
+        if(updateProjectRequest.projectSkillIds() != null) {
             project.setProjectSkill(updateProjectRequest.projectSkillIds().stream().map(id -> Skill.builder().id(id).build()).collect(Collectors.toSet()));
         }
         return projectMapper.entityToDetailsResponse(projectRepository.save(project));
@@ -140,23 +140,25 @@ public class ProjectService {
 
     public Map<String, String> delete(Long projectId) throws ResponseStatusException{
         Integer userId = auditAware.getCurrentAuditor().orElseThrow(() -> new RuntimeException("Auditor ID not found"));
-        if(!projectRepository.existsByClient_UserId(userId)){
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project does not exist"));
+//        if(!projectRepository.existsByClient_UserId(userId)){
+        if(!project.getClient().getUser().getId().equals(userId)){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Project does not belong to the user");
+        }if(!List.of(ProjectStatus.open, ProjectStatus.closed).contains(project.getStatus())){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cannot Delete project after it settled.");
         }
-        boolean deleted = projectRepository.deleteByIdAndStatus(projectId, ProjectStatus.open);
-        if(deleted){
-            return Map.of("message", "Project Deleted");
-        }
-        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cannot Delete project after it settled.");
+        projectRepository.deleteById(projectId);
+        return Map.of("message", "Project Deleted");
     }
+
     public Map<String, String> close(Long projectId) throws ResponseStatusException{
         Integer userId = auditAware.getCurrentAuditor().orElseThrow(() -> new RuntimeException("Auditor ID not found"));
         if(!projectRepository.existsByClient_UserId(userId)){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Project does not belong to the user");
         }
-        boolean closed = projectRepository.updateStatusByProjectIdAndStatus(ProjectStatus.closed, projectId, ProjectStatus.open);
-        if(closed){
-            return Map.of("message", "Project Deleted");
+        Integer closed = projectRepository.updateStatusByProjectIdAndStatus(ProjectStatus.closed, projectId, ProjectStatus.open);
+        if(closed>0){
+            return Map.of("message", "Project Closed");
         }
         throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cannot Delete project after it settled.");
     }
@@ -180,7 +182,8 @@ public class ProjectService {
             project.setWorker(WorkerProfile.builder().id(workerId).build());
         }
         return projectRepository.save(project);
-    }public Project updateInternalFromOffer(Long offerId, ProjectStatus projectStatus, Long workerId) throws ResponseStatusException{
+    }
+    public void updateInternalFromOffer(Long offerId, ProjectStatus projectStatus, Long workerId) throws ResponseStatusException{
         Project project = projectRepository.findByOfferId(offerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found"));
         if(projectStatus != null){
             project.setStatus(projectStatus);
@@ -188,6 +191,6 @@ public class ProjectService {
         if(workerId != null){
             project.setWorker(WorkerProfile.builder().id(workerId).build());
         }
-        return projectRepository.save(project);
+//        return projectRepository.save(project);
     }
 }

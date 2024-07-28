@@ -72,12 +72,12 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     boolean existsByClient_UserId(Integer userId);
 
-    boolean deleteByIdAndStatus(Long projectId, ProjectStatus projectStatus);
+    Integer deleteByIdAndStatus(Long projectId, ProjectStatus projectStatus);
 
     @Modifying
     @Transactional
     @Query("UPDATE Project p SET p.status = :newStatus WHERE p.id = :id AND p.status = :oldStatus")
-    boolean updateStatusByProjectIdAndStatus(@Param("newStatus") ProjectStatus newStatus, @Param("id") Long id, @Param("oldStatus") ProjectStatus oldStatus);
+    Integer updateStatusByProjectIdAndStatus(@Param("newStatus") ProjectStatus newStatus, @Param("id") Long id, @Param("oldStatus") ProjectStatus oldStatus);
 
     @Query("SELECT o2.project FROM Offer o2 WHERE o2.id = :id")
     Optional<Project> findByOfferId(@Param("id") Long id);

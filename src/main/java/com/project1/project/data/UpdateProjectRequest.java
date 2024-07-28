@@ -9,7 +9,6 @@ public record UpdateProjectRequest(
     Long minBudget,
     Long maxBudget,
     Long ExpectedDuration,
-    ProjectStatus status,
     Set<Long> projectSkillIds,
     Set<Long> projectCategoriesIds
 ){}
