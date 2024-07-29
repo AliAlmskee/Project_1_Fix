@@ -60,12 +60,12 @@ public class AuthenticationService {
 
     if(user.getRole()==Role.ADMIN)
       return ResponseEntity.ok("Register successfully");
-    sendVerificationSMS(user);
+    int code = sendVerificationSMS(user);
 
-    return ResponseEntity.ok( "A code has been sent to your phone");
+    return ResponseEntity.ok( "A code has been sent to your phone: " + code);
   }
 
-  public String firstStepLogin(FirstStepLoginRequest request) throws Exception {
+  public ResponseEntity<String> firstStepLogin(FirstStepLoginRequest request) throws Exception {
     try {
       authenticationManager.authenticate(
               new UsernamePasswordAuthenticationToken(
@@ -84,11 +84,11 @@ public class AuthenticationService {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "role is not correct");
     }
 
-    sendVerificationSMS(user);
-    return "A code has been sent to your phone";
+    int code = sendVerificationSMS(user);
+    return ResponseEntity.ok("A code has been sent to your phone: " + code);
 
   }
-  private void sendVerificationSMS(User user) throws Exception {
+  private int sendVerificationSMS(User user) throws Exception {
     Verification newVerificationCode = new Verification();
     int min = 100000;
     int max = 999999;
@@ -108,6 +108,7 @@ public class AuthenticationService {
     user.getVerification_codes().add(newVerificationCode);
     verificationRepository.save(newVerificationCode);
     smsService.sendSMS(user, code, " Your enjas Verification Code");
+    return code;
   }
 
 
