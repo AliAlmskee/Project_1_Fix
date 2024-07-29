@@ -17,7 +17,7 @@ public class SkillService {
     private final CategoryRepository categoryRepository;
 
     public ResponseEntity<List<SkillResponse>> getAllSkills(Long catId) {
-        List<Skill> skills = skillRepository.findByCategoryId(1L);
+        List<Skill> skills = skillRepository.findByCategoryId(catId);
         List<SkillResponse> skillResponses = skills.stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
