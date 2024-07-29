@@ -20,14 +20,13 @@ public class SkillController {
 
     private final SkillService skillService;
 
-    @GetMapping
-    public  ResponseEntity<Map<String, Object>> getAllSkills() {
-        ResponseEntity<List<SkillResponse>> skills =  skillService.getAllSkills();
+    @GetMapping("/{catId}")
+    public ResponseEntity<Map<String, Object>> getAllSkills(@PathVariable("catId") Long catId) {
+        ResponseEntity<List<SkillResponse>> skills = skillService.getAllSkills(catId);
         Map<String, Object> response = new HashMap<>();
         response.put("clientProfiles", skills);
         return ResponseEntity.ok(response);
     }
-
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping

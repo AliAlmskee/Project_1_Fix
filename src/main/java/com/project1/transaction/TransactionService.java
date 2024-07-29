@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.project1.transaction.data.TransactionDTO;
 
 import java.util.List;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +34,10 @@ public class TransactionService {
 
     public Transaction createAdminTransaction(TransactionDTO transactiondto) {
         Transaction transaction = transactionMapper.toEntity(transactiondto);
+        Random random = new Random();
+        long transactionNumber = random.nextInt(900000000) + 100000000L;
+        transaction.setTransactionNumber(transactionNumber);
+
         switch (transaction.getType()) {
             case DEPOSIT:
                 return depositTransaction(transaction);
@@ -87,11 +92,7 @@ public class TransactionService {
         return transactionRepository.save(transaction);
     }
 
-    private Transaction transferHeldTransaction(Transaction transaction) {
-        // Perform transfer held-specific logic here
-        // ...
-        return transactionRepository.save(transaction);
-    }
+
 
 
 

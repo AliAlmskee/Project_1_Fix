@@ -18,4 +18,6 @@ public class UserDTO {
     private String email;
     private Integer points;
     private Status status;
+    private String device_token;
+
 }

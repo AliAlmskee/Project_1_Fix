@@ -2,14 +2,12 @@ package com.project1.transaction.data;
 
 
 import com.project1.transaction.TransactionType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import validation.Unique;
 
 import java.util.Date;
 
@@ -27,6 +25,7 @@ public class Transaction {
     private Double amount;
     private Date transactionDate;
     private TransactionType type; // Enum for deposit, withdraw, transfer, hold, unhold
+    @Column(unique = true)
     private Long transactionNumber;
     private Double postBalance;
 }

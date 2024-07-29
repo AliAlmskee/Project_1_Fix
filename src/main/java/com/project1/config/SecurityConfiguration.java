@@ -63,7 +63,7 @@ public class SecurityConfiguration {
                         req.requestMatchers(WHITE_LIST_URL)
                                 .permitAll()
 //                                .requestMatchers("/api/v1/management/**").hasAnyRole(ADMIN.name(), MANAGER.name())
-                               .requestMatchers(GET, "/api/v1/skill").permitAll()
+                               .requestMatchers(GET, "/api/v1/skill/**").permitAll()
                                 .requestMatchers(GET, "/api/v1/category").permitAll()
                                 .requestMatchers(GET, "/api/v1/job-titles").permitAll()
                                 .requestMatchers(GET, "/api/v1/projects/**").permitAll()
