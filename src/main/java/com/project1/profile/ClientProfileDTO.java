@@ -1,6 +1,8 @@
 package com.project1.profile;
 
+import com.project1.fileSystem.DocDTO;
 import com.project1.fileSystem.PhotoDTO;
+import com.project1.fileSystem.VideoDTO;
 import com.project1.jobTitle.JobTitleDTO;
 import com.project1.skill.SkillDTO;
 import com.project1.user.UserDTO;
@@ -23,6 +25,8 @@ public class ClientProfileDTO {
     private double rate;
     private JobTitleDTO jobTitleDTO;
     private List<PhotoDTO> photoDTOs;
+    private List<VideoDTO> videoDTOs;
+    private List<DocDTO> docDTOs;
     private List<SkillDTO> skillDTOs;
 
     private UserDTO userDTO;

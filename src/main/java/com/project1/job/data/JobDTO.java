@@ -21,5 +21,7 @@ public class JobDTO {
     private int likeNo;
     private Date date;
     private List<Long> photoIds;
+    private List<Long> videoIds;
+    private List<Long> docIds;
     private List<Long> skillIds;
 }

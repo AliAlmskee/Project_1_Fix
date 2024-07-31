@@ -1,8 +1,7 @@
 package com.project1.profile;
 
 import com.project1.auditing.ApplicationAuditAware;
-import com.project1.fileSystem.Photo;
-import com.project1.fileSystem.PhotoRepository;
+import com.project1.fileSystem.*;
 import com.project1.jobTitle.JobTitle;
 import com.project1.jobTitle.JobTitleRepository;
 import com.project1.skill.Skill;
@@ -23,6 +22,8 @@ public class ClientProfileService {
 
     private final ClientProfileRepository clientProfileRepository;
     private final PhotoRepository photoRepository;
+    private final VideoRepository videoRepository;
+    private final DocRepository docRepository;
     private final JobTitleRepository jobTitleRepository;
     private final ClientProfileMapper clientProfileMapper;
     private final ApplicationAuditAware auditAware;
@@ -78,6 +79,26 @@ public class ClientProfileService {
         clientProfileRepository.save(clientProfile);
 
         return ResponseEntity.ok("Photo added successfully");
+    }
+
+    public ResponseEntity<String> addVideoToClientProfile(Long clientProfileId, Long videoId) {
+        ClientProfile clientProfile = clientProfileRepository.findById(clientProfileId).orElseThrow(() -> new RuntimeException("clientProfile ID not found"));
+        Video video = videoRepository.findById(videoId).orElseThrow(() -> new RuntimeException("Video ID not found"));
+
+        clientProfile.getVideos().add(video);
+        clientProfileRepository.save(clientProfile);
+
+        return ResponseEntity.ok("Video added successfully");
+    }
+
+    public ResponseEntity<String> addDocToClientProfile(Long clientProfileId, Long docId) {
+        ClientProfile clientProfile = clientProfileRepository.findById(clientProfileId).orElseThrow(() -> new RuntimeException("clientProfile ID not found"));
+        Doc doc = docRepository.findById(docId).orElseThrow(() -> new RuntimeException("Doc ID not found"));
+
+        clientProfile.getDocs().add(doc);
+        clientProfileRepository.save(clientProfile);
+
+        return ResponseEntity.ok("Doc added successfully");
     }
 
 

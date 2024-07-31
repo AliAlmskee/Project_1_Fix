@@ -1,7 +1,9 @@
 package com.project1.profile;
 
 import com.project1.category.Category;
+import com.project1.fileSystem.Doc;
 import com.project1.fileSystem.Photo;
+import com.project1.fileSystem.Video;
 import com.project1.job.data.Job;
 import com.project1.jobTitle.JobTitle;
 import com.project1.skill.Skill;
@@ -55,6 +57,21 @@ public class WorkerProfile {
             inverseJoinColumns = @JoinColumn(name = "photo_id")
     )
     private List<Photo> photos;
+
+    @ManyToMany
+    @JoinTable(
+            name = "worker_profile_videos",
+            joinColumns = @JoinColumn(name = "worker_profile_id"),
+            inverseJoinColumns = @JoinColumn(name = "video_id")
+    )
+    private List<Video> videos;
+    @ManyToMany
+    @JoinTable(
+            name = "worker_profile_docs",
+            joinColumns = @JoinColumn(name = "worker_profile_id"),
+            inverseJoinColumns = @JoinColumn(name = "doc_id")
+    )
+    private List<Doc> docs;
 
     @ManyToMany
     @JoinTable(

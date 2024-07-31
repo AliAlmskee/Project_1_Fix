@@ -47,6 +47,17 @@ public class WorkerProfileController {
         return workerProfileService.addPhotoToWorkerProfile(request.getWorkerProfileId(), request.getPhotoId());
     }
 
+    @PostMapping("/add-video")
+    public ResponseEntity<String> addVideoToWorkerProfile(@RequestBody AddVideoToWorkerProfileRequest request) {
+        return workerProfileService.addVideoToWorkerProfile(request.getWorkerProfileId(), request.getVideoId());
+    }
+
+    @PostMapping("/add-doc")
+    public ResponseEntity<String> addDocToWorkerProfile(@RequestBody AddDocToWorkerProfileRequest request) {
+        return workerProfileService.addDocToWorkerProfile(request.getWorkerProfileId(), request.getDocId());
+    }
+
+
     @PostMapping("/add-skill")
     public ResponseEntity<String> addSkillToWorkerProfile(@RequestBody AddSkillToWorkerProfileRequest request) {
         return workerProfileService.addSkillToWorkerProfile(request.getWorkerProfileId(), request.getSkillId());

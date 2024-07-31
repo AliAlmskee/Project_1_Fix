@@ -1,6 +1,8 @@
 package com.project1.job.data;
 
+import com.project1.fileSystem.Doc;
 import com.project1.fileSystem.Photo;
+import com.project1.fileSystem.Video;
 import com.project1.profile.WorkerProfile;
 import com.project1.skill.Skill;
 import com.project1.user.User;
@@ -64,6 +66,20 @@ public class Job {
             inverseJoinColumns = @JoinColumn(name = "photo_id")
     )
     private List<Photo> photos;
+    @ManyToMany
+    @JoinTable(
+            name = "job_video",
+            joinColumns = @JoinColumn(name = "job_id"),
+            inverseJoinColumns = @JoinColumn(name = "video_id")
+    )
+    private List<Video> videos;
+    @ManyToMany
+    @JoinTable(
+            name = "job_doc",
+            joinColumns = @JoinColumn(name = "job_id"),
+            inverseJoinColumns = @JoinColumn(name = "doc_id")
+    )
+    private List<Doc> docs;
 
     @ManyToMany
     @JoinTable(

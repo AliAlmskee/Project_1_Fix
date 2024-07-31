@@ -10,6 +10,8 @@ public interface WorkerProfileMapper {
     @Mapping(source = "user", target = "userDTO")
     @Mapping(source = "jobTitle", target = "jobTitleDTO")
     @Mapping(source = "photos", target = "photoDTOs")
+    @Mapping(source = "videos", target = "videoDTOs")
+    @Mapping(source = "docs", target = "docDTOs")
     @Mapping(source = "skills", target = "skillDTOs")
     @Mapping(source = "id", target = "id")
     @Mapping(source = "category", target = "categoryDTO")

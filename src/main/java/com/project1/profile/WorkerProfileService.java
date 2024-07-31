@@ -4,8 +4,7 @@ package com.project1.profile;
 import com.project1.auditing.ApplicationAuditAware;
 import com.project1.category.Category;
 import com.project1.category.CategoryRepository;
-import com.project1.fileSystem.Photo;
-import com.project1.fileSystem.PhotoRepository;
+import com.project1.fileSystem.*;
 import com.project1.jobTitle.JobTitle;
 import com.project1.jobTitle.JobTitleRepository;
 import com.project1.skill.Skill;
@@ -26,6 +25,8 @@ public class WorkerProfileService {
 
     private final WorkerProfileRepository workerProfileRepository;
     private final PhotoRepository photoRepository;
+    private final VideoRepository videoRepository;
+    private final DocRepository docRepository;
     private final JobTitleRepository jobTitleRepository;
     private final WorkerProfileMapper workerProfileMapper;
     private final ApplicationAuditAware auditAware;
@@ -86,6 +87,26 @@ public class WorkerProfileService {
         workerProfileRepository.save(workerProfile);
 
         return ResponseEntity.ok("Photo added successfully");
+    }
+
+    public ResponseEntity<String> addVideoToWorkerProfile(Long workerProfileId, Long videoId) {
+        WorkerProfile workerProfile = workerProfileRepository.findById(workerProfileId).orElseThrow(() -> new RuntimeException("workerProfile ID not found"));
+        Video video = videoRepository.findById(videoId).orElseThrow(() -> new RuntimeException("Video ID not found"));
+
+        workerProfile.getVideos().add(video);
+        workerProfileRepository.save(workerProfile);
+
+        return ResponseEntity.ok("Video added successfully");
+    }
+
+    public ResponseEntity<String> addDocToWorkerProfile(Long workerProfileId, Long docId) {
+        WorkerProfile workerProfile = workerProfileRepository.findById(workerProfileId).orElseThrow(() -> new RuntimeException("workerProfile ID not found"));
+        Doc doc = docRepository.findById(docId).orElseThrow(() -> new RuntimeException("Doc ID not found"));
+
+        workerProfile.getDocs().add(doc);
+        workerProfileRepository.save(workerProfile);
+
+        return ResponseEntity.ok("Doc added successfully");
     }
 
 

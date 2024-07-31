@@ -1,6 +1,8 @@
 package com.project1.job;
 
+import com.project1.fileSystem.Doc;
 import com.project1.fileSystem.Photo;
+import com.project1.fileSystem.Video;
 import com.project1.job.data.Job;
 import com.project1.job.data.JobDTO;
 import com.project1.job.data.JobRequest;
@@ -17,6 +19,8 @@ import java.util.stream.Collectors;
 public interface JobMapper {
 
     @Mapping(source = "photos", target = "photoIds", qualifiedByName = "photosToIds")
+    @Mapping(source = "videos", target = "videoIds", qualifiedByName = "videosToIds")
+    @Mapping(source = "docs", target = "docIds", qualifiedByName = "docsToIds")
     @Mapping(source = "skills", target = "skillIds", qualifiedByName = "skillsToIds")
     @Mapping(source = "workerProfile", target = "workerProfileId", qualifiedByName = "workerProfileToId")
     JobDTO jobToJobDTO(Job job);
@@ -25,6 +29,8 @@ public interface JobMapper {
 
     @Mapping(source = "workerProfileId", target = "workerProfile", qualifiedByName = "idToWorkerProfile")
     @Mapping(source = "photoIds", target = "photos", qualifiedByName = "idsToPhotos")
+    @Mapping(source = "videoIds", target = "videos", qualifiedByName = "idsToVideos")
+    @Mapping(source = "docIds", target = "docs", qualifiedByName = "idsToDocs")
     @Mapping(source = "skillIds", target = "skills", qualifiedByName = "idsToSkills")
     Job jobRequestToJob(JobRequest jobRequest);
 
@@ -44,6 +50,20 @@ public interface JobMapper {
                 .collect(Collectors.toList());
     }
 
+    @Named("videosToIds")
+    default List<Long> videosToIds(List<Video> videos){
+        return videos.stream()
+                .map(Video::getId)
+                .collect(Collectors.toList());
+    }
+
+    @Named("docsToIds")
+    default List<Long> docsToIds(List<Doc> docs){
+        return docs.stream()
+                .map(Doc::getId)
+                .collect(Collectors.toList());
+    }
+
     @Named("skillsToIds")
     default List<Long> skillsToIds(List<Skill> skills){
         return skills.stream()
@@ -55,6 +75,20 @@ public interface JobMapper {
     default List<Photo> idsToPhotos(List<Long> photoIds){
         return photoIds.stream()
                 .map(id -> Photo.builder().id(id).build())
+                .collect(Collectors.toList());
+    }
+
+    @Named("idsToVideos")
+    default List<Video> idsToVideos(List<Long> videoIds){
+        return videoIds.stream()
+                .map(id -> Video.builder().id(id).build())
+                .collect(Collectors.toList());
+    }
+
+    @Named("idsToDocs")
+    default List<Doc> idsToDocs(List<Long> docIds){
+        return docIds.stream()
+                .map(id -> Doc.builder().id(id).build())
                 .collect(Collectors.toList());
     }
 

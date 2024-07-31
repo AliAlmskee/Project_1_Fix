@@ -50,6 +50,14 @@ public class ClientProfileController {
     public ResponseEntity<String> addPhotoToClientProfile(@RequestBody AddPhotoToClientProfileRequest request) {
         return clientProfileService.addPhotoToClientProfile(request.getClientProfileId(), request.getPhotoId());
     }
+    @PostMapping("/add-video")
+    public ResponseEntity<String> addVideoToClientProfile(@RequestBody AddVideoToClientProfileRequest request) {
+        return clientProfileService.addVideoToClientProfile(request.getClientProfileId(), request.getVideoId());
+    }
+    @PostMapping("/add-doc")
+    public ResponseEntity<String> addDocToClientProfile(@RequestBody AddDocToClientProfileRequest request) {
+        return clientProfileService.addDocToClientProfile(request.getClientProfileId(), request.getDocId());
+    }
     @PostMapping("/add-skill")
     public ResponseEntity<String> addSkillToClientProfile(@RequestBody AddSkillToClientProfileRequest request) {
         return clientProfileService.addSkillToClientProfile(request.getClientProfileId(), request.getSkillId());
