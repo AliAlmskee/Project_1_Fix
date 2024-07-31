@@ -25,7 +25,7 @@ public class AuthenticationController {
     return service.register(request);
   }
   @PostMapping("/first-step-login")
-  public String firstAuthenticate(
+  public ResponseEntity<String> firstAuthenticate(
           @RequestBody FirstStepLoginRequest request
   ) throws Exception {
     return service.firstStepLogin(request);
