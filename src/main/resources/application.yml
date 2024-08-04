@@ -1,0 +1,29 @@
+spring:
+  server:
+    error:
+      include-message: always
+  datasource:
+    url: jdbc:postgresql://localhost:5432/student
+    username: postgres
+    password: ali123
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+application:
+  security:
+    jwt:
+      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      expiration: 86400000 # a day
+      refresh-token:
+        expiration: 604800000 # 7 days
+sms:
+  api_key: fSQk2mTtRTmF1Mj_kIyuZ2:APA91bEK1SZLGDpa60EGSrujNP56uDaIhEv-BMknmKYJxiiYt4ZL2v0gr9ykrpAzeY43foidftst3eIzqPVbl1JW34WNX8fr7xMrnMuAoIKcgYU0NsVz8AnVTWRfP95-IZ8cjK0NhpIt
+  url: https://www.traccar.org/sms/
