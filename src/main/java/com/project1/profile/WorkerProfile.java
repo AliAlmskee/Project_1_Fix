@@ -67,4 +67,7 @@ public class WorkerProfile {
     @OneToMany(mappedBy = "workerProfile")
     private List<Job> jobs;
 
+    public void addRate(double rate, int count){
+        setRate((this.rate*count + rate) * (count+1));
+    }
 }

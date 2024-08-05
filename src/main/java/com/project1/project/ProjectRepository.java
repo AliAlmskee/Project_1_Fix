@@ -3,7 +3,6 @@ package com.project1.project;
 import com.project1.profile.ClientProfile;
 import com.project1.profile.WorkerProfile;
 import com.project1.project.data.Project;
-import com.project1.project.data.ProjectResponse;
 import com.project1.project.data.ProjectStatus;
 import com.project1.project.data.ProjectWithOfferCount;
 import com.project1.user.User;

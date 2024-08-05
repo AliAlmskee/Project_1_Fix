@@ -1,11 +1,8 @@
 package com.project1.project;
 
-import com.project1.category.Category;
 import com.project1.project.data.*;
-import com.project1.skill.Skill;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +19,7 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @GetMapping
-    public ResponseEntity<List<ProjectResponse>> getAllFiltered(
+    public ResponseEntity<Map<String, List<ProjectResponse>>> getAllFiltered(
             @RequestParam @Nullable String search,
             @RequestParam @Nullable List<Long> categories,
             @RequestParam @Nullable List<Long> skills,
@@ -33,7 +30,8 @@ public class ProjectController {
             @RequestParam @Nullable ProjectSortTypes sortBy,
             @RequestParam @Nullable Boolean sortDes
             ) {
-        return ResponseEntity.ok(projectService.getFilteredProjects(search, categories, skills, minBudget, maxBudget, duration, status, sortBy, sortDes));
+        List<ProjectResponse> projectResponses = projectService.getFilteredProjects(search, categories, skills, minBudget, maxBudget, duration, status, sortBy, sortDes);
+        return ResponseEntity.ok(Map.of("projects", projectResponses));
     }
 
     @GetMapping("/{id}")
@@ -42,13 +40,13 @@ public class ProjectController {
     }
 
     @GetMapping("/byUser/{id}")
-    public ResponseEntity<List<ProjectResponse>> getByUser(@PathVariable Integer id) {
-        return ResponseEntity.ok(projectService.getByUser(id));
+    public ResponseEntity<Map<String, List<ProjectResponse>>> getByUser(@PathVariable Integer id) {
+        return ResponseEntity.ok(Map.of("projects" , projectService.getByUser(id)));
     }
 
     @GetMapping("/byProfile")
-    public ResponseEntity<List<ProjectResponse>> getByProfile(@RequestParam(required = false) Long clientId, @RequestParam(required = false) Long workerId) {
-        return ResponseEntity.ok(projectService.getByProfile(clientId, workerId));
+    public ResponseEntity<Map<String, List<ProjectResponse>>> getByProfile(@RequestParam(required = false) Long clientId, @RequestParam(required = false) Long workerId) {
+        return ResponseEntity.ok(Map.of("projects", projectService.getByProfile(clientId, workerId)));
     }
 
     @PostMapping

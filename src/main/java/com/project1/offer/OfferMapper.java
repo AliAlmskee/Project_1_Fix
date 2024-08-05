@@ -1,20 +1,19 @@
 package com.project1.offer;
 
-import com.project1.category.CategoryMapper;
-import com.project1.offer.data.*;
-import com.project1.profile.ClientProfile;
-import com.project1.profile.ClientProfileMapper;
-import com.project1.profile.WorkerProfile;
+import com.project1.offer.data.CreateOfferRequest;
+import com.project1.offer.data.Offer;
+import com.project1.offer.data.OfferResponse;
+import com.project1.offer.data.UpdateOfferRequest;
 import com.project1.profile.WorkerProfileMapper;
 import com.project1.project.data.Project;
-import com.project1.skill.SkillMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = WorkerProfileMapper.class)
+@Mapper(componentModel = "spring", uses = WorkerProfileMapper.class, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public abstract class OfferMapper {
     abstract OfferResponse entityToResponse(Offer offer);
 
@@ -24,9 +23,6 @@ public abstract class OfferMapper {
     @Mapping(source = "projectId", target = "project")
     abstract Offer toEntity(CreateOfferRequest createOfferRequest);
 
-    WorkerProfile idToWorkerProfile(Long id){
-        return WorkerProfile.builder().id(id).build();
-    }
     Project idToProject(Long id){
         return Project.builder().id(id).build();
     }

@@ -58,4 +58,8 @@ public class ClientProfile {
             inverseJoinColumns = @JoinColumn(name = "skill_id")
     )
     private List<Skill> skills;
+
+    public void addRate(double rate, int count){
+        setRate((this.rate*count + rate) * (count+1));
+    }
 }

@@ -1,6 +1,5 @@
 package com.project1.project.data;
 
-import java.util.Date;
 import java.util.Set;
 
 public record CreateProjectRequest(

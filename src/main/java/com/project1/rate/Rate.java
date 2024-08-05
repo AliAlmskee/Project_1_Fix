@@ -21,6 +21,11 @@ public class Rate {
     private Long id;
     private Date createDate;
     private String description;
+    private Double overall;
+    private Double proficiency;
+    private Double communication;
+    private Double quality;
+    private RatedType rated;
     @ManyToOne
     private ClientProfile client;
     @ManyToOne
