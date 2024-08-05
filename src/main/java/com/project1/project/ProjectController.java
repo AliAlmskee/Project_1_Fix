@@ -19,7 +19,7 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @GetMapping
-    public ResponseEntity<Map<String, List<ProjectResponse>>> getAllFiltered(
+    public ResponseEntity<Map<String, List<ProjectDetailsResponse>>> getAllFiltered(
             @RequestParam @Nullable String search,
             @RequestParam @Nullable List<Long> categories,
             @RequestParam @Nullable List<Long> skills,
@@ -30,7 +30,7 @@ public class ProjectController {
             @RequestParam @Nullable ProjectSortTypes sortBy,
             @RequestParam @Nullable Boolean sortDes
             ) {
-        List<ProjectResponse> projectResponses = projectService.getFilteredProjects(search, categories, skills, minBudget, maxBudget, duration, status, sortBy, sortDes);
+        List<ProjectDetailsResponse> projectResponses = projectService.getFilteredProjects(search, categories, skills, minBudget, maxBudget, duration, status, sortBy, sortDes);
         return ResponseEntity.ok(Map.of("projects", projectResponses));
     }
 
@@ -40,18 +40,18 @@ public class ProjectController {
     }
 
     @GetMapping("/byUser/{id}")
-    public ResponseEntity<Map<String, List<ProjectResponse>>> getByUser(@PathVariable Integer id) {
+    public ResponseEntity<Map<String, List<ProjectDetailsResponse>>> getByUser(@PathVariable Integer id) {
         return ResponseEntity.ok(Map.of("projects" , projectService.getByUser(id)));
     }
 
     @GetMapping("/byProfile")
-    public ResponseEntity<Map<String, List<ProjectResponse>>> getByProfile(@RequestParam(required = false) Long clientId, @RequestParam(required = false) Long workerId) {
+    public ResponseEntity<Map<String, List<ProjectDetailsResponse>>> getByProfile(@RequestParam(required = false) Long clientId, @RequestParam(required = false) Long workerId) {
         return ResponseEntity.ok(Map.of("projects", projectService.getByProfile(clientId, workerId)));
     }
 
     @PostMapping
     @PreAuthorize("hasAnyRole('CLIENT','CLIENT_WORKER')")
-    public ResponseEntity<ProjectResponse> create(@RequestBody CreateProjectRequest createProjectRequest) {
+    public ResponseEntity<ProjectDetailsResponse> create(@RequestBody CreateProjectRequest createProjectRequest) {
         return ResponseEntity.ok(projectService.create(createProjectRequest));
     }
 

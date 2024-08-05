@@ -34,7 +34,7 @@ public class ProjectService {
         return projectMapper.entityWithOffersToResponse(projectRepository.findFilteredProjects(search, categories, skills, minBudget, maxBudget, duration, status, sortBy.name(), sortDes? "DESC" : "ASC"));
     }
 
-    public List<ProjectResponse> getFilteredProjects(String namePattern, List<Long> categoryIds, List<Long> skillIds,
+    public List<ProjectDetailsResponse> getFilteredProjects(String namePattern, List<Long> categoryIds, List<Long> skillIds,
                                              Long minBudget, Long maxBudget, Long duration, ProjectStatus status,
                                              ProjectSortTypes sortBy, Boolean sortDes) {
 
@@ -95,34 +95,34 @@ public class ProjectService {
 //                .replace(":duration", duration != null ? duration.toString() : "")
 //                .replace(":status", status != null ? "'" + status.name() + "'" : "");
 
-        return projectMapper.entityToResponse(projectRepository.findAll());
+        return projectMapper.entityToDetailsResponse(projectRepository.findAll());
     }
 
     public ProjectDetailsResponse get(Long id) {
         return projectMapper.entityToDetailsResponse(projectRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found")));
     }
 
-    public List<ProjectResponse> getByUser(Integer id) {
+    public List<ProjectDetailsResponse> getByUser(Integer id) {
         final User user = User.builder().id(id).build();
-        return projectMapper.entityToResponse(projectRepository.findAllByClient_UserOrWorker_User(user, user));
+        return projectMapper.entityToDetailsResponse(projectRepository.findAllByClient_UserOrWorker_User(user, user));
     }
-    public List<ProjectResponse> getByProfile(Long clientId, Long workerId) {
+    public List<ProjectDetailsResponse> getByProfile(Long clientId, Long workerId) {
         if(workerId == null && clientId == null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "no profile id given (clientId or workerId)");
         }
         if(clientId != null){
-            return projectMapper.entityToResponse(projectRepository.findAllByClient(ClientProfile.builder().id(clientId).build()));
+            return projectMapper.entityToDetailsResponse(projectRepository.findAllByClient(ClientProfile.builder().id(clientId).build()));
         }
-        return projectMapper.entityToResponse(projectRepository.findAllByWorker(WorkerProfile.builder().id(workerId).build()));
+        return projectMapper.entityToDetailsResponse(projectRepository.findAllByWorker(WorkerProfile.builder().id(workerId).build()));
     }
 
-    public ProjectResponse create(CreateProjectRequest createProjectRequest) {
+    public ProjectDetailsResponse create(CreateProjectRequest createProjectRequest) {
         //TODO check wallet
         Integer userId = auditAware.getCurrentAuditor().orElseThrow(() -> new RuntimeException("Auditor ID not found"));
         Project project = projectMapper.toEntity(createProjectRequest);
         project.setCreateDate(Date.from(Instant.now()));
         project.setStatus(ProjectStatus.open);
-         return projectMapper.entityToResponse(projectRepository.save(project));
+         return projectMapper.entityToDetailsResponse(projectRepository.save(project));
     }
     public ProjectDetailsResponse update(Long projectId, UpdateProjectRequest updateProjectRequest) throws ResponseStatusException{
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found"));

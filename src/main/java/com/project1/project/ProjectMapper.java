@@ -21,6 +21,7 @@ public abstract class ProjectMapper {
     abstract ProjectWithOfferCountResponse entityToResponse(ProjectWithOfferCount project);
 
     abstract ProjectDetailsResponse entityToDetailsResponse(Project project);
+    abstract List<ProjectDetailsResponse> entityToDetailsResponse(List<Project> projects);
     abstract List<ProjectResponse> entityToResponse(List<Project> project);
     abstract List<ProjectWithOfferCountResponse> entityWithOffersToResponse(List<ProjectWithOfferCount> project);
 
