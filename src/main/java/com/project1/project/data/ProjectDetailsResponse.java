@@ -23,6 +23,7 @@ public record ProjectDetailsResponse(
     ClientProfileDTO client,
     @Nullable
     WorkerProfileDTO worker,
-    Set<CategoryDTO> projectCategories,
-    Set<SkillDTO> projectSkill
+    CategoryDTO projectCategory,
+    Set<SkillDTO> projectSkill,
+    Integer offerCount
 ){}

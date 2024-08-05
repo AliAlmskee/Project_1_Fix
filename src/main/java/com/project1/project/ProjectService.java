@@ -25,14 +25,14 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final ApplicationAuditAware auditAware;
 
-    public List<ProjectWithOfferCountResponse> getAllFiltered(
-            String search, List<Long> categories,
-            List<Long> skills, Long minBudget,
-            Long maxBudget, Long duration,
-            ProjectStatus status, ProjectSortTypes sortBy,
-            Boolean sortDes) {
-        return projectMapper.entityWithOffersToResponse(projectRepository.findFilteredProjects(search, categories, skills, minBudget, maxBudget, duration, status, sortBy.name(), sortDes? "DESC" : "ASC"));
-    }
+//    public List<ProjectWithOfferCountResponse> getAllFiltered(
+//            String search, List<Long> categories,
+//            List<Long> skills, Long minBudget,
+//            Long maxBudget, Long duration,
+//            ProjectStatus status, ProjectSortTypes sortBy,
+//            Boolean sortDes) {
+//        return projectMapper.entityWithOffersToResponse(projectRepository.findFilteredProjects(search, categories, skills, minBudget, maxBudget, duration, status, sortBy.name(), sortDes? "DESC" : "ASC"));
+//    }
 
     public List<ProjectDetailsResponse> getFilteredProjects(String namePattern, List<Long> categoryIds, List<Long> skillIds,
                                              Long minBudget, Long maxBudget, Long duration, ProjectStatus status,
@@ -127,12 +127,12 @@ public class ProjectService {
     public ProjectDetailsResponse update(Long projectId, UpdateProjectRequest updateProjectRequest) throws ResponseStatusException{
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found"));
         projectMapper.updateFromDto(project, updateProjectRequest);
-        if(updateProjectRequest.projectCategoriesIds() != null){
-            project.setProjectCategories(updateProjectRequest.projectCategoriesIds().stream().map(id -> Category.builder().id(id).build()).collect(Collectors.toSet()));
-        }
-        if(updateProjectRequest.projectSkillIds() != null) {
-            project.setProjectSkill(updateProjectRequest.projectSkillIds().stream().map(id -> Skill.builder().id(id).build()).collect(Collectors.toSet()));
-        }
+//        if(updateProjectRequest.projectCategoryId() != null){
+//            project.setProjectCategory(updateProjectRequest.projectCategoryId());
+//        }
+//        if(updateProjectRequest.projectSkillIds() != null) {
+//            project.setProjectSkill(updateProjectRequest.projectSkillIds().stream().map(id -> Skill.builder().id(id).build()).collect(Collectors.toSet()));
+//        }
         return projectMapper.entityToDetailsResponse(projectRepository.save(project));
     }
 

@@ -22,7 +22,7 @@ public abstract class ProjectProgressMapper {
     abstract List<ProjectResponse> entityToResponse(List<Project> project);
 
     @Mapping(source = "projectSkillIds", target = "projectSkill")
-    @Mapping(source = "projectCategoriesIds", target = "projectCategories")
+    @Mapping(source = "projectCategoryId", target = "projectCategory")
     @Mapping(source = "clientProfileId", target = "client")
     abstract Project toEntity(CreateProjectRequest createProjectRequest);
     Set<Skill> idsToSkills(Set<Long> ids){

@@ -37,13 +37,13 @@ public class Project {
     @ManyToOne
     @JoinColumn(name="worker_profile_id")
     private WorkerProfile worker;
-    @ManyToMany
-    @JoinTable(
-            name="ProjectCategory",
-            joinColumns = @JoinColumn(name = "project_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id")
-    )
-    private Set<Category> projectCategories;
+//    @JoinTable(
+//            name="ProjectCategory",
+//            joinColumns = @JoinColumn(name = "project_id"),
+//            inverseJoinColumns = @JoinColumn(name = "category_id")
+//    )
+    @ManyToOne
+    private Category projectCategory;
     @ManyToMany
     @JoinTable(
             name="ProjectSkill",

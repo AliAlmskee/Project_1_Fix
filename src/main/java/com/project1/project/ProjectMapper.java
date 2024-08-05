@@ -18,15 +18,10 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring", uses = {ClientProfileMapper.class, SkillMapper.class, CategoryMapper.class}, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public abstract class ProjectMapper {
     abstract ProjectResponse entityToResponse(Project project);
-    abstract ProjectWithOfferCountResponse entityToResponse(ProjectWithOfferCount project);
-
     abstract ProjectDetailsResponse entityToDetailsResponse(Project project);
     abstract List<ProjectDetailsResponse> entityToDetailsResponse(List<Project> projects);
-    abstract List<ProjectResponse> entityToResponse(List<Project> project);
-    abstract List<ProjectWithOfferCountResponse> entityWithOffersToResponse(List<ProjectWithOfferCount> project);
-
     @Mapping(source = "projectSkillIds", target = "projectSkill")
-    @Mapping(source = "projectCategoriesIds", target = "projectCategories")
+    @Mapping(source = "projectCategoryId", target = "projectCategory")
     @Mapping(source = "clientProfileId", target = "client")
     abstract Project toEntity(CreateProjectRequest createProjectRequest);
 
@@ -39,7 +34,8 @@ public abstract class ProjectMapper {
     }
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(source = "projectCategoryId", target = "projectCategory")
+    @Mapping(source = "projectSkillIds", target = "projectSkill")
     public abstract void updateFromDto(@MappingTarget Project project, UpdateProjectRequest updateProjectRequest);
-
 }
 

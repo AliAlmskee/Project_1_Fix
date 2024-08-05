@@ -10,5 +10,5 @@ public record CreateProjectRequest(
     Long ExpectedDuration,
     Long clientProfileId,
     Set<Long> projectSkillIds,
-    Set<Long> projectCategoriesIds
+    Long projectCategoryId
 ){}

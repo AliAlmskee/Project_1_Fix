@@ -4,7 +4,6 @@ import com.project1.profile.ClientProfile;
 import com.project1.profile.WorkerProfile;
 import com.project1.project.data.Project;
 import com.project1.project.data.ProjectStatus;
-import com.project1.project.data.ProjectWithOfferCount;
 import com.project1.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -23,7 +22,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 //    ProjectSortTypes sortBy, Boolean sortDes,
 
     @Query(value = "SELECT p.*, " +
-            "(SELECT COUNT(*) FROM OrderOffer oo WHERE oo.order_id = p.id) AS offerCount " +
             "FROM Project p " +
             "JOIN ProjectCategory pc ON p.id = pc.project_id " +
             "JOIN ProjectSkill ps ON p.id = ps.project_id " +
@@ -43,7 +41,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             "CASE WHEN :sortBy = 'NoOfOffers' THEN offerCount END " +
             ":sortDirection",
             nativeQuery = true)
-    List<ProjectWithOfferCount> findFilteredProjects(@Param("namePattern") String namePattern,
+    List<Project> findFilteredProjects(@Param("namePattern") String namePattern,
                                                      @Param("categoryIds") List<Long> categoryIds,
                                                      @Param("skillIds") List<Long> skillIds,
                                                      @Param("minBudget") Long minBudget,
