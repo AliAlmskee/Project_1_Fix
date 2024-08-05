@@ -24,6 +24,7 @@ public class UserSeeder {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final WalletService walletService;
+    private final ClientProfileSeeder clientProfileSeeder;
 
     public void seed() {
         if (userRepository.count() == 0) {
@@ -72,6 +73,8 @@ public class UserSeeder {
             }
             makeToken(client);
             makeToken(worker);
+
+            clientProfileSeeder.seed(client);
         }
     }
 

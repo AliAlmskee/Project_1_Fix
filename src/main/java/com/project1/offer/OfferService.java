@@ -43,14 +43,18 @@ public class OfferService {
         Offer offer = offerMapper.toEntity(createOfferRequest);
         offer.setStatus(OfferStatus.pending);
         offer.setCreateDate(Date.from(Instant.now()));
-        return offerMapper.entityToResponse(offerRepository.save(offer));
+
+        offer = offerRepository.findById(offer.getId()).orElseThrow();
+        return offerMapper.entityToResponse(offer);
     }
 
 
     public OfferResponse update(Long offerId, UpdateOfferRequest updateOfferRequest) throws ResponseStatusException{
         Offer offer = offerRepository.findById(offerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Offer Not Found"));
         offerMapper.updateFromDto(offer, updateOfferRequest);
-        return offerMapper.entityToResponse(offerRepository.save(offer));
+
+        offer = offerRepository.findById(offer.getId()).orElseThrow();
+        return offerMapper.entityToResponse(offer);
     }
 
     public Map<String, String> delete(Long id) throws ResponseStatusException{

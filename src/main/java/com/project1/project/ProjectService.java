@@ -122,7 +122,9 @@ public class ProjectService {
         Project project = projectMapper.toEntity(createProjectRequest);
         project.setCreateDate(Date.from(Instant.now()));
         project.setStatus(ProjectStatus.open);
-         return projectMapper.entityToDetailsResponse(projectRepository.save(project));
+        projectRepository.save(project);
+        project = projectRepository.findById(project.getId()).orElseThrow();
+         return projectMapper.entityToDetailsResponse(project);
     }
     public ProjectDetailsResponse update(Long projectId, UpdateProjectRequest updateProjectRequest) throws ResponseStatusException{
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found"));
@@ -133,7 +135,9 @@ public class ProjectService {
 //        if(updateProjectRequest.projectSkillIds() != null) {
 //            project.setProjectSkill(updateProjectRequest.projectSkillIds().stream().map(id -> Skill.builder().id(id).build()).collect(Collectors.toSet()));
 //        }
-        return projectMapper.entityToDetailsResponse(projectRepository.save(project));
+
+        project = projectRepository.findById(project.getId()).orElseThrow();
+        return projectMapper.entityToDetailsResponse(project);
     }
 
     public Map<String, String> delete(Long projectId) throws ResponseStatusException{
