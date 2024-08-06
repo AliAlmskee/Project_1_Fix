@@ -5,6 +5,7 @@ import com.project1.profile.WorkerProfile;
 import com.project1.project.data.Project;
 import com.project1.project.data.ProjectStatus;
 import com.project1.user.User;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

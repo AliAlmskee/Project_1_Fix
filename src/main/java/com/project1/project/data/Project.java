@@ -51,6 +51,7 @@ public class Project {
 //            inverseJoinColumns = @JoinColumn(name = "category_id")
 //    )
     @ManyToOne
+    @NotNull
     private Category projectCategory;
     @ManyToMany
     @JoinTable(
@@ -58,6 +59,7 @@ public class Project {
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "skill_id")
     )
+    @NotNull
     private Set<Skill> projectSkill;
 
     @Formula("(SELECT COUNT(*) FROM Offer offer WHERE offer.project_id = id)")

@@ -71,7 +71,9 @@ public class UserSeeder {
             for (User savedUser : users) {
                 walletService.createNewWallet(savedUser);
             }
+            System.out.println("client: ");
             makeToken(client);
+            System.out.println("worker: ");
             makeToken(worker);
 
             clientProfileSeeder.seed(client);
@@ -88,7 +90,7 @@ public class UserSeeder {
                 .expired(false)
                 .revoked(false)
                 .build();
-        System.out.println(jwtToken);
+        System.out.print(jwtToken);
         tokenRepository.save(token);
     }
 }

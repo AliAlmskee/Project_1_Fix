@@ -122,7 +122,7 @@ public class ProjectService {
         Project project = projectMapper.toEntity(createProjectRequest);
         project.setCreateDate(Date.from(Instant.now()));
         project.setStatus(ProjectStatus.open);
-        projectRepository.save(project);
+        project = projectRepository.save(project);
         Project project1 = projectRepository.findById(project.getId()).orElseThrow();
          return projectMapper.entityToDetailsResponse(project1);
     }

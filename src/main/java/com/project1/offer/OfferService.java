@@ -43,7 +43,7 @@ public class OfferService {
         Offer offer = offerMapper.toEntity(createOfferRequest);
         offer.setStatus(OfferStatus.pending);
         offer.setCreateDate(Date.from(Instant.now()));
-
+        offer = offerRepository.save(offer);
         Offer offer1 = offerRepository.findById(offer.getId()).orElseThrow();
         return offerMapper.entityToResponse(offer1);
     }
@@ -53,6 +53,7 @@ public class OfferService {
         Offer offer = offerRepository.findById(offerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Offer Not Found"));
         offerMapper.updateFromDto(offer, updateOfferRequest);
 
+        offer = offerRepository.save(offer);
         Offer offer1 = offerRepository.findById(offer.getId()).orElseThrow();
         return offerMapper.entityToResponse(offer1);
     }
