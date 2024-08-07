@@ -26,17 +26,15 @@ public class ProjectService {
     private final ProjectMapper projectMapper;
     private final ProjectRepository projectRepository;
     private final ApplicationAuditAware auditAware;
-<<<<<<< HEAD
     private final TransactionService transactionService;
-    public List<ProjectWithOfferCountResponse> getAllFiltered(
-            String search, List<Long> categories,
-            List<Long> skills, Long minBudget,
-            Long maxBudget, Long duration,
-            ProjectStatus status, ProjectSortTypes sortBy,
-            Boolean sortDes) {
-        return projectMapper.entityWithOffersToResponse(projectRepository.findFilteredProjects(search, categories, skills, minBudget, maxBudget, duration, status, sortBy.name(), sortDes? "DESC" : "ASC"));
-    }
-=======
+//    public List<ProjectWithOfferCountResponse> getAllFiltered(
+//            String search, List<Long> categories,
+//            List<Long> skills, Long minBudget,
+//            Long maxBudget, Long duration,
+//            ProjectStatus status, ProjectSortTypes sortBy,
+//            Boolean sortDes) {
+//        return projectMapper.entityWithOffersToResponse(projectRepository.findFilteredProjects(search, categories, skills, minBudget, maxBudget, duration, status, sortBy.name(), sortDes? "DESC" : "ASC"));
+//    }
 
 //    public List<ProjectWithOfferCountResponse> getAllFiltered(
 //            String search, List<Long> categories,
@@ -46,7 +44,6 @@ public class ProjectService {
 //            Boolean sortDes) {
 //        return projectMapper.entityWithOffersToResponse(projectRepository.findFilteredProjects(search, categories, skills, minBudget, maxBudget, duration, status, sortBy.name(), sortDes? "DESC" : "ASC"));
 //    }
->>>>>>> 0747a621613f2c2447d4735362131df736a09ba3
 
     public List<ProjectDetailsResponse> getFilteredProjects(String namePattern, List<Long> categoryIds, List<Long> skillIds,
                                              Long minBudget, Long maxBudget, Long duration, ProjectStatus status,

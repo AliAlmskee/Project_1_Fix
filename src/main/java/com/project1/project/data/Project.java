@@ -35,12 +35,7 @@ public class Project {
     private Long maxBudget;
     @NotNull
     private Long ExpectedDuration;
-<<<<<<< HEAD
-
-   // @Enumerated(EnumType.STRING)
-=======
     @NotNull
->>>>>>> 0747a621613f2c2447d4735362131df736a09ba3
     private ProjectStatus status;
     @NotNull
     private Date createDate;
@@ -50,11 +45,11 @@ public class Project {
     @ManyToOne
     @JoinColumn(name="worker_profile_id")
     private WorkerProfile worker;
-//    @JoinTable(
-//            name="ProjectCategory",
-//            joinColumns = @JoinColumn(name = "project_id"),
-//            inverseJoinColumns = @JoinColumn(name = "category_id")
-//    )
+    @JoinTable(
+            name="ProjectCategory",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
     @ManyToOne
     @NotNull
     private Category projectCategory;
