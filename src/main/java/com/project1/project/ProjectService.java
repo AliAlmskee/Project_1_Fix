@@ -140,6 +140,7 @@ public class ProjectService {
     public ProjectDetailsResponse update(Long projectId, UpdateProjectRequest updateProjectRequest) throws ResponseStatusException{
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found"));
         projectMapper.updateFromDto(project, updateProjectRequest);
+        projectRepository.save(project);
 //        if(updateProjectRequest.projectCategoryId() != null){
 //            project.setProjectCategory(updateProjectRequest.projectCategoryId());
 //        }

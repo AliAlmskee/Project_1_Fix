@@ -103,6 +103,17 @@ public class ClientProfileService {
 
         return ResponseEntity.ok("Skill added successfully");
     }
+    public ResponseEntity<String> removeSkillFromClientProfile(Long clientProfileId, Long skillId) {
+        ClientProfile clientProfile = clientProfileRepository.findById(clientProfileId).orElseThrow(() -> new RuntimeException("Client profile ID not found"));
+        Skill skill = skillRepository.findById(skillId).orElseThrow(() -> new RuntimeException("Skill ID not found"));
+
+        if (!clientProfile.getSkills().remove(skill)) {
+            throw new RuntimeException("Photo not found in client profile");
+        }
+        clientProfileRepository.save(clientProfile);
+
+        return ResponseEntity.ok("Skill added successfully");
+    }
     
 
 
