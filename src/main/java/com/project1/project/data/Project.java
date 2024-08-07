@@ -31,6 +31,8 @@ public class Project {
     private Long minBudget;
     private Long maxBudget;
     private Long ExpectedDuration;
+
+   // @Enumerated(EnumType.STRING)
     private ProjectStatus status;
     private Date createDate;
     @ManyToOne

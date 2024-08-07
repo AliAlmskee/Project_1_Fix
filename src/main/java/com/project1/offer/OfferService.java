@@ -6,6 +6,7 @@ import com.project1.profile.WorkerProfile;
 import com.project1.project.ProjectRepository;
 import com.project1.project.ProjectService;
 import com.project1.project.data.ProjectStatus;
+import com.project1.transaction.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class OfferService {
     private final ApplicationAuditAware auditAware;
     private final ProjectRepository projectRepository;
     private final ProjectService projectService;
-
+    private final TransactionService transactionService;
 
     public List<OfferResponse> getByProject(Long projectId) {
         return offerMapper.entityToResponse(offerRepository.findAllByProjectId(projectId));
@@ -65,7 +66,10 @@ public class OfferService {
 
     @Transactional
     public Map<String, String> accept(Long id) {
+        transactionService.AcceptOfferTransaction(id);
         //TODO hold from wallet
+
+
         Integer userId = auditAware.getCurrentAuditor().orElseThrow(() -> new RuntimeException("Auditor ID not found"));
         if(!offerRepository.existsByProject_Client_UserId(userId)){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Project does not belong to the user");

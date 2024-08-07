@@ -24,6 +24,8 @@ public class Transaction {
     private Long receiverUserId;
     private Double amount;
     private Date transactionDate;
+
+    @Enumerated(EnumType.STRING)
     private TransactionType type; // Enum for deposit, withdraw, transfer, hold, unhold
     @Column(unique = true)
     private Long transactionNumber;

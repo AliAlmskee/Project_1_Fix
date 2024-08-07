@@ -30,4 +30,6 @@ public class WorkerProfileDTO {
 
     private UserDTO userDTO;
 
+    private int completedProjectsCount;
+
 }

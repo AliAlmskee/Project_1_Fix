@@ -1,0 +1,15 @@
+package com.project1.transaction.data;
+
+import com.project1.transaction.TransactionType;
+import lombok.Data;
+
+import java.util.Date;
+
+@Data
+public class AdminTransactionDTO {
+    private Long receiverUserId;
+    private Double amount;
+    private Date transactionDate;
+    private TransactionType type; // Enum for deposit, withdraw, transfer, hold, unhold, transfer_held
+    private Long transactionNumber;
+}

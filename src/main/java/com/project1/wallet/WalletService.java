@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.Math.abs;
+
 @Service
 @AllArgsConstructor
 public class WalletService {
@@ -52,7 +54,7 @@ public class WalletService {
         Optional<Wallet> existingWalletOptional = walletRepository.findById(id);
         if (existingWalletOptional.isPresent()) {
             Wallet existingWallet = existingWalletOptional.get();
-            if (existingWallet.getTotalBalance()  + amount >= 0) {
+            if (existingWallet.getTotalBalance()  - abs(amount) >= 0) {
                 existingWallet.setTotalBalance(existingWallet.getTotalBalance() - amount);
                 return walletRepository.save(existingWallet);
             } else {
@@ -78,7 +80,7 @@ public class WalletService {
         Optional<Wallet> existingWalletOptional = walletRepository.findById(id);
         if (existingWalletOptional.isPresent()) {
             Wallet existingWallet = existingWalletOptional.get();
-            if (existingWallet.getTotalHeldBalance()- amount >= 0) {
+            if (existingWallet.getTotalHeldBalance()- abs( amount) >= 0) {
                 existingWallet.setTotalHeldBalance(existingWallet.getTotalHeldBalance()-amount);
                 return walletRepository.save(existingWallet);
             } else {

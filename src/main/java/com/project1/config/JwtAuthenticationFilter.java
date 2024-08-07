@@ -2,6 +2,7 @@ package com.project1.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project1.token.TokenRepository;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -74,6 +75,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         Map<String, String> errorMap = new HashMap<>();
         errorMap.put("error", "username_not_found");
         errorMap.put("message", "User not found. Please check your credentials and try again.");
+        ObjectMapper mapper = new ObjectMapper();
+        response.getWriter().write(mapper.writeValueAsString(errorMap));
+        return;
+      }
+      catch (ExpiredJwtException e) {
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        Map<String, String> errorMap = new HashMap<>();
+        errorMap.put("error", "token_expired");
+        errorMap.put("message", "Token has expired. Please authenticate again.");
         ObjectMapper mapper = new ObjectMapper();
         response.getWriter().write(mapper.writeValueAsString(errorMap));
         return;

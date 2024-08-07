@@ -88,6 +88,19 @@ public class WorkerProfileService {
         return ResponseEntity.ok("Photo added successfully");
     }
 
+    public ResponseEntity<String> removePhotoFromWorkerProfile(Long workerProfileId, Long photoId) {
+        WorkerProfile workerProfile = workerProfileRepository.findById(workerProfileId).orElseThrow(() -> new RuntimeException("Worker profile ID not found"));
+        Photo photo = photoRepository.findById(photoId).orElseThrow(() -> new RuntimeException("Photo ID not found"));
+
+        if (!workerProfile.getPhotos().remove(photo)) {
+            throw new RuntimeException("Photo not found in worker profile");
+        }
+
+        workerProfileRepository.save(workerProfile);
+
+        return ResponseEntity.ok("Photo removed successfully");
+    }
+
 
     public ResponseEntity<String> addSkillToWorkerProfile(Long workerProfileId, Long skillId) {
         WorkerProfile workerProfile = workerProfileRepository.findById(workerProfileId).orElseThrow(() -> new RuntimeException("Worker profile ID not found"));

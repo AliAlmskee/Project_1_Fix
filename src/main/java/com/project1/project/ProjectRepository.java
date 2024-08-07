@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
+import com.project1.project.data.ProjectStatus;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +24,9 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 //    ProjectStatus status,
 //    ProjectSortTypes sortBy, Boolean sortDes,
 
+//    @Query("SELECT COUNT(p) FROM Project p WHERE p.status = com.project1.project.data.ProjectStatus.complete AND p.workerProfileId = :workerProfileId")
+//    Long countByCompleteStatusAndWorkerProfileId(@Param("workerProfileId") Long workerProfileId);
+//
     @Query(value = "SELECT p.*, " +
             "(SELECT COUNT(*) FROM OrderOffer oo WHERE oo.order_id = p.id) AS offerCount " +
             "FROM Project p " +

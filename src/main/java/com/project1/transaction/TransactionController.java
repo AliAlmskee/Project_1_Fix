@@ -1,6 +1,8 @@
 package com.project1.transaction;
 
 
+import com.project1.transaction.data.AcceptOfferRequest;
+import com.project1.transaction.data.AdminTransactionDTO;
 import com.project1.transaction.data.Transaction;
 import com.project1.transaction.data.TransactionDTO;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,15 +49,18 @@ public class TransactionController {
     @PostMapping("/admin")
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public ResponseEntity<Transaction> createAdminTransaction(@RequestBody TransactionDTO transaction) {
+    public ResponseEntity<Transaction> createAdminTransaction(@RequestBody AdminTransactionDTO transaction) {
         Transaction createdTransaction = transactionService.createAdminTransaction(transaction);
         return new ResponseEntity<>(createdTransaction, HttpStatus.CREATED);
     }
 
     @PostMapping
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public ResponseEntity<Transaction> createTransaction(@RequestBody Transaction transaction) {
-        Transaction createdTransaction = transactionService.createTransaction(transaction);
+    public ResponseEntity<Transaction> createTransaction(@RequestBody TransactionDTO transactiondto) {
+        Transaction createdTransaction = transactionService.createTransaction(transactiondto);
         return new ResponseEntity<>(createdTransaction, HttpStatus.CREATED);
     }
+
+
+
 }

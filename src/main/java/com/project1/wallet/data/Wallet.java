@@ -10,6 +10,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Min;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -25,7 +27,11 @@ public class Wallet {
     @JsonBackReference
     private User user;
 
+
+    @Min(0)
     private double totalBalance ;
+
+    @Min(0)
     private double totalHeldBalance;
 
 

@@ -47,6 +47,10 @@ public class ClientProfileController {
 
 
     @PostMapping("/add-photo")
+    public ResponseEntity<String> removePhotoFromClientProfile(@RequestBody AddPhotoToClientProfileRequest request) {
+        return clientProfileService.removePhotoFromClientProfile(request.getClientProfileId(), request.getPhotoId());
+    }
+    @DeleteMapping("/add-photo")
     public ResponseEntity<String> addPhotoToClientProfile(@RequestBody AddPhotoToClientProfileRequest request) {
         return clientProfileService.addPhotoToClientProfile(request.getClientProfileId(), request.getPhotoId());
     }

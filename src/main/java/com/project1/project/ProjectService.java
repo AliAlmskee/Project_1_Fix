@@ -6,6 +6,8 @@ import com.project1.profile.ClientProfile;
 import com.project1.profile.WorkerProfile;
 import com.project1.project.data.*;
 import com.project1.skill.Skill;
+import com.project1.transaction.TransactionService;
+import com.project1.transaction.data.Transaction;
 import com.project1.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,7 +28,7 @@ public class ProjectService {
     private final ProjectMapper projectMapper;
     private final ProjectRepository projectRepository;
     private final ApplicationAuditAware auditAware;
-
+    private final TransactionService transactionService;
     public List<ProjectWithOfferCountResponse> getAllFiltered(
             String search, List<Long> categories,
             List<Long> skills, Long minBudget,
