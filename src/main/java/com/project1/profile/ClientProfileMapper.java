@@ -18,4 +18,7 @@ public interface ClientProfileMapper {
     ClientProfile toEntity(ClientProfileDTO clientProfileDTO);
     ClientProfile toEntity(ClientProfileRequest clientProfileRequest);
 
+    default ClientProfile fromId(Long id){
+        return ClientProfile.builder().id(id).build();
+    }
 }

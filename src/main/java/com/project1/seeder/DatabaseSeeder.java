@@ -22,6 +22,9 @@ public class DatabaseSeeder implements CommandLineRunner {
                 categorySeeder.seed();
                 skillSeeder.seed();
                 userSeeder.seed();
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0747a621613f2c2447d4735362131df736a09ba3
     }
 }

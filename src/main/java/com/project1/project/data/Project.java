@@ -3,10 +3,9 @@ package com.project1.project.data;
 import com.project1.category.Category;
 import com.project1.profile.ClientProfile;
 import com.project1.profile.WorkerProfile;
-import com.project1.project.data.ProjectStatus;
 import com.project1.skill.Skill;
-import com.project1.user.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,14 +25,24 @@ public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+    @NotNull
     private String name;
+    @NotNull
     private String description;
+    @NotNull
     private Long minBudget;
+    @NotNull
     private Long maxBudget;
+    @NotNull
     private Long ExpectedDuration;
+<<<<<<< HEAD
 
    // @Enumerated(EnumType.STRING)
+=======
+    @NotNull
+>>>>>>> 0747a621613f2c2447d4735362131df736a09ba3
     private ProjectStatus status;
+    @NotNull
     private Date createDate;
     @ManyToOne
     @JoinColumn(name="client_profile_id")
@@ -41,19 +50,21 @@ public class Project {
     @ManyToOne
     @JoinColumn(name="worker_profile_id")
     private WorkerProfile worker;
-    @ManyToMany
-    @JoinTable(
-            name="ProjectCategory",
-            joinColumns = @JoinColumn(name = "project_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id")
-    )
-    private Set<Category> projectCategories;
+//    @JoinTable(
+//            name="ProjectCategory",
+//            joinColumns = @JoinColumn(name = "project_id"),
+//            inverseJoinColumns = @JoinColumn(name = "category_id")
+//    )
+    @ManyToOne
+    @NotNull
+    private Category projectCategory;
     @ManyToMany
     @JoinTable(
             name="ProjectSkill",
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "skill_id")
     )
+    @NotNull
     private Set<Skill> projectSkill;
 
     @Formula("(SELECT COUNT(*) FROM Offer offer WHERE offer.project_id = id)")

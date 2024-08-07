@@ -1,6 +1,5 @@
 package com.project1.project.data;
 
-import java.util.Date;
 import java.util.Set;
 
 public record UpdateProjectRequest(
@@ -10,5 +9,5 @@ public record UpdateProjectRequest(
     Long maxBudget,
     Long ExpectedDuration,
     Set<Long> projectSkillIds,
-    Set<Long> projectCategoriesIds
+    Long projectCategoryId
 ){}

@@ -7,4 +7,6 @@ public interface CategoryMapper {
 
     CategoryDTO toDto(Category category);
     Category toEntity(CategoryDTO categoryDTO);
+
+    Category fromId(Long id);
 }

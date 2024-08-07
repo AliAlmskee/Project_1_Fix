@@ -3,7 +3,6 @@ package com.project1.offer.data;
 import com.project1.profile.WorkerProfile;
 import com.project1.project.data.Project;
 import com.project1.projectProgress.ProjectProgress;
-import com.project1.rate.Rate;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +12,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.lang.Nullable;
 
 import java.util.Date;
-import java.util.Set;
 
 @Data
 @Builder

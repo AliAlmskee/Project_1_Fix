@@ -1,14 +1,12 @@
 package com.project1.offer;
 
-import com.project1.category.Category;
-import com.project1.offer.data.*;
-import com.project1.skill.Skill;
+import com.project1.offer.data.CreateOfferRequest;
+import com.project1.offer.data.OfferResponse;
+import com.project1.offer.data.UpdateOfferRequest;
 import io.swagger.v3.oas.annotations.Parameter;
-import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -18,18 +16,19 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/offers")
 @RequiredArgsConstructor
-public class OfferController {
+public class
+ OfferController {
 
     private final OfferService offerService;
 
     @GetMapping("/byProject/{id}")
-    public ResponseEntity<List<OfferResponse>> getProjectOffers(@PathVariable Long id) {
-        return ResponseEntity.ok(offerService.getByProject(id));
+    public ResponseEntity<Map<String,List<OfferResponse>>> getProjectOffers(@PathVariable Long id) {
+        return ResponseEntity.ok(Map.of("offers", offerService.getByProject(id)));
     }
 
     @GetMapping("/byWorker/{id}")
-    public ResponseEntity<List<OfferResponse>> getByWorker(@PathVariable Long id) {
-        return ResponseEntity.ok(offerService.getByWorker(id));
+    public ResponseEntity<Map<String, List<OfferResponse>>> getByWorker(@PathVariable Long id) {
+        return ResponseEntity.ok(Map.of("offers",offerService.getByWorker(id)));
     }
 
 

@@ -7,6 +7,8 @@ import com.project1.project.ProjectRepository;
 import com.project1.project.ProjectService;
 import com.project1.project.data.ProjectStatus;
 import com.project1.transaction.TransactionService;
+import com.project1.projectProgress.ProjectProgress;
+import com.project1.projectProgress.ProjectProgressRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,7 @@ public class OfferService {
     private final OfferRepository offerRepository;
     private final ApplicationAuditAware auditAware;
     private final ProjectRepository projectRepository;
+    private final ProjectProgressRepository projectProgressRepository;
     private final ProjectService projectService;
     private final TransactionService transactionService;
 
@@ -41,14 +44,19 @@ public class OfferService {
         Offer offer = offerMapper.toEntity(createOfferRequest);
         offer.setStatus(OfferStatus.pending);
         offer.setCreateDate(Date.from(Instant.now()));
-        return offerMapper.entityToResponse(offerRepository.save(offer));
+        offer = offerRepository.save(offer);
+        Offer offer1 = offerRepository.findById(offer.getId()).orElseThrow();
+        return offerMapper.entityToResponse(offer1);
     }
 
 
     public OfferResponse update(Long offerId, UpdateOfferRequest updateOfferRequest) throws ResponseStatusException{
         Offer offer = offerRepository.findById(offerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Offer Not Found"));
         offerMapper.updateFromDto(offer, updateOfferRequest);
-        return offerMapper.entityToResponse(offerRepository.save(offer));
+
+        offer = offerRepository.save(offer);
+        Offer offer1 = offerRepository.findById(offer.getId()).orElseThrow();
+        return offerMapper.entityToResponse(offer1);
     }
 
     public Map<String, String> delete(Long id) throws ResponseStatusException{
@@ -78,7 +86,10 @@ public class OfferService {
         if(!offer.getStatus().equals(OfferStatus.pending)){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Offer should be pending when accepted");
         }
+        ProjectProgress projectProgress = ProjectProgress.builder().acceptDate(Date.from(Instant.now())).build();
+        offer.setProjectProgress(projectProgressRepository.save(projectProgress));
         offer.setStatus(OfferStatus.accepted);
+        offerRepository.save(offer);
         projectService.updateInternalFromOffer(id, ProjectStatus.inProgress, offer.getWorker().getId());
         offerRepository.updateStatusOfSameProject(OfferStatus.dropped, id);
         return Map.of("message", "Offer Accepted");

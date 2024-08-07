@@ -11,7 +11,6 @@ import com.project1.transaction.data.Transaction;
 import com.project1.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -19,7 +18,6 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +26,7 @@ public class ProjectService {
     private final ProjectMapper projectMapper;
     private final ProjectRepository projectRepository;
     private final ApplicationAuditAware auditAware;
+<<<<<<< HEAD
     private final TransactionService transactionService;
     public List<ProjectWithOfferCountResponse> getAllFiltered(
             String search, List<Long> categories,
@@ -37,8 +36,19 @@ public class ProjectService {
             Boolean sortDes) {
         return projectMapper.entityWithOffersToResponse(projectRepository.findFilteredProjects(search, categories, skills, minBudget, maxBudget, duration, status, sortBy.name(), sortDes? "DESC" : "ASC"));
     }
+=======
 
-    public List<ProjectResponse> getFilteredProjects(String namePattern, List<Long> categoryIds, List<Long> skillIds,
+//    public List<ProjectWithOfferCountResponse> getAllFiltered(
+//            String search, List<Long> categories,
+//            List<Long> skills, Long minBudget,
+//            Long maxBudget, Long duration,
+//            ProjectStatus status, ProjectSortTypes sortBy,
+//            Boolean sortDes) {
+//        return projectMapper.entityWithOffersToResponse(projectRepository.findFilteredProjects(search, categories, skills, minBudget, maxBudget, duration, status, sortBy.name(), sortDes? "DESC" : "ASC"));
+//    }
+>>>>>>> 0747a621613f2c2447d4735362131df736a09ba3
+
+    public List<ProjectDetailsResponse> getFilteredProjects(String namePattern, List<Long> categoryIds, List<Long> skillIds,
                                              Long minBudget, Long maxBudget, Long duration, ProjectStatus status,
                                              ProjectSortTypes sortBy, Boolean sortDes) {
 
@@ -99,45 +109,49 @@ public class ProjectService {
 //                .replace(":duration", duration != null ? duration.toString() : "")
 //                .replace(":status", status != null ? "'" + status.name() + "'" : "");
 
-        return projectMapper.entityToResponse(projectRepository.findAll());
+        return projectMapper.entityToDetailsResponse(projectRepository.findAll());
     }
 
     public ProjectDetailsResponse get(Long id) {
         return projectMapper.entityToDetailsResponse(projectRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found")));
     }
 
-    public List<ProjectResponse> getByUser(Integer id) {
+    public List<ProjectDetailsResponse> getByUser(Integer id) {
         final User user = User.builder().id(id).build();
-        return projectMapper.entityToResponse(projectRepository.findAllByClient_UserOrWorker_User(user, user));
+        return projectMapper.entityToDetailsResponse(projectRepository.findAllByClient_UserOrWorker_User(user, user));
     }
-    public List<ProjectResponse> getByProfile(Long clientId, Long workerId) {
+    public List<ProjectDetailsResponse> getByProfile(Long clientId, Long workerId) {
         if(workerId == null && clientId == null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "no profile id given (clientId or workerId)");
         }
         if(clientId != null){
-            return projectMapper.entityToResponse(projectRepository.findAllByClient(ClientProfile.builder().id(clientId).build()));
+            return projectMapper.entityToDetailsResponse(projectRepository.findAllByClient(ClientProfile.builder().id(clientId).build()));
         }
-        return projectMapper.entityToResponse(projectRepository.findAllByWorker(WorkerProfile.builder().id(workerId).build()));
+        return projectMapper.entityToDetailsResponse(projectRepository.findAllByWorker(WorkerProfile.builder().id(workerId).build()));
     }
 
-    public ProjectResponse create(CreateProjectRequest createProjectRequest) {
+    public ProjectDetailsResponse create(CreateProjectRequest createProjectRequest) {
         //TODO check wallet
         Integer userId = auditAware.getCurrentAuditor().orElseThrow(() -> new RuntimeException("Auditor ID not found"));
         Project project = projectMapper.toEntity(createProjectRequest);
         project.setCreateDate(Date.from(Instant.now()));
         project.setStatus(ProjectStatus.open);
-         return projectMapper.entityToResponse(projectRepository.save(project));
+        project = projectRepository.save(project);
+        Project project1 = projectRepository.findById(project.getId()).orElseThrow();
+         return projectMapper.entityToDetailsResponse(project1);
     }
     public ProjectDetailsResponse update(Long projectId, UpdateProjectRequest updateProjectRequest) throws ResponseStatusException{
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found"));
         projectMapper.updateFromDto(project, updateProjectRequest);
-        if(updateProjectRequest.projectCategoriesIds() != null){
-            project.setProjectCategories(updateProjectRequest.projectCategoriesIds().stream().map(id -> Category.builder().id(id).build()).collect(Collectors.toSet()));
-        }
-        if(updateProjectRequest.projectSkillIds() != null) {
-            project.setProjectSkill(updateProjectRequest.projectSkillIds().stream().map(id -> Skill.builder().id(id).build()).collect(Collectors.toSet()));
-        }
-        return projectMapper.entityToDetailsResponse(projectRepository.save(project));
+//        if(updateProjectRequest.projectCategoryId() != null){
+//            project.setProjectCategory(updateProjectRequest.projectCategoryId());
+//        }
+//        if(updateProjectRequest.projectSkillIds() != null) {
+//            project.setProjectSkill(updateProjectRequest.projectSkillIds().stream().map(id -> Skill.builder().id(id).build()).collect(Collectors.toSet()));
+//        }
+
+        Project project1 = projectRepository.findById(project.getId()).orElseThrow();
+        return projectMapper.entityToDetailsResponse(project1);
     }
 
     public Map<String, String> delete(Long projectId) throws ResponseStatusException{
