@@ -48,7 +48,7 @@ public class WorkerProfileController {
     }
 
 
-    @DeleteMapping("/add-photo")
+    @DeleteMapping("/delete-photo")
     public ResponseEntity<String> removePhotoFromWorkerProfile(@RequestBody AddPhotoToWorkerProfileRequest request) {
         return workerProfileService.removePhotoFromWorkerProfile(request.getWorkerProfileId(), request.getPhotoId());
     }
@@ -56,5 +56,10 @@ public class WorkerProfileController {
     @PostMapping("/add-skill")
     public ResponseEntity<String> addSkillToWorkerProfile(@RequestBody AddSkillToWorkerProfileRequest request) {
         return workerProfileService.addSkillToWorkerProfile(request.getWorkerProfileId(), request.getSkillId());
+    }
+
+    @DeleteMapping("/delete-skill")
+    public ResponseEntity<String> deleteSkillToWorkerProfile(@RequestBody AddSkillToWorkerProfileRequest request) {
+        return workerProfileService.deleteSkillToWorkerProfile(request.getWorkerProfileId(), request.getSkillId());
     }
 }

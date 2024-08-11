@@ -6,6 +6,8 @@ import com.project1.profile.ClientProfileMapper;
 import com.project1.project.data.*;
 import com.project1.skill.Skill;
 import com.project1.skill.SkillMapper;
+import com.project1.user.User;
+import com.project1.user.UserDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -32,6 +34,9 @@ public abstract class ProjectMapper {
     Set<Category> idsToCategories(Set<Long> ids){
         return ids.stream().map(aLong -> Category.builder().id(aLong).build()).collect(Collectors.toSet());
     }
+
+    public abstract List<ProjectResponse> projectsToProjectResponses(List<Project> projects);
+
 
     @Mapping(target = "id", ignore = true)
     @Mapping(source = "projectCategoryId", target = "projectCategory")

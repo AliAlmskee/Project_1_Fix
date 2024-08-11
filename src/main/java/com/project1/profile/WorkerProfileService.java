@@ -111,4 +111,14 @@ public class WorkerProfileService {
 
         return ResponseEntity.ok("Skill added successfully");
     }
+
+    public ResponseEntity<String> deleteSkillToWorkerProfile(Long workerProfileId, Long skillId) {
+        WorkerProfile workerProfile = workerProfileRepository.findById(workerProfileId).orElseThrow(() -> new RuntimeException("Worker profile ID not found"));
+        Skill skill = skillRepository.findById(skillId).orElseThrow(() -> new RuntimeException("Skill ID not found"));
+
+        workerProfile.getSkills().remove(skill);
+        workerProfileRepository.save(workerProfile);
+
+        return ResponseEntity.ok("Skill removed successfully");
+    }
 }

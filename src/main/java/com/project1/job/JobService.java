@@ -2,6 +2,7 @@ package com.project1.job;
 
 
 import com.project1.auditing.ApplicationAuditAware;
+import com.project1.fileSystem.Photo;
 import com.project1.job.data.Job;
 import com.project1.job.data.JobDTO;
 import com.project1.job.data.JobRequest;
@@ -14,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,22 +29,27 @@ public class JobService {
     private final ApplicationAuditAware applicationAuditAware;
 
     @Transactional(readOnly = true)
+    public JobDTO getJobById(Long id) {
+        Optional<Job> jobOptional = jobRepository.findById(id);
+        return jobOptional.map(jobMapper::jobToJobDTO).orElse(null);
+    }
+    @Transactional(readOnly = true)
     public List<JobDTO> getAllJobByWorkerProfileId(Long workerProfileId) {
         List<Job> jobs = jobRepository.findAllByWorkerProfileId(workerProfileId);
         return jobMapper.jobsToJobDTOs(jobs);
     }
 
-    @Transactional(readOnly = true)
-    public JobDTO getJobById(Long id) {
-        Optional<Job> jobOptional = jobRepository.findById(id);
-        return jobOptional.map(jobMapper::jobToJobDTO).orElse(null);
-    }
 
-    @Transactional
-    public JobDTO createJob(JobRequest jobDTO) {
-        Job job = jobMapper.jobRequestToJob(jobDTO);
+
+    public JobDTO createJob(JobRequest jobRequest) {
+        Job job = jobMapper.jobRequestToJob(jobRequest);
         Job createdJob = jobRepository.save(job);
-        return jobMapper.jobToJobDTO(createdJob);
+        System.out.println(createdJob.getId());
+        Optional<Job> savedJob =  jobRepository.findById(createdJob.getId());
+        if(savedJob.isPresent()) {
+            return jobMapper.jobToJobDTO(savedJob.get());
+        }
+        return null ;
     }
 
     @Transactional
@@ -73,7 +80,7 @@ public class JobService {
         Job job = jobRepository.findById(jobId).orElseThrow(() -> new RuntimeException("Job not found"));
         User user = applicationAuditAware.getCurrentUser().orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (job.getLikedBy().contains(user)) {
+        if (job.getLikedBy().stream().anyMatch(u -> u.getId().equals(user.getId()))) {
             throw new RuntimeException("User has already liked this job");
         }
         job.setLikeNo(job.getLikeNo() + 1 );
@@ -82,6 +89,30 @@ public class JobService {
         jobRepository.save(job);
 
         return ResponseEntity.ok("Like added successfully");
+    }
+
+    public ResponseEntity<String> deleteLikeToJob(Long jobId) {
+        Job job = jobRepository.findById(jobId).orElseThrow(() -> new RuntimeException("Job not found"));
+        User user = applicationAuditAware.getCurrentUser().orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!job.getLikedBy().stream().anyMatch(u -> u.getId().equals(user.getId()))) {
+            throw new RuntimeException("User has not liked this job");
+        }
+
+        job.setLikeNo(job.getLikeNo() - 1 );
+
+        Iterator<User> iterator = job.getLikedBy().iterator();
+        while (iterator.hasNext()) {
+            User u = iterator.next();
+            if (u.getId().equals(user.getId())) {
+                iterator.remove();
+                break;
+            }
+        }
+
+        jobRepository.save(job);
+
+        return ResponseEntity.ok("Like removed successfully");
     }
 
     public boolean hasUserLikedJob(Long jobId) {

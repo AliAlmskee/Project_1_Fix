@@ -4,6 +4,7 @@ import com.project1.category.Category;
 import com.project1.profile.ClientProfile;
 import com.project1.profile.WorkerProfile;
 import com.project1.skill.Skill;
+import com.project1.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -14,6 +15,7 @@ import org.hibernate.annotations.Formula;
 import org.springframework.data.annotation.ReadOnlyProperty;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -65,4 +67,8 @@ public class Project {
     @Formula("(SELECT COUNT(*) FROM Offer offer WHERE offer.project_id = id)")
     @ReadOnlyProperty
     private Integer offerCount;
+
+
+    @ManyToMany(mappedBy = "projects")
+    private List<User> users;
 }

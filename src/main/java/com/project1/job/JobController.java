@@ -33,6 +33,7 @@ public class JobController {
         return new ResponseEntity<>(createdJob, HttpStatus.CREATED);
     }
 
+
     @PutMapping("/{id}")
     public ResponseEntity<JobDTO> updateJob(@PathVariable Long id, @RequestBody JobDTO jobDTO) {
         JobDTO updatedJob = jobService.updateJob(id, jobDTO);
@@ -50,6 +51,11 @@ public class JobController {
     @PostMapping("/add-like")
     public ResponseEntity<String> addLikeToJob(@RequestBody @Valid AddLikeToJobRequest request) {
         return jobService.addLikeToJob(request.getJobId());
+    }
+    @PreAuthorize("hasAnyRole('WORKER','CLIENT_WORKER','CLIENT','ADMIN')")
+    @DeleteMapping("/delete-like")
+    public ResponseEntity<String> deleteLikeToJob(@RequestBody @Valid AddLikeToJobRequest request) {
+        return jobService.deleteLikeToJob(request.getJobId());
     }
     @PreAuthorize("hasAnyRole('WORKER','CLIENT_WORKER','CLIENT','ADMIN')")
     @GetMapping("/is-liked")
