@@ -17,14 +17,13 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final ProjectRepository projectRepository;
 
 
     @Autowired
     private JwtService jwtService;
-    private ProjectRepository projectRepository;
 
 
     public void changePassword(ChangePasswordRequest request, Principal connectedUser) {
