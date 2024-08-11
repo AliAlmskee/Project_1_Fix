@@ -17,4 +17,6 @@ public class RateController {
     private ResponseEntity<Map<String, String>> addProjectRate(@RequestBody  RateCreateDTO rateDTO, @RequestParam Long projectId){
         return ResponseEntity.ok(rateService.addRate(rateDTO, projectId));
     }
+
+
 }

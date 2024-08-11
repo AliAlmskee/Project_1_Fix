@@ -15,7 +15,8 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Rate {
+public class
+Rate {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;

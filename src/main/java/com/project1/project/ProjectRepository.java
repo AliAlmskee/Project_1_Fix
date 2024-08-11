@@ -23,7 +23,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 //    ProjectStatus status,
 //    ProjectSortTypes sortBy, Boolean sortDes,
 
-//    @Query("SELECT COUNT(p) FROM Project p WHERE p.status = com.project1.project.data.ProjectStatus.complete AND p.workerProfileId = :workerProfileId")
+    //    @Query("SELECT COUNT(p) FROM Project p WHERE p.status = com.project1.project.data.ProjectStatus.complete AND p.workerProfileId = :workerProfileId")
 //    Long countByCompleteStatusAndWorkerProfileId(@Param("workerProfileId") Long workerProfileId);
 //
     @Query(value = "SELECT p.*, " +
@@ -47,21 +47,22 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             ":sortDirection",
             nativeQuery = true)
     List<Project> findFilteredProjects(@Param("namePattern") String namePattern,
-                                                     @Param("categoryIds") List<Long> categoryIds,
-                                                     @Param("skillIds") List<Long> skillIds,
-                                                     @Param("minBudget") Long minBudget,
-                                                     @Param("maxBudget") Long maxBudget,
-                                                     @Param("duration") Long duration,
-                                                     @Param("status") ProjectStatus status,
-                                                     @Param("sortBy") String sortBy,
-                                                     @Param("sortDirection") String sortDirection);
+                                       @Param("categoryIds") List<Long> categoryIds,
+                                       @Param("skillIds") List<Long> skillIds,
+                                       @Param("minBudget") Long minBudget,
+                                       @Param("maxBudget") Long maxBudget,
+                                       @Param("duration") Long duration,
+                                       @Param("status") ProjectStatus status,
+                                       @Param("sortBy") String sortBy,
+                                       @Param("sortDirection") String sortDirection);
 
 //    List<Project> findAllProjects();
 
 //    @Query(value = ":query", nativeQuery = true)
 //    List<ProjectWithOfferCount> findFilteredProjectsQ(@Param("query") String query);
 
-    List<Project> findAllByClient_UserOrWorker_User(User user, User user1);
+    @Query("SELECT p.* from projects p join offer f on p.id = f.projectId where p.client.userId = :userId or p.worker.userId = :userId or f.worker.userId = :userId")
+    List<Project> findAllByUser(@Param("userId") Integer userId);
 
     List<Project> findAllByClient(ClientProfile client);
 
@@ -83,4 +84,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     @Query("SELECT o2.project FROM Offer o2 WHERE o2.id = :id")
     Optional<Project> findByOfferId(@Param("id") Long id);
+
+    boolean existsByIdAndStatus(Long id, ProjectStatus status);
 }
