@@ -46,17 +46,22 @@ public class ClientProfileController {
 
 
 
-    @PostMapping("/add-photo")
+    @DeleteMapping("/delete-photo")
     public ResponseEntity<String> removePhotoFromClientProfile(@RequestBody AddPhotoToClientProfileRequest request) {
         return clientProfileService.removePhotoFromClientProfile(request.getClientProfileId(), request.getPhotoId());
     }
-    @DeleteMapping("/delete-photo")
+
+    @PostMapping("/add-photo")
     public ResponseEntity<String> addPhotoToClientProfile(@RequestBody AddPhotoToClientProfileRequest request) {
         return clientProfileService.addPhotoToClientProfile(request.getClientProfileId(), request.getPhotoId());
     }
     @PostMapping("/add-skill")
     public ResponseEntity<String> addSkillToClientProfile(@RequestBody AddSkillToClientProfileRequest request) {
         return clientProfileService.addSkillToClientProfile(request.getClientProfileId(), request.getSkillId());
+    }
+    @DeleteMapping("/delete-skill")
+    public ResponseEntity<String> removeSkillFromClientProfile(@RequestBody AddSkillToClientProfileRequest request) {
+        return clientProfileService.removeSkillFromClientProfile(request.getClientProfileId(), request.getSkillId());
     }
 
     @DeleteMapping("/delete-skill")
