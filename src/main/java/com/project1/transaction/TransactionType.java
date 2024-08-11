@@ -4,6 +4,7 @@ public enum TransactionType {
     DEPOSIT,
     WITHDRAW,
     TRANSFER,
+    TRANSFERHELD,
     HOLD,
     UNHOLD
 }

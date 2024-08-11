@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 public interface JobMapper {
 
-    @Mapping(source = "photos", target = "photoIds", qualifiedByName = "photosToIds")
+    @Mapping(source = "photos", target = "photoDTOs")
     @Mapping(source = "skills", target = "skillIds", qualifiedByName = "skillsToIds")
     @Mapping(source = "workerProfile", target = "workerProfileId", qualifiedByName = "workerProfileToId")
     JobDTO jobToJobDTO(Job job);

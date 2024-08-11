@@ -127,7 +127,7 @@ public class ProjectService {
     }
 
     public ProjectDetailsResponse create(CreateProjectRequest createProjectRequest) {
-        //TODO check wallet
+        //TODO check wallet  : not needed because until itis a prroved i donot need the money
         Integer userId = auditAware.getCurrentAuditor().orElseThrow(() -> new RuntimeException("Auditor ID not found"));
         Project project = projectMapper.toEntity(createProjectRequest);
         project.setCreateDate(Date.from(Instant.now()));

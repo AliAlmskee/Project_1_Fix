@@ -81,12 +81,16 @@ public class TransactionService {
                 return holdTransaction(transaction);
             case TRANSFER:
                 return transferTransaction(transaction);
+            case TRANSFERHELD:
+                return transferHeldTransaction(transaction);
             case UNHOLD:
                 return unholdTransaction(transaction);
             default:
                 throw new UnsupportedOperationException("Unsupported transaction type: " + transaction.getType());
         }
     }
+
+
 
     public Transaction AcceptOfferTransaction(Long offerId) {
         Offer offer = offerRepository.findById(offerId)
@@ -122,6 +126,48 @@ public class TransactionService {
     }
 
 
+    public Transaction finishedProjectTransaction(Long offerId) {
+        Offer offer = offerRepository.findById(offerId)
+                .orElseThrow(() -> new RuntimeException("Offer not found with id " + offerId));
+
+        Integer currentAuditorId = applicationAuditAware.getCurrentAuditor()
+                .orElseThrow(() -> new RuntimeException("Current auditor not found"));
+
+        Project project = offer.getProject();
+
+//       if(project.getStatus()!= ProjectStatus.open)
+//       {
+//           throw new RuntimeException("Project is not open for offers");
+//
+//       }
+
+//        System.out.println(Long.valueOf(currentAuditorId));
+//        System.out.println(Long.valueOf(project.getClient().getUser().getId()));
+
+        if (!project.getClient().getId().equals(Long.valueOf(currentAuditorId))) {
+            throw new RuntimeException("You are not authorized to accept this offer");
+        }
+
+
+        Transaction transaction = Transaction.builder()
+                .senderUserId(Long.valueOf(project.getClient().getUser().getId()))
+                .receiverUserId(Long.valueOf(offer.getWorker().getUser().getId()))
+                .transactionDate(new Date())
+                .amount(offer.getCost() * 0.8)
+                .type(TransactionType.TRANSFER)
+                .build();
+
+        Transaction transaction2 = Transaction.builder()
+                .senderUserId(Long.valueOf(project.getClient().getUser().getId()))
+                .receiverUserId(Long.valueOf(offer.getWorker().getUser().getId()))
+                .transactionDate(new Date())
+                .amount(offer.getCost() * 0.2)
+                .type(TransactionType.TRANSFERHELD)
+                .build();
+        createTransaction(transactionMapper.toDto(transaction2));
+        return createTransaction(transactionMapper.toDto(transaction)) ;
+    }
+
 
 
     private Transaction depositTransaction(Transaction transaction) {
@@ -135,8 +181,14 @@ public class TransactionService {
     }
 
     private Transaction transferTransaction(Transaction transaction) {
+        walletService.subtractTotalBalance(transaction.getSenderUserId(), transaction.getAmount());
+        walletService.addTotalBalance(transaction.getReceiverUserId(), transaction.getAmount());
+        return transactionRepository.save(transaction);
+    }
+
+    private Transaction transferHeldTransaction(Transaction transaction) {
         walletService.subtractTotalHeldBalance(transaction.getSenderUserId(), transaction.getAmount());
-        walletService.addTotalHeldBalance(transaction.getReceiverUserId(), transaction.getAmount());
+        walletService.addTotalBalance(transaction.getReceiverUserId(), transaction.getAmount());
         return transactionRepository.save(transaction);
     }
 

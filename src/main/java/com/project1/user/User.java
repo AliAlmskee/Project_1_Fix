@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project1.job.data.Job;
 import com.project1.profile.ClientProfile;
 import com.project1.profile.WorkerProfile;
+import com.project1.project.data.Project;
 import com.project1.token.Token;
 import com.project1.verification.Verification;
 import com.project1.wallet.data.Wallet;
@@ -75,6 +76,23 @@ public class User implements UserDetails {
 
   @ManyToMany(fetch = FetchType.EAGER)
   private List<Job>   likedJobs;
+
+
+  @ManyToMany
+  @JoinTable(
+          name = "favorite_projects",
+          joinColumns = @JoinColumn(name = "user_id"),
+          inverseJoinColumns = @JoinColumn(name = "project_id")
+  )
+  private List<Project> projects;
+
+  @ManyToMany
+  @JoinTable(
+          name = "user_favorites",
+          joinColumns = @JoinColumn(name = "user_id"),
+          inverseJoinColumns = @JoinColumn(name = "favorite_user_id")
+  )
+  private List<User> favorites;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
