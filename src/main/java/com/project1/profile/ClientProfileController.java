@@ -59,10 +59,6 @@ public class ClientProfileController {
     public ResponseEntity<String> addSkillToClientProfile(@RequestBody AddSkillToClientProfileRequest request) {
         return clientProfileService.addSkillToClientProfile(request.getClientProfileId(), request.getSkillId());
     }
-    @DeleteMapping("/delete-skill")
-    public ResponseEntity<String> removeSkillFromClientProfile(@RequestBody AddSkillToClientProfileRequest request) {
-        return clientProfileService.removeSkillFromClientProfile(request.getClientProfileId(), request.getSkillId());
-    }
 
     @DeleteMapping("/delete-skill")
     public ResponseEntity<String> deleteSkillToClientProfile(@RequestBody AddSkillToClientProfileRequest request) {
