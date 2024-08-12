@@ -31,4 +31,8 @@ Rate {
     private ClientProfile client;
     @ManyToOne
     private WorkerProfile worker;
+
+    public Double totalRate(){
+        return (overall+proficiency+communication+quality)/4;
+    }
 }

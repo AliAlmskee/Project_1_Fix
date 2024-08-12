@@ -9,6 +9,7 @@ import com.project1.project.data.ProjectStatus;
 import com.project1.projectProgress.ProjectProgress;
 import com.project1.projectProgress.ProjectProgressRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.Date;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -61,5 +64,32 @@ public class RateService {
             projectProgressRepository.save(projectProgress);
         }
         return Map.of("message", "Rate Recorded");
+    }
+
+    public ProfileRatesDTO getProfilesRates(Long profileId, RatedType profileType) {
+        List<Rate> rates = List.of();
+        Double sum = 0.0;
+        if(profileType == RatedType.Client){
+            rates = rateRepository.findByClient_IdAndRated(profileId, RatedType.Client);
+        }else{
+            rates = rateRepository.findByWorker_IdAndRated(profileId, RatedType.Worker);
+        }
+        Integer[] counts = {0,0,0,0,0};
+        for (Rate rate: rates) {
+            Double totalRate = rate.totalRate();
+            counts[rate.totalRate().intValue()]++;
+            sum+= totalRate;
+        }
+        Integer count = rates.size();
+        return ProfileRatesDTO.builder()
+                .count(count)
+                .avg(sum/count)
+                .rates(rateMapper.EntityToDto(rates))
+                .count1(counts[0])
+                .count2(counts[1])
+                .count3(counts[2])
+                .count4(counts[3])
+                .count5(counts[4])
+                .build();
     }
 }
