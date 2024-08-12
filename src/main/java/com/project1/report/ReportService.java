@@ -6,6 +6,8 @@ import com.project1.user.User;
 import com.project1.user.UserDTO;
 import com.project1.user.UserMapper;
 import com.project1.user.UserRepository;
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,9 +23,15 @@ public class ReportService {
     private final ApplicationAuditAware applicationAuditAware;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+
     public Report createReport(Report report) {
-       // report.setSenderId(applicationAuditAware.getCurrentAuditor().get());
-        return reportRepository.save(report);
+        if (!reportRepository.existsBySenderIdAndRecipientId(report.getSenderId(), report.getRecipientId())) {
+            return reportRepository.save(report);
+        } else {
+            // Handle the case where the senderId and recipientId already exist
+            // For example, you could throw an exception or return null
+            throw new RuntimeException("Report with senderId and recipientId already exists");
+        }
     }
 
     public List<Report> getAllReports() {

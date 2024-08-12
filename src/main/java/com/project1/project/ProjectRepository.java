@@ -61,8 +61,16 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 //    @Query(value = ":query", nativeQuery = true)
 //    List<ProjectWithOfferCount> findFilteredProjectsQ(@Param("query") String query);
 
-    @Query("SELECT p FROM Project p JOIN Offer f ON p.id = f.project.id WHERE p.client.user.id = :userId OR p.worker.user.id = :userId OR f.worker.user.id = :userId")
-    List<Project> findProjectsByUserId(@Param("userId") Integer userId);
+
+   // @Query("SELECT p FROM Project p JOIN Offer f ON p.id = f.project.id WHERE p.client.user.id = :userId OR p.worker.user.id = :userId OR f.worker.user.id = :userId")
+   @Query("SELECT p FROM Project p "
+           + "LEFT JOIN FETCH p.client c "
+           + "LEFT JOIN FETCH c.user cu "
+           + "LEFT JOIN FETCH p.worker w "
+           + "LEFT JOIN FETCH w.user uu "
+          // + "JOIN p.offers offer on offer.project.id = p.id"
+           + "WHERE cu.id = :userId OR uu.id = :userId")
+   List<Project> findProjectsByUserId(@Param("userId") Integer userId);
 
     List<Project> findAllByClient(ClientProfile client);
 

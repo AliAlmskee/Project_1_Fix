@@ -15,4 +15,6 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
 
     @Query("SELECT r.recipientId FROM Report r GROUP BY r.recipientId HAVING COUNT(r) > :X")
     List<Integer> findUsersWithReportsGreaterThanX(@Param("X") int X);
+
+    boolean existsBySenderIdAndRecipientId(Integer senderId, Integer recipientId);
 }
