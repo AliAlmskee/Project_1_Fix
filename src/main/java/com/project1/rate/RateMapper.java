@@ -11,9 +11,6 @@ import java.util.List;
 public abstract class RateMapper {
     @Mapping(source = "clientProfileId", target = "client")
     @Mapping(source = "workerProfileId", target = "worker")
-    abstract Rate dtoToEntity(RateDTO dto);
-    @Mapping(source = "clientProfileId", target = "client")
-    @Mapping(source = "workerProfileId", target = "worker")
     abstract Rate createEntity(RateCreateDTO dto);
 
     public abstract List<RateDTO> EntityToDto(List<Rate> rates);

@@ -1,5 +1,8 @@
 package com.project1.rate;
 
+import com.project1.profile.ClientProfile;
+import com.project1.profile.WorkerProfile;
+
 import java.util.Date;
 
 public record RateDTO (
@@ -8,7 +11,7 @@ public record RateDTO (
     String description,
     Double totalRate,
     RatedType rated,
-    Long clientProfileId,
-    Long workerProfileId
+    ClientProfile client,
+    WorkerProfile worker
 ){
 }
