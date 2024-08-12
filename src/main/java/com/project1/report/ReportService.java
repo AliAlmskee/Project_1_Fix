@@ -4,6 +4,8 @@ import com.project1.report.data.Report;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 // ReportService.java
 @Service
 @RequiredArgsConstructor
