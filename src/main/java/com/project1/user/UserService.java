@@ -84,15 +84,17 @@ public class UserService {
     }
 
 
-    public List<User> getFavoriteUserIds(int userId) {
+    public List<User> getFavoriteUser(int userId) {
         User user = userRepository.findById(userId).orElseThrow();
         return user.getFavorites();
     }
 
-    public List<Project> getFavoriteProjectIds(int userId) {
+    public List<Project> getFavoriteProject(int userId) {
         User user = userRepository.findById(userId).orElseThrow();
         return user.getProjects();
     }
+
+
 
 
 

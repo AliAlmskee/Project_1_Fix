@@ -1,6 +1,7 @@
 package com.project1.job.data;
 
 import com.project1.fileSystem.PhotoDTO;
+import com.project1.skill.SkillDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,5 +23,5 @@ public class JobDTO {
     private int likeNo;
     private Date date;
     private List<PhotoDTO> photoDTOs;
-    private List<Long> skillIds;
+    private List<SkillDTO> skillDTOs;
 }

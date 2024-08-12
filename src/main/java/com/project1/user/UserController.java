@@ -8,7 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -53,15 +55,19 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/favorites")
-    public ResponseEntity<List<UserDTO>> getFavoriteUserIds(@PathVariable int userId) {
-        List<User> favoriteUser = service.getFavoriteUserIds(userId);
-        return ResponseEntity.ok(userMapper.usersToUserDTOs(favoriteUser));
+    public ResponseEntity<Map<String, Object>> getFavoriteUserIds(@PathVariable int userId) {
+        List<User> favoriteUsers = service.getFavoriteUser(userId);
+        Map<String, Object> response = new HashMap<>();
+        response.put("favoriteUsers", userMapper.usersToUserDTOs(favoriteUsers));
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{userId}/projects")
-    public ResponseEntity<List<ProjectResponse>> getFavoriteProjectIds(@PathVariable int userId) {
-        List<Project> favoriteProject = service.getFavoriteProjectIds(userId);
-        return ResponseEntity.ok(projectMapper.projectsToProjectResponses(favoriteProject));
+    public ResponseEntity<Map<String, Object>> getFavoriteProjectIds(@PathVariable int userId) {
+        List<Project> favoriteProjects = service.getFavoriteProject(userId);
+        Map<String, Object> response = new HashMap<>();
+        response.put("favoriteProjects", projectMapper.projectsToProjectResponses(favoriteProjects));
+        return ResponseEntity.ok(response);
     }
 
 
