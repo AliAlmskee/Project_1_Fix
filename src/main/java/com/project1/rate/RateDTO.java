@@ -1,21 +1,19 @@
 package com.project1.rate;
 
+import com.project1.profile.ClientProfile;
+import com.project1.profile.ClientProfileDTO;
+import com.project1.profile.WorkerProfile;
+import com.project1.profile.WorkerProfileDTO;
+
 import java.util.Date;
 
 public record RateDTO (
     Long id,
     Date createDate,
-
     String description,
-    Double overall,
-    Double proficiency,
-    Double communication,
-    Double quality,
+    Double totalRate,
     RatedType rated,
-    Long clientProfileId,
-    Long workerProfileId
+    ClientProfileDTO client,
+    WorkerProfileDTO worker
 ){
-    public double totalRate(){
-        return (overall+proficiency+communication+quality)/4;
-    }
 }

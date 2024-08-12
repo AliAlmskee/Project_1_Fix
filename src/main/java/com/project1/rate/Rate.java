@@ -15,7 +15,8 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Rate {
+public class
+Rate {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -30,4 +31,8 @@ public class Rate {
     private ClientProfile client;
     @ManyToOne
     private WorkerProfile worker;
+
+    public Double totalRate(){
+        return (overall+proficiency+communication+quality)/4;
+    }
 }

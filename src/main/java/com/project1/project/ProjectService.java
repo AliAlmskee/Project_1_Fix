@@ -114,8 +114,7 @@ public class ProjectService {
     }
 
     public List<ProjectDetailsResponse> getByUser(Integer id) {
-        final User user = User.builder().id(id).build();
-        return projectMapper.entityToDetailsResponse(projectRepository.findAllByClient_UserOrWorker_User(user, user));
+        return projectMapper.entityToDetailsResponse(projectRepository.findProjectsByUserId(id));
     }
     public List<ProjectDetailsResponse> getByProfile(Long clientId, Long workerId) {
         if(workerId == null && clientId == null){

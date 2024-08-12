@@ -73,8 +73,10 @@ public class UserSeeder {
             }
             System.out.println("client: ");
             makeToken(client);
+            System.out.println();
             System.out.println("worker: ");
             makeToken(worker);
+            System.out.println();
 
             clientProfileSeeder.seed(client);
         }
