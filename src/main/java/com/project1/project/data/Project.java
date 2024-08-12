@@ -5,12 +5,16 @@ import com.project1.profile.ClientProfile;
 import com.project1.profile.WorkerProfile;
 import com.project1.skill.Skill;
 import com.project1.user.User;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Formula;
 import org.springframework.data.annotation.ReadOnlyProperty;
 
@@ -45,7 +49,7 @@ public class Project {
     @JoinColumn(name="client_profile_id")
     private ClientProfile client;
     @ManyToOne
-    @JoinColumn(name="worker_profile_id")
+    @JoinColumn(name="worker_profile_id", nullable = true)
     private WorkerProfile worker;
 //    @JoinTable(
 //            name="ProjectCategory",

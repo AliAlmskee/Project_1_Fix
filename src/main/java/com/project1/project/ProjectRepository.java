@@ -4,14 +4,11 @@ import com.project1.profile.ClientProfile;
 import com.project1.profile.WorkerProfile;
 import com.project1.project.data.Project;
 import com.project1.project.data.ProjectStatus;
-import com.project1.user.User;
-import org.aspectj.lang.annotation.AfterReturning;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
-import com.project1.project.data.ProjectStatus;
 
 import java.util.List;
 import java.util.Optional;
@@ -61,8 +58,22 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 //    @Query(value = ":query", nativeQuery = true)
 //    List<ProjectWithOfferCount> findFilteredProjectsQ(@Param("query") String query);
 
-    @Query("SELECT p FROM Project p JOIN Offer f ON p.id = f.project.id WHERE p.client.user.id = :userId OR p.worker.user.id = :userId OR f.worker.user.id = :userId")
-    List<Project> findProjectsByUserId(@Param("userId") Integer userId);
+//    @Query(value = """
+//            select p.* from project p
+//            \tleft join client_profile c on p.client_profile_id = c.id
+//            \tleft join offer o on p.id = o.project_id
+//            \tleft join worker_profile w on p.worker_profile_id = w.id OR o.worker_profile_id = w.id
+//            \twhere c.user_id = :userId
+//            \tOR w.user_id = :userId"""
+//    ,nativeQuery = true)
+//    @Query("SELECT p FROM Project p Left JOIN Offer f ON p.id = f.project.id WHERE p.client.user.id = :userId OR p.worker.user.id = :userId OR f.worker.user.id = :userId")
+//    @Query("SELECT p FROM Project p" +
+//            "LEFT JOIN p.client c " +
+//////            "LEFT JOIN p.offer o on p.id = o.project.id" +
+////            "LEFT JOIN p.worker w on p.worker.id = w.id "+// OR o.worker.id = w.id" +
+//            "WHERE c.user.id = :userId")
+    List<Project> findUserProjects(@Param("userId") Integer userId);
+//    List<Project> findByClient_User_IdOrWorker_User_Id(@Param("userId") Integer userId, Integer userId2);
 
     List<Project> findAllByClient(ClientProfile client);
 

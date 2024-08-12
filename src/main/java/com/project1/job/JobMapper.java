@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public interface JobMapper {
 
     @Mapping(source = "photos", target = "photoDTOs")
-    @Mapping(source = "skills", target = "skillIds", qualifiedByName = "skillsToIds")
+    @Mapping(source = "skills", target = "skillDTOs")
     @Mapping(source = "workerProfile", target = "workerProfileId", qualifiedByName = "workerProfileToId")
     JobDTO jobToJobDTO(Job job);
 

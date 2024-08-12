@@ -1,14 +1,10 @@
 package com.project1.project;
 
 import com.project1.auditing.ApplicationAuditAware;
-import com.project1.category.Category;
 import com.project1.profile.ClientProfile;
 import com.project1.profile.WorkerProfile;
 import com.project1.project.data.*;
-import com.project1.skill.Skill;
 import com.project1.transaction.TransactionService;
-import com.project1.transaction.data.Transaction;
-import com.project1.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,7 +14,6 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -114,7 +109,7 @@ public class ProjectService {
     }
 
     public List<ProjectDetailsResponse> getByUser(Integer id) {
-        return projectMapper.entityToDetailsResponse(projectRepository.findProjectsByUserId(id));
+        return projectMapper.entityToDetailsResponse(projectRepository.findUserProjects(id));
     }
     public List<ProjectDetailsResponse> getByProfile(Long clientId, Long workerId) {
         if(workerId == null && clientId == null){

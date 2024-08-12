@@ -49,7 +49,8 @@ public class SecurityConfiguration {
             "/api/v1/wallets/**",
             "/api/v1/auditor/**",
             "/api/v1/users/{userId}/projects/**",
-            "/api/v1/users/{userId}/favorites/**"
+            "/api/v1/users/{userId}/favorites/**",
+            "/api/v1/reports/**"
 
 
     };
