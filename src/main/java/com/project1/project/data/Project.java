@@ -1,6 +1,7 @@
 package com.project1.project.data;
 
 import com.project1.category.Category;
+import com.project1.offer.data.Offer;
 import com.project1.profile.ClientProfile;
 import com.project1.profile.WorkerProfile;
 import com.project1.skill.Skill;
@@ -75,4 +76,9 @@ public class Project {
 
     @ManyToMany(mappedBy = "projects")
     private List<User> users;
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Offer> offers;
+
+
 }

@@ -5,15 +5,14 @@ import com.project1.profile.ClientProfile;
 import com.project1.profile.WorkerProfile;
 import com.project1.project.data.*;
 import com.project1.transaction.TransactionService;
+import com.project1.user.Permission;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -109,8 +108,10 @@ public class ProjectService {
     }
 
     public List<ProjectDetailsResponse> getByUser(Integer id) {
-        return projectMapper.entityToDetailsResponse(projectRepository.findUserProjects(id));
+        List<Project> projectsByUserId = projectRepository.findProjectsByUserIdOrOfferUserId(id);
+        return projectMapper.entityToDetailsResponse(projectsByUserId);
     }
+
     public List<ProjectDetailsResponse> getByProfile(Long clientId, Long workerId) {
         if(workerId == null && clientId == null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "no profile id given (clientId or workerId)");
