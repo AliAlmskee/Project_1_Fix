@@ -4,14 +4,11 @@ import com.project1.profile.ClientProfile;
 import com.project1.profile.WorkerProfile;
 import com.project1.project.data.Project;
 import com.project1.project.data.ProjectStatus;
-import com.project1.user.User;
-import org.aspectj.lang.annotation.AfterReturning;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
-import com.project1.project.data.ProjectStatus;
 
 import java.util.List;
 import java.util.Optional;

@@ -19,9 +19,9 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", uses = {ClientProfileMapper.class, SkillMapper.class, CategoryMapper.class}, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public abstract class ProjectMapper {
-    abstract ProjectResponse entityToResponse(Project project);
-    abstract ProjectDetailsResponse entityToDetailsResponse(Project project);
-    abstract List<ProjectDetailsResponse> entityToDetailsResponse(List<Project> projects);
+    public abstract ProjectResponse entityToResponse(Project project);
+    public abstract ProjectDetailsResponse entityToDetailsResponse(Project project);
+    public abstract List<ProjectDetailsResponse> entityToDetailsResponse(List<Project> projects);
     @Mapping(source = "projectSkillIds", target = "projectSkill")
     @Mapping(source = "projectCategoryId", target = "projectCategory")
     @Mapping(source = "clientProfileId", target = "client")

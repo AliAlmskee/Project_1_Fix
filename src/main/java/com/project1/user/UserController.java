@@ -2,6 +2,7 @@ package com.project1.user;
 
 import com.project1.project.ProjectMapper;
 import com.project1.project.data.Project;
+import com.project1.project.data.ProjectDetailsResponse;
 import com.project1.project.data.ProjectResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-//
+
     @PostMapping("/{userId}/projects/{projectId}")
     public ResponseEntity<Void> addUserProject(@PathVariable int userId, @PathVariable Long projectId) {
         service.addUserProject(userId, projectId);
@@ -66,7 +67,7 @@ public class UserController {
     public ResponseEntity<Map<String, Object>> getFavoriteProjectIds(@PathVariable int userId) {
         List<Project> favoriteProjects = service.getFavoriteProject(userId);
         Map<String, Object> response = new HashMap<>();
-        response.put("favoriteProjects", projectMapper.projectsToProjectResponses(favoriteProjects));
+        response.put("favoriteProjects", projectMapper.entityToDetailsResponse(favoriteProjects));
         return ResponseEntity.ok(response);
     }
 
