@@ -25,13 +25,12 @@ public class ReportService {
     private final UserMapper userMapper;
 
     public Report createReport(Report report) {
-        if (!reportRepository.existsBySenderIdAndRecipientId(report.getSenderId(), report.getRecipientId())) {
-            return reportRepository.save(report);
-        } else {
+        if (report.getRecipientId() != null && !reportRepository.existsBySenderIdAndRecipientId(report.getSenderId(), report.getRecipientId())) {
             // Handle the case where the senderId and recipientId already exist
             // For example, you could throw an exception or return null
             throw new RuntimeException("Report with senderId and recipientId already exists");
         }
+            return reportRepository.save(report);
     }
 
     public List<Report> getAllReports() {
