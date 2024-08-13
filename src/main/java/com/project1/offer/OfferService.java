@@ -89,9 +89,9 @@ public class OfferService {
         ProjectProgress projectProgress = ProjectProgress.builder().acceptDate(Date.from(Instant.now())).build();
         offer.setProjectProgress(projectProgressRepository.save(projectProgress));
         offer.setStatus(OfferStatus.accepted);
+        offerRepository.updateStatusOfSameProject(OfferStatus.dropped, id);
         offerRepository.save(offer);
         projectService.updateInternalFromOffer(id, ProjectStatus.inProgress, offer.getWorker().getId());
-        offerRepository.updateStatusOfSameProject(OfferStatus.dropped, id);
         return Map.of("message", "Offer Accepted");
     }
     public Map<String, String> reject(Long id) {
