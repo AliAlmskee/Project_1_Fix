@@ -66,7 +66,9 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             + "LEFT JOIN FETCH p.worker w "
             + "LEFT JOIN FETCH w.user uu "
             + "LEFT JOIN FETCH p.offers f "
-            + "WHERE cu.id = :userId OR uu.id = :userId OR f.worker.user.id = :userId")
+            + "LEFT JOIN FETCH f.worker fw "
+            + "LEFT JOIN FETCH fw.user fwu "
+            + "WHERE cu.id = :userId OR uu.id = :userId OR fwu.id = :userId")
     List<Project> findProjectsByUserIdOrOfferUserId(@Param("userId") Integer userId);
 
     List<Project> findAllByClient(ClientProfile client);
