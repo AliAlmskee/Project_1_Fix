@@ -77,4 +77,16 @@ public class ProjectController {
     public ResponseEntity<Map<String, String>> adminDelete(@PathVariable Long id) throws ResponseStatusException{
         return  ResponseEntity.ok(projectService.adminDelete(id));
     }
+
+    @PostMapping("/submit/{id}")
+    @PreAuthorize("hasAnyRole('WORKER','CLIENT_WORKER')")
+    public ResponseEntity<Map<String, String>> submit(@PathVariable Long id) throws ResponseStatusException{
+        return  ResponseEntity.ok(projectService.submit(id));
+    }
+
+    @PostMapping("/complete/{id}")
+    @PreAuthorize("hasAnyRole('Client','CLIENT_WORKER')")
+    public ResponseEntity<Map<String, String>> complete(@PathVariable Long id) throws ResponseStatusException{
+        return  ResponseEntity.ok(projectService.complete(id));
+    }
 }

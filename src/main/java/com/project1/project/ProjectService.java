@@ -1,6 +1,9 @@
 package com.project1.project;
 
 import com.project1.auditing.ApplicationAuditAware;
+import com.project1.offer.OfferRepository;
+import com.project1.offer.data.Offer;
+import com.project1.offer.data.OfferStatus;
 import com.project1.profile.ClientProfile;
 import com.project1.profile.WorkerProfile;
 import com.project1.project.data.*;
@@ -9,6 +12,7 @@ import com.project1.user.Permission;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
@@ -19,6 +23,7 @@ import java.util.*;
 public class ProjectService {
     private final ProjectMapper projectMapper;
     private final ProjectRepository projectRepository;
+    private final OfferRepository offerRepository;
     private final ApplicationAuditAware auditAware;
     private final TransactionService transactionService;
 //    public List<ProjectWithOfferCountResponse> getAllFiltered(
@@ -201,5 +206,32 @@ public class ProjectService {
             project.setWorker(WorkerProfile.builder().id(workerId).build());
         }
 //        return projectRepository.save(project);
+    }
+
+    @Transactional
+    public Map<String, String> submit(Long id) {
+        Integer userId = auditAware.getCurrentAuditor().orElseThrow(() -> new RuntimeException("Auditor ID not found"));
+        if(!offerRepository.existsByWorker_UserId(userId)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Offer does not belong to the user");
+        }
+        if(!offerRepository.existsByProjectIdAndStatus(id, OfferStatus.accepted)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Offer should be accepted when submitting");
+        }
+        updateInternal(id, ProjectStatus.submitted, null);
+        return Map.of("message", "Project Submitted");
+    }
+
+    @Transactional
+    public Map<String, String> complete(Long id) {
+        Integer userId = auditAware.getCurrentAuditor().orElseThrow(() -> new RuntimeException("Auditor ID not found"));
+        Project project = projectRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found"));
+        if(!project.getClient().getUser().getId().equals(userId)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Project does not belong to the user");
+        }
+        if(!project.getStatus().equals(ProjectStatus.submitted)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cannot complete project before it's submitted by the worker");
+        }
+        updateInternal(id, ProjectStatus.completed, null);
+        return Map.of("message", "Project Completed");
     }
 }

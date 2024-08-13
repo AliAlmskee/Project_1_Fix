@@ -107,31 +107,6 @@ public class OfferService {
         return Map.of("message", "Offer Rejected");
     }
 
-    @Transactional
-    public Map<String, String> submit(Long id) {
-        Integer userId = auditAware.getCurrentAuditor().orElseThrow(() -> new RuntimeException("Auditor ID not found"));
-        if(!offerRepository.existsByWorker_UserId(userId)){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Offer does not belong to the user");
-        }
-        if(!offerRepository.existsByIdAndStatus(id, OfferStatus.accepted)){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Offer should be accepted when submitting");
-        }
-        projectService.updateInternalFromOffer(id, ProjectStatus.submitted, null);
-        return Map.of("message", "Project Submitted");
-    }
-    @Transactional
-    public Map<String, String> complete(Long id) {
-        Integer userId = auditAware.getCurrentAuditor().orElseThrow(() -> new RuntimeException("Auditor ID not found"));
-        Offer offer = offerRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Offer Not Found"));
-        if(!offer.getProject().getClient().getUser().getId().equals(userId)){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Project does not belong to the user");
-        }
-        if(!offer.getProject().getStatus().equals(ProjectStatus.submitted)){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cannot complete project before it's submitted by the worker");
-        }
-        projectService.updateInternalFromOffer(id, ProjectStatus.completed, null);
-        return Map.of("message", "Project Completed");
-    }
 
     //-------ADMIN--------
     public Map<String, String> adminDelete(Long offerId){
