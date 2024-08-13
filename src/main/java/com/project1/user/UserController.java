@@ -32,27 +32,27 @@ public class UserController {
 
 
     @PostMapping("/{userId}/projects/{projectId}")
-    public ResponseEntity<Void> addUserProject(@PathVariable int userId, @PathVariable Long projectId) {
+    public ResponseEntity<Map<String, Object>> addUserProject(@PathVariable int userId, @PathVariable Long projectId) {
         service.addUserProject(userId, projectId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(Map.of("message", "Project Added"));
     }
 
     @PostMapping("/{userId}/favorites/{favoriteUserId}")
-    public ResponseEntity<Void> addFavoriteUser(@PathVariable int userId, @PathVariable int favoriteUserId) {
+    public ResponseEntity<Map<String, Object>> addFavoriteUser(@PathVariable int userId, @PathVariable int favoriteUserId) {
         service.addFavoriteUser(userId, favoriteUserId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(Map.of("message", "User Added"));
     }
 
     @DeleteMapping("/{userId}/projects/{projectId}")
-    public ResponseEntity<Void> removeUserProject(@PathVariable int userId, @PathVariable Long projectId) {
+    public ResponseEntity<Map<String, Object>> removeUserProject(@PathVariable int userId, @PathVariable Long projectId) {
         service.removeUserProject(userId, projectId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(Map.of("message", "Project Removed"));
     }
 
     @DeleteMapping("/{userId}/favorites/{favoriteUserId}")
-    public ResponseEntity<Void> removeFavoriteUser(@PathVariable int userId, @PathVariable int favoriteUserId) {
+    public ResponseEntity<Map<String, Object>> removeFavoriteUser(@PathVariable int userId, @PathVariable int favoriteUserId) {
         service.removeFavoriteUser(userId, favoriteUserId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(Map.of("message", "User Removed"));
     }
 
     @GetMapping("/{userId}/favorites")
