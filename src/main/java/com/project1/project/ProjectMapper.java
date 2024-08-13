@@ -3,6 +3,7 @@ package com.project1.project;
 import com.project1.category.Category;
 import com.project1.category.CategoryMapper;
 import com.project1.profile.ClientProfileMapper;
+import com.project1.profile.WorkerProfileMapper;
 import com.project1.project.data.*;
 import com.project1.skill.Skill;
 import com.project1.skill.SkillMapper;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring", uses = {ClientProfileMapper.class, SkillMapper.class, CategoryMapper.class}, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+@Mapper(componentModel = "spring", uses = {WorkerProfileMapper.class, ClientProfileMapper.class, SkillMapper.class, CategoryMapper.class}, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public abstract class ProjectMapper {
     public abstract ProjectResponse entityToResponse(Project project);
     public abstract ProjectDetailsResponse entityToDetailsResponse(Project project);
