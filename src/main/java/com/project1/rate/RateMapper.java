@@ -13,6 +13,8 @@ public abstract class RateMapper {
     @Mapping(source = "workerProfileId", target = "worker")
     abstract Rate createEntity(RateCreateDTO dto);
 
+    @Mapping(target = "totalRate", expression = "java(rate.totalRate())")
+    public abstract RateDTO EntityToDto(Rate rate);
     public abstract List<RateDTO> EntityToDto(List<Rate> rates);
 }
 

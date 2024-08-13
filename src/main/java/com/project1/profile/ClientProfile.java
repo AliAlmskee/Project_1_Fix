@@ -60,6 +60,6 @@ public class ClientProfile {
     private List<Skill> skills;
 
     public void addRate(double rate, int count){
-        setRate((this.rate*count + rate) * (count+1));
+        setRate((this.rate*count + rate) / (count+1));
     }
 }
