@@ -7,8 +7,11 @@ import java.util.Date;
 
 @Data
 public class TransactionDTO {
+    private Long id;
     private Long senderUserId;
+    private String senderUserName;
     private Long receiverUserId;
+    private String receiverUserName;
     private Double amount;
     private Date transactionDate;
     private TransactionType type; // Enum for deposit, withdraw, transfer, hold, unhold, transfer_held

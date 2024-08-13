@@ -10,6 +10,8 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 
 public interface TransactionMapper {
+    @Mapping(target = "senderUserName", expression = "java(transaction.getSender().getFirstname() + \" \" + transaction.getSender().getLastname())")
+    @Mapping(target = "receiverUserName", expression = "java(transaction.getReceiver().getFirstname() + \" \" + transaction.getReceiver().getLastname())")
     TransactionDTO toDto(Transaction transaction);
     Transaction toEntity(TransactionDTO transactionDTO);
     Transaction toEntity(AdminTransactionDTO admintransactionDTO);
