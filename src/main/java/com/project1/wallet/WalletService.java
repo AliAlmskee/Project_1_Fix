@@ -40,7 +40,7 @@ public class WalletService {
 
 
     public Wallet addTotalBalance(Long id, double amount) {
-        Optional<Wallet> existingWalletOptional = walletRepository.findById(id);
+        Optional<Wallet> existingWalletOptional = walletRepository.findByUserId(Math.toIntExact(id));
         if (existingWalletOptional.isPresent()) {
             Wallet existingWallet = existingWalletOptional.get();
             existingWallet.setTotalBalance(existingWallet.getTotalBalance()+ amount);
@@ -51,7 +51,7 @@ public class WalletService {
     }
 
     public Wallet subtractTotalBalance(Long id, double amount) {
-        Optional<Wallet> existingWalletOptional = walletRepository.findById(id);
+        Optional<Wallet> existingWalletOptional = walletRepository.findByUserId(Math.toIntExact(id));
         if (existingWalletOptional.isPresent()) {
             Wallet existingWallet = existingWalletOptional.get();
             if (existingWallet.getTotalBalance()  - abs(amount) >= 0) {
@@ -66,7 +66,7 @@ public class WalletService {
     }
 
     public Wallet addTotalHeldBalance(Long id, double amount) {
-        Optional<Wallet> existingWalletOptional = walletRepository.findById(id);
+        Optional<Wallet> existingWalletOptional = walletRepository.findByUserId(Math.toIntExact(id));
         if (existingWalletOptional.isPresent()) {
             Wallet existingWallet = existingWalletOptional.get();
             existingWallet.setTotalHeldBalance(existingWallet.getTotalHeldBalance()+ amount);
@@ -77,7 +77,7 @@ public class WalletService {
     }
 
     public Wallet subtractTotalHeldBalance(Long id, double amount) {
-        Optional<Wallet> existingWalletOptional = walletRepository.findById(id);
+        Optional<Wallet> existingWalletOptional = walletRepository.findByUserId(Math.toIntExact(id));
         if (existingWalletOptional.isPresent()) {
             Wallet existingWallet = existingWalletOptional.get();
             if (existingWallet.getTotalHeldBalance()- abs( amount) >= 0) {
