@@ -35,7 +35,7 @@ public class UserSeeder {
             admin1.setLastname("Doe");
             admin1.setEmail("johndoe@example.com");
             admin1.setPhone("0987651321");
-            admin1.setPassword("securePassword123");
+            admin1.setPassword(passwordEncoder.encode("12345678"));
             admin1.setRole(Role.ADMIN);
             users.add(admin1);
 
@@ -44,10 +44,9 @@ public class UserSeeder {
             admin2.setLastname("Smith");
             admin2.setEmail("janesmith@example.com");
             admin2.setPhone("0934567890");
-            admin2.setPassword("anotherSecurePassword456");
+            admin2.setPassword(passwordEncoder.encode("12345678"));
             admin2.setRole(Role.ADMIN);
             users.add(admin2);
-
 
             User client = new User();
             client.setFirstname("Kara");

@@ -21,7 +21,7 @@ public class WorkerProfileDTO {
     private Long id;
 
     private String bio;
-    private int userId;
+    private Integer userId;
     private double rate;
     private JobTitleDTO jobTitleDTO;
     private CategoryDTO categoryDTO;
