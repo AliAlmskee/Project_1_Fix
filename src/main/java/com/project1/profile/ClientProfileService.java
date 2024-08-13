@@ -10,8 +10,10 @@ import com.project1.skill.SkillRepository;
 import com.project1.user.User;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
 import java.util.List;
@@ -115,5 +117,8 @@ public class ClientProfileService {
     }
 
 
-
+    public ClientProfileDTO findById(Long id) {
+        ClientProfile clientProfile = clientProfileRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "profile not found"));
+        return clientProfileMapper.toDto(clientProfile);
+    }
 }

@@ -1,5 +1,6 @@
 package com.project1.profile;
 
+import ch.qos.logback.core.net.server.Client;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,11 @@ public class ClientProfileController {
         Map<String, Object> response = new HashMap<>();
         response.put("clientProfiles", clientProfiles);
         return ResponseEntity.ok(response);
+    }
+    @GetMapping("/profile/{id}")
+    public ResponseEntity<ClientProfileDTO> getById(@PathVariable Long id) {
+        ClientProfileDTO clientProfile = clientProfileService.findById(id);
+        return ResponseEntity.ok(clientProfile);
     }
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT','CLIENT_WORKER')")
     @PostMapping

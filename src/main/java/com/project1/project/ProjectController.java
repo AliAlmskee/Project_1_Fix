@@ -85,7 +85,7 @@ public class ProjectController {
     }
 
     @PostMapping("/complete/{id}")
-    @PreAuthorize("hasAnyRole('Client','CLIENT_WORKER')")
+    @PreAuthorize("hasAnyRole('CLIENT','CLIENT_WORKER')")
     public ResponseEntity<Map<String, String>> complete(@PathVariable Long id) throws ResponseStatusException{
         return  ResponseEntity.ok(projectService.complete(id));
     }
