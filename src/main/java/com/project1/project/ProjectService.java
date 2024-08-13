@@ -214,7 +214,7 @@ public class ProjectService {
         if(!offerRepository.existsByWorker_UserId(userId)){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Offer does not belong to the user");
         }
-        if(!offerRepository.existsByProjectIdAndStatus(id, OfferStatus.accepted)){
+        if(!offerRepository.existsByProjectIdAndStatusAndWorker_UserId(id, OfferStatus.accepted, userId)){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Offer should be accepted when submitting");
         }
         updateInternal(id, ProjectStatus.submitted, null);
