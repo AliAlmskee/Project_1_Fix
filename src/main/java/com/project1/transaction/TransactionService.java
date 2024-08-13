@@ -113,7 +113,9 @@ public class TransactionService {
 //        System.out.println(Long.valueOf(currentAuditorId));
 //        System.out.println(Long.valueOf(project.getClient().getUser().getId()));
 
-        if (!project.getClient().getId().equals(Long.valueOf(currentAuditorId))) {
+        System.out.println(project.getClient().getUser().getId());
+        System.out.println(currentAuditorId);
+        if (project.getClient().getId().compareTo(Long.valueOf(currentAuditorId)) != 0) {
             throw new RuntimeException("You are not authorized to accept this offer");
         }
 
