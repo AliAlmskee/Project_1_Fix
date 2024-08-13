@@ -1,5 +1,7 @@
 package com.project1.wallet;
 
+import com.project1.transaction.TransactionService;
+import com.project1.transaction.data.Transaction;
 import com.project1.wallet.data.Wallet;
 import com.project1.wallet.data.WalletDTO;
 import lombok.AllArgsConstructor;
@@ -8,12 +10,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/v1/wallets")
 @AllArgsConstructor
 public class WalletController {
 
     private final WalletService walletService;
+    private final TransactionService transactionService;
 
 
 
@@ -21,6 +27,12 @@ public class WalletController {
     public ResponseEntity<Wallet> getWalletByUserId(@PathVariable("user-id") int userId) {
         Wallet wallet = walletService.getWalletByUserId(userId);
         return new ResponseEntity<>(wallet, HttpStatus.OK);
+    }
+    @GetMapping("/with_transactions/{user-id}")
+    public ResponseEntity<Map<String, Object>> getWalletWithTransactions(@PathVariable("user-id") Integer userId) {
+        Wallet wallet = walletService.getWalletByUserId(userId);
+        List<Transaction> transactions =  transactionService.getTransactionsByReceiverOrSender(userId.longValue());
+        return ResponseEntity.ok(Map.of("wallet", wallet, "transactions", transactions));
     }
 
 //    @PreAuthorize("hasRole('ADMIN')")

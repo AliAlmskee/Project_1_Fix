@@ -39,6 +39,9 @@ public class TransactionService {
     public List<Transaction> getTransactionsByReceiverId(Long receiverId) {
         return transactionRepository.findByReceiverUserId(receiverId);
     }
+    public List<Transaction> getTransactionsByReceiverOrSender(Long userId) {
+        return transactionRepository.findByReceiverUserIdOrSenderUserId(userId, userId);
+    }
 
     public List<Transaction> getTransactionsByType(TransactionType type) {
         return transactionRepository.findByType(type);
