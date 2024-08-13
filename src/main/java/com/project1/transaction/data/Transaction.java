@@ -23,12 +23,6 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    @ReadOnlyProperty
-    @Formula("(SELECT u FROM User u where u.id = senderUserId)")
-    private User sender;
-    @ReadOnlyProperty
-    @Formula("(SELECT u FROM User u where u.id = receiverUserId)")
-    private User receiver;
     private Long senderUserId;
     private Long receiverUserId;
     private Double amount;

@@ -85,8 +85,10 @@ public class OfferService {
         Offer offer = offerRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Offer Not Found"));
         if(!offer.getStatus().equals(OfferStatus.pending)){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Offer should be pending when accepted");
+        }if(!offer.getProject().getStatus().equals(ProjectStatus.open)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Project should be open when an offer accepted");
         }
-        ProjectProgress projectProgress = ProjectProgress.builder().acceptDate(Date.from(Instant.now())).build();
+        ProjectProgress projectProgress = ProjectProgress.builder().acceptDate(Date.from(Instant.now())).offer(offer).build();
         offer.setProjectProgress(projectProgressRepository.save(projectProgress));
         offer.setStatus(OfferStatus.accepted);
         offerRepository.updateStatusOfSameProject(OfferStatus.dropped, id);
