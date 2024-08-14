@@ -3,12 +3,15 @@ package com.project1.job;
 
 import com.project1.auditing.ApplicationAuditAware;
 import com.project1.fileSystem.Photo;
+import com.project1.fileSystem.PhotoRepository;
 import com.project1.job.data.Job;
 import com.project1.job.data.JobDTO;
 import com.project1.job.data.JobRequest;
+import com.project1.skill.SkillRepository;
 import com.project1.user.User;
 import com.project1.user.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,6 +30,8 @@ public class JobService {
     private final JobMapper jobMapper;
     private final UserRepository userRepository;
     private final ApplicationAuditAware applicationAuditAware;
+    private final PhotoRepository photoRepository;
+    private final SkillRepository skillRepository;
 
     @Transactional(readOnly = true)
     public JobDTO getJobById(Long id) {
@@ -53,16 +58,15 @@ public class JobService {
     }
 
     @Transactional
-    public JobDTO updateJob(Long id, JobDTO jobDTO) {
+    public JobDTO updateJob(Long id, JobRequest jobDTO) {
         Optional<Job> jobOptional = jobRepository.findById(id);
         if (jobOptional.isPresent()) {
             Job job = jobOptional.get();
             job.setName(jobDTO.getName());
             job.setDescription(jobDTO.getDescription());
-            job.setViewsNo(jobDTO.getViewsNo());
-            job.setLikeNo(jobDTO.getLikeNo());
             job.setDate(jobDTO.getDate());
-
+            job.setPhotos(photoRepository.findAllById(jobDTO.getPhotoIds()));
+            job.setSkills(skillRepository.findAllById(jobDTO.getSkillIds()));
             Job updatedJob = jobRepository.save(job);
             return jobMapper.jobToJobDTO(updatedJob);
         } else {

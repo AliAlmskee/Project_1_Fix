@@ -3,6 +3,7 @@ package com.project1.job;
 import com.project1.job.data.AddLikeToJobRequest;
 import com.project1.job.data.JobDTO;
 import com.project1.job.data.JobRequest;
+import com.project1.job.data.UpdateJobRequest;
 import com.project1.profile.AddPhotoToClientProfileRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -35,8 +36,8 @@ public class JobController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<JobDTO> updateJob(@PathVariable Long id, @RequestBody JobDTO jobDTO) {
-        JobDTO updatedJob = jobService.updateJob(id, jobDTO);
+    public ResponseEntity<JobDTO> updateJob(@PathVariable Long id, @RequestBody JobRequest jobRequest) {
+        JobDTO updatedJob = jobService.updateJob(id, jobRequest);
         return new ResponseEntity<>(updatedJob, HttpStatus.OK);
     }
 
