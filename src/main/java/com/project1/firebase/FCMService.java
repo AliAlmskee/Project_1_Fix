@@ -19,7 +19,7 @@ public class FCMService {
                         .build())
                 .build();
 
-        System.out.println("FCM message sent: "+message);
+        System.out.println("FCM message sent: " + message);
         String response = FirebaseMessaging.getInstance().send(message);
         System.out.println("Successfully sent message: " + response);
     }
