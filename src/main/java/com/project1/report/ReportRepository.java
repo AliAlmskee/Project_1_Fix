@@ -1,7 +1,6 @@
 package com.project1.report;
 
 import com.project1.report.data.Report;
-import com.project1.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,4 +16,6 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
     List<Integer> findUsersWithReportsGreaterThanX(@Param("X") int X);
 
     boolean existsBySenderIdAndRecipientId(Integer senderId, Integer recipientId);
+
+    List<Report> findByRecipientId(Integer id);
 }

@@ -2,6 +2,7 @@ package com.project1.report;
 
 
 import com.project1.report.data.Report;
+import com.project1.report.data.ReportWithUserDTO;
 import com.project1.user.User;
 import com.project1.user.UserDTO;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +25,8 @@ public class ReportController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Report>> getAllReports() {
-        List<Report> reports = reportService.getAllReports();
+    public ResponseEntity< List<ReportWithUserDTO>> getAllReports() {
+        List<ReportWithUserDTO> reports = reportService.getAllReports();
         return ResponseEntity.ok(reports);
     }
 
@@ -38,6 +39,11 @@ public class ReportController {
     @GetMapping("/{id}")
     public ResponseEntity<Report> getReportById(@PathVariable Long id) {
         Report report = reportService.getReportById(id);
+        return ResponseEntity.ok(report);
+    }
+    @GetMapping("/byUser/{id}")
+    public ResponseEntity< List<Report>> getReportByUserId(@PathVariable Integer id) {
+        List<Report> report = reportService.getReportByUserId(id);
         return ResponseEntity.ok(report);
     }
 

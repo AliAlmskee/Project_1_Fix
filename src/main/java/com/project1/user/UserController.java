@@ -6,6 +6,7 @@ import com.project1.project.data.ProjectDetailsResponse;
 import com.project1.project.data.ProjectResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -77,7 +78,11 @@ public class UserController {
             return ResponseEntity.ok(userDTO);
     }
 
-
-
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/set_status")
+    public ResponseEntity<UserDTO> getUserByPhone(@RequestBody UpdateStatusRequest updateStatusRequest) {
+        UserDTO userDTO = service.updateStatusRequest(updateStatusRequest);
+        return ResponseEntity.ok(userDTO);
+    }
 
 }
