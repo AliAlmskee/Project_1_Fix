@@ -1,5 +1,6 @@
 package com.project1.handler;
 
+import com.google.firebase.messaging.FirebaseMessagingException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -94,6 +95,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<String> handleResponseStatusException(ResponseStatusException ex) {
         return ResponseEntity.status(ex.getStatusCode()).body(ex.getReason());
+    }
+
+
+    @ExceptionHandler(FirebaseMessagingException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Map<String, String> handleFirebaseMessagingException(FirebaseMessagingException exception) {
+        Map<String, String> errorMap = new HashMap<>();
+        errorMap.put("error", exception.getMessage());
+        errorMap.put("exception", exception.getClass().toString());
+        errorMap.put("message", "An unexpected error occurred while sending message. Please try again later.");
+
+        return errorMap;
     }
 
     @ExceptionHandler(RuntimeException.class)

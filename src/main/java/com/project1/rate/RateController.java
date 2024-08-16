@@ -18,6 +18,7 @@ public class RateController {
     private ResponseEntity<Map<String, String>> addProjectRate(@RequestBody  RateCreateDTO rateDTO, @RequestParam Long projectId){
         return ResponseEntity.ok(rateService.addRate(rateDTO, projectId));
     }
+
     @GetMapping("/profile/{profileId}")
     private ResponseEntity<ProfileRatesDTO> getProjectRates(@PathVariable("profileId") Long profileId, @RequestParam RatedType profileType){
         return ResponseEntity.ok(rateService.getProfilesRates(profileId, profileType));

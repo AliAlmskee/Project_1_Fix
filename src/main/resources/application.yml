@@ -3,9 +3,11 @@ spring:
     error:
       include-message: always
   datasource:
-    url: jdbc:postgresql://localhost:5432/student
+#    url: jdbc:postgresql://localhost:5432/student
+    url: jdbc:postgresql://localhost:5432/project1
     username: postgres
-    password: ali123
+#    password: ali123
+    password: adminadmin
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -16,7 +18,6 @@ spring:
         format_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-
 application:
   security:
     jwt:
@@ -24,6 +25,7 @@ application:
       expiration: 86400000 # a day
       refresh-token:
         expiration: 604800000 # 7 days
+
 sms:
   api_key: fSQk2mTtRTmF1Mj_kIyuZ2:APA91bEK1SZLGDpa60EGSrujNP56uDaIhEv-BMknmKYJxiiYt4ZL2v0gr9ykrpAzeY43foidftst3eIzqPVbl1JW34WNX8fr7xMrnMuAoIKcgYU0NsVz8AnVTWRfP95-IZ8cjK0NhpIt
   url: https://www.traccar.org/sms/
