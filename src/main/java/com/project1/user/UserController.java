@@ -71,5 +71,11 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/phone/{phone}")
+    public ResponseEntity<UserDTO> getUserByPhone(@PathVariable String phone) {
+            UserDTO userDTO = service.getUserByPhone(phone);
+            return ResponseEntity.ok(userDTO);
+    }
+
 
 }

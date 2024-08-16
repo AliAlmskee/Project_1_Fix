@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,7 +21,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
-
+    private final UserMapper userMapper;
 
     @Autowired
     private JwtService jwtService;
@@ -94,6 +95,9 @@ public class UserService {
     }
 
 
+    public UserDTO getUserByPhone(String phone) {
+        return userMapper.toDto(userRepository.findByPhone(phone).orElseThrow(() -> new RuntimeException("No user found with phone " + phone)));
+    }
 
 
 
