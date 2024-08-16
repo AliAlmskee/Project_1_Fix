@@ -1,5 +1,6 @@
 package com.project1.offer;
 
+import com.google.firebase.messaging.FirebaseMessagingException;
 import com.project1.offer.data.CreateOfferRequest;
 import com.project1.offer.data.OfferResponse;
 import com.project1.offer.data.UpdateOfferRequest;
@@ -34,7 +35,7 @@ public class
 
     @PostMapping
     @PreAuthorize("hasAnyRole('WORKER','CLIENT_WORKER')")
-    public ResponseEntity<OfferResponse> create(@RequestBody CreateOfferRequest createOfferRequest) {
+    public ResponseEntity<OfferResponse> create(@RequestBody CreateOfferRequest createOfferRequest) throws FirebaseMessagingException {
         return ResponseEntity.ok(offerService.create(createOfferRequest));
     }
 
@@ -59,13 +60,13 @@ public class
 
     @PostMapping("/accept/{id}")
     @PreAuthorize("hasAnyRole('CLIENT','CLIENT_WORKER')")
-    public ResponseEntity<Map<String, String>> accept(@PathVariable Long id) throws ResponseStatusException{
+    public ResponseEntity<Map<String, String>> accept(@PathVariable Long id) throws ResponseStatusException, FirebaseMessagingException {
         return  ResponseEntity.ok(offerService.accept(id));
     }
 
     @PostMapping("/reject/{id}")
     @PreAuthorize("hasAnyRole('CLIENT','CLIENT_WORKER')")
-    public ResponseEntity<Map<String, String>> reject(@PathVariable Long id) throws ResponseStatusException{
+    public ResponseEntity<Map<String, String>> reject(@PathVariable Long id) throws ResponseStatusException, FirebaseMessagingException {
         return  ResponseEntity.ok(offerService.reject(id));
     }
 }

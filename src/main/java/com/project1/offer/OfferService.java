@@ -1,6 +1,9 @@
 package com.project1.offer;
 
+import com.google.firebase.internal.FirebaseService;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import com.project1.auditing.ApplicationAuditAware;
+import com.project1.firebase.FCMService;
 import com.project1.offer.data.*;
 import com.project1.profile.WorkerProfile;
 import com.project1.project.ProjectRepository;
@@ -9,7 +12,10 @@ import com.project1.project.data.ProjectStatus;
 import com.project1.transaction.TransactionService;
 import com.project1.projectProgress.ProjectProgress;
 import com.project1.projectProgress.ProjectProgressRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +36,9 @@ public class OfferService {
     private final ProjectProgressRepository projectProgressRepository;
     private final ProjectService projectService;
     private final TransactionService transactionService;
-
+    private final FCMService fcmService;
+    @PersistenceContext
+    private EntityManager entityManager;
     public List<OfferResponse> getByProject(Long projectId) {
         return offerMapper.entityToResponse(offerRepository.findAllByProjectId(projectId));
     }
@@ -40,13 +48,16 @@ public class OfferService {
         return offerMapper.entityToResponse(offerRepository.findAllByWorker(worker));
     }
 
-    public OfferResponse create(CreateOfferRequest createOfferRequest) {
+    @Transactional
+    public OfferResponse create(CreateOfferRequest createOfferRequest) throws FirebaseMessagingException {
         Offer offer = offerMapper.toEntity(createOfferRequest);
         offer.setStatus(OfferStatus.pending);
         offer.setCreateDate(Date.from(Instant.now()));
-        offer = offerRepository.save(offer);
+        offer = offerRepository.saveAndFlush(offer);
         Offer offer1 = offerRepository.findById(offer.getId()).orElseThrow();
-        return offerMapper.entityToResponse(offer1);
+        entityManager.refresh(offer);
+        fcmService.sendNotification("New Offer", "A new offer was made on your project!", offer.getProject().getClient().getUser().getDevice_token());
+        return offerMapper.entityToResponse(offer);
     }
 
 
@@ -73,7 +84,7 @@ public class OfferService {
     }
 
     @Transactional
-    public Map<String, String> accept(Long id) {
+    public Map<String, String> accept(Long id) throws FirebaseMessagingException {
         transactionService.AcceptOfferTransaction(id);
         //TODO hold from wallet
 
@@ -94,9 +105,10 @@ public class OfferService {
         offerRepository.updateStatusOfSameProject(OfferStatus.dropped, id);
         offerRepository.save(offer);
         projectService.updateInternalFromOffer(id, ProjectStatus.inProgress, offer.getWorker().getId());
+        fcmService.sendNotification("Offer Accepted", "One of your offers has been accepted.", offer.getWorker().getUser().getDevice_token());
         return Map.of("message", "Offer Accepted");
     }
-    public Map<String, String> reject(Long id) {
+    public Map<String, String> reject(Long id) throws FirebaseMessagingException {
         Integer userId = auditAware.getCurrentAuditor().orElseThrow(() -> new RuntimeException("Auditor ID not found"));
         if(!offerRepository.existsByProject_Client_UserId(userId)){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Project does not belong to the user");
@@ -106,6 +118,7 @@ public class OfferService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Offer should be pending when rejected");
         }
         updateInternal(id, OfferStatus.rejected);
+        fcmService.sendNotification("Offer Rejected", "One of your offers has been rejected.", offer.getWorker().getUser().getDevice_token());
         return Map.of("message", "Offer Rejected");
     }
 
@@ -113,6 +126,7 @@ public class OfferService {
     //-------ADMIN--------
     public Map<String, String> adminDelete(Long offerId){
         offerRepository.deleteById(offerId);
+//        fcmService.sendNotification("Offer Deleted", "One of your offers has been deleted.", offer.getWorker().getUser().getDevice_token());
         return Map.of("message", "Offer Deleted.");
     }
 
