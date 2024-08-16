@@ -1,6 +1,8 @@
 package com.project1.chat;
 
 
+import com.project1.chatRoom.ChatRoom;
+import com.project1.chatRoom.ChatRoomDto;
 import com.project1.chatRoom.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,4 +32,5 @@ public class ChatMessageService {
         var chatId = chatRoomService.getChatRoomId(senderId, recipientId, false);
         return chatId.map(repository::findByChatId).orElse(new ArrayList<>());
     }
+
 }

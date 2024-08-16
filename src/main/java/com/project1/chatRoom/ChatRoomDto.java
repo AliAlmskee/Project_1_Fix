@@ -1,8 +1,8 @@
 package com.project1.chatRoom;
 
+import com.project1.user.UserDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,12 +13,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity
-public class ChatRoom {
+public class ChatRoomDto {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue
     private String id;
     private String chatId;
-    private String senderId;
-    private String recipientId;
+    private UserDTO sender;
+    private UserDTO recipient;
 }

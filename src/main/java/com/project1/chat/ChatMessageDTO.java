@@ -1,24 +1,23 @@
-package com.project1.chatRoom;
+package com.project1.chat;
+
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-@Entity
-public class ChatRoom {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
-    private String chatId;
+public class ChatMessageDTO {
     private String senderId;
     private String recipientId;
+    private String content;
+    //private MessageStatus status;
 }
