@@ -3,6 +3,7 @@ package com.project1.user;
 import com.project1.config.JwtService;
 import com.project1.project.ProjectRepository;
 import com.project1.project.data.Project;
+import com.project1.token.Token;
 import com.project1.wallet.WalletRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,6 +99,18 @@ public class UserService {
 
     public UserDTO getUserByPhone(String phone) {
         return userMapper.toDto(userRepository.findByPhone(phone).orElseThrow(() -> new RuntimeException("No user found with phone " + phone)));
+    }
+
+    public UserDTO updateStatusRequest(UpdateStatusRequest updateStatusRequest) {
+        User user = userRepository.findById(updateStatusRequest.getUserId()).orElseThrow(() -> new RuntimeException("No user found with id " + updateStatusRequest.getUserId()));
+        user.setStatus(updateStatusRequest.getStatus());
+        List<Token> tokens = user.getTokens();
+        for (Token token : tokens) {
+            token.setExpired(true);
+        }
+        user.setTokens(tokens);
+        userRepository.save(user);
+        return userMapper.toDto(user);
     }
 //    public ResponseEntity<String> changeStatus(int userId , Status status)
 //    {

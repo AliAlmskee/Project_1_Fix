@@ -79,7 +79,9 @@ public class AuthenticationService {
     }
     var user = repository.findByPhone(request.getPhone())
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone number not valid"));
-
+    if(user.getStatus()==Status.BANNED){
+      throw  new ResponseStatusException(HttpStatus.BAD_REQUEST, "you are banned");
+    }
     if(user.getRole()== Role.ADMIN  )
     {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "role is not correct");
@@ -121,7 +123,10 @@ public class AuthenticationService {
 
 
     User user  = code.getUser();
-    verificationRepository.delete(code);
+    if(user.getStatus()==Status.BANNED){
+      throw  new ResponseStatusException(HttpStatus.BAD_REQUEST, "you are banned");
+    }
+      verificationRepository.delete(code);
     var jwtToken = jwtService.generateToken(user);
     var refreshToken = jwtService.generateRefreshToken(user);
     // revokeAllUserTokens(user);
