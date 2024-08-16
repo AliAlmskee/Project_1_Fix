@@ -14,6 +14,8 @@ import com.project1.wallet.WalletService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.project1.transaction.data.TransactionDTO;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -50,7 +52,7 @@ public class TransactionService {
         return transactionRepository.findById(id).orElseThrow();
     }
 
-
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public Transaction createAdminTransaction(AdminTransactionDTO admintransactiondto) {
         Transaction transaction = transactionMapper.toEntity(admintransactiondto);
         long transactionNumber;
@@ -70,7 +72,7 @@ public class TransactionService {
                 throw new UnsupportedOperationException("Unsupported transaction type: " + transaction.getType());
         }
     }
-
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public Transaction createTransaction(TransactionDTO transactiondto) {
         Transaction transaction = transactionMapper.toEntity(transactiondto);
         long transactionNumber;

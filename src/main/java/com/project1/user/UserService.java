@@ -6,6 +6,7 @@ import com.project1.project.data.Project;
 import com.project1.wallet.WalletRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -98,6 +99,11 @@ public class UserService {
     public UserDTO getUserByPhone(String phone) {
         return userMapper.toDto(userRepository.findByPhone(phone).orElseThrow(() -> new RuntimeException("No user found with phone " + phone)));
     }
+//    public ResponseEntity<String> changeStatus(int userId , Status status)
+//    {
+//        User user = userRepository.findById(userId).orElseThrow();
+//        user.setStatus(status);
+//    }
 
 
 
