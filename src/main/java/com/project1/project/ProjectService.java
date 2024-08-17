@@ -159,14 +159,19 @@ public class ProjectService {
         return projectMapper.entityToDetailsResponse(projectRepository.findAllByWorker(WorkerProfile.builder().id(workerId).build()));
     }
 
+    @Transactional
     public ProjectDetailsResponse create(CreateProjectRequest createProjectRequest) {
         //TODO check wallet  : not needed because until itis a prroved i donot need the money
         Integer userId = auditAware.getCurrentAuditor().orElseThrow(() -> new RuntimeException("Auditor ID not found"));
         Project project = projectMapper.toEntity(createProjectRequest);
         project.setCreateDate(Date.from(Instant.now()));
         project.setStatus(ProjectStatus.open);
-        project = projectRepository.save(project);
+        project = projectRepository.saveAndFlush(project);
+        entityManager.refresh(project);
         return projectMapper.entityToDetailsResponse(project);
+
+
+
     }
     public ProjectDetailsResponse update(Long projectId, UpdateProjectRequest updateProjectRequest) throws ResponseStatusException{
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found"));
