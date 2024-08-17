@@ -22,6 +22,7 @@ import java.util.Map;
 public class ChatRoomController {
     private final ChatRoomService chatRoomService;
     private final ApplicationAuditAware auditorAware;
+    private final ChatMessageService chatMessageService;
 
     @GetMapping("/{userId}")
     public ResponseEntity<List<ChatRoomDto>> findChatMessages(@PathVariable String userId) {
@@ -34,5 +35,20 @@ public class ChatRoomController {
         Integer senderId = auditorAware.getCurrentAuditor().orElseThrow(() -> new RuntimeException("Auditor ID not found"));
         return ResponseEntity
                 .ok(chatRoomService.createRoom(senderId.toString(), userId));
+    }
+
+    @PostMapping("/message")
+    public ResponseEntity<ChatMessage> createMessage(@RequestBody ChatMessage chatMessage) {
+        ChatMessage savedMsg = chatMessageService.save(chatMessage);
+        return ResponseEntity
+                .ok(savedMsg);
+    }
+
+    @GetMapping("/messages/{senderId}/{recipientId}")
+    public ResponseEntity<List<ChatMessage>> findChatMessages(@PathVariable String senderId,
+                                                              @PathVariable String recipientId) {
+        System.out.println("mesagegs");
+        return ResponseEntity
+                .ok(chatMessageService.findChatMessages(senderId, recipientId));
     }
 }

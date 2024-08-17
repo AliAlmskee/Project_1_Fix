@@ -19,14 +19,15 @@ public class ChatController {
     private final ChatMessageService chatMessageService;
 
     @MessageMapping("/chat")
-    public void processMessage(@Payload ChatMessageDTO chatMessage) {
+    public void processMessage(@Payload ChatMessage chatMessage) {
         System.out.println();
         System.out.println("ali");
-        ChatMessage savedMsg = chatMessageService.save(ChatMessage.builder()
-                .senderId(chatMessage.getSenderId())
-                .recipientId(chatMessage.getRecipientId())
-                .content(chatMessage.getContent())
-                .build());
+//        ChatMessage savedMsg = chatMessageService.save(ChatMessage.builder()
+//                .senderId(chatMessage.getSenderId())
+//                .recipientId(chatMessage.getRecipientId())
+//                .content(chatMessage.getContent())
+//                .build());
+        ChatMessage savedMsg = chatMessageService.save(chatMessage);
         messagingTemplate.convertAndSendToUser(
                 chatMessage.getRecipientId(), "/queue/messages",
                 new ChatNotification(
@@ -43,10 +44,4 @@ public class ChatController {
         System.out.println("testing indg" + test);
     }
 
-    @GetMapping("/messages/{senderId}/{recipientId}")
-    public ResponseEntity<List<ChatMessage>> findChatMessages(@PathVariable String senderId,
-                                                              @PathVariable String recipientId) {
-        return ResponseEntity
-                .ok(chatMessageService.findChatMessages(senderId, recipientId));
-    }
 }
