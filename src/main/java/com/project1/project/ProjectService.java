@@ -1,12 +1,14 @@
 package com.project1.project;
 
 import com.project1.auditing.ApplicationAuditAware;
+import com.project1.category.Category;
 import com.project1.offer.OfferRepository;
 import com.project1.offer.data.Offer;
 import com.project1.offer.data.OfferStatus;
 import com.project1.profile.ClientProfile;
 import com.project1.profile.WorkerProfile;
 import com.project1.project.data.*;
+import com.project1.skill.Skill;
 import com.project1.transaction.TransactionService;
 import com.project1.user.Permission;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -45,68 +48,91 @@ public class ProjectService {
 //    }
 
     public List<ProjectDetailsResponse> getFilteredProjects(String namePattern, List<Long> categoryIds, List<Long> skillIds,
-                                             Long minBudget, Long maxBudget, Long duration, ProjectStatus status,
-                                             ProjectSortTypes sortBy, Boolean sortDes) {
+                                                            Long minBudget, Long maxBudget, Long duration, ProjectStatus status,
+                                                            ProjectSortTypes sortBy, Boolean sortDes) {
+        List<Project> projects = projectRepository.findAll();
 
-//        StringBuilder queryBuilder = new StringBuilder("SELECT p.* " + "FROM Project p");
-////                "(SELECT COUNT(*) FROM OrderOffer oo WHERE oo.order_id = p.id) AS offer_count " +
-////                "FROM Project p " +
-////                "LEFT JOIN ProjectCategory pc ON p.id = pc.project_id " +
-////                "LEFT JOIN ProjectSkill ps ON p.id = ps.project_id " +
-////                "WHERE 1=1 ");
-//
-//        if (namePattern != null && !namePattern.isEmpty()) {
-//            queryBuilder.append("AND LOWER(p.name) LIKE LOWER(CONCAT('%', :namePattern, '%')) ");
-//        }
-//        if (categoryIds != null && !categoryIds.isEmpty()) {
-//            queryBuilder.append("AND pc.category_id IN (:categoryIds) ");
-//        }
-//        if (skillIds != null && !skillIds.isEmpty()) {
-//            queryBuilder.append("AND ps.skill_id IN (:skillIds) ");
-//        }
-//        if (minBudget != null && maxBudget != null) {
-//            queryBuilder.append("AND ((p.minBudget BETWEEN :minBudget AND :maxBudget) " +
-//                    "OR (p.maxBudget BETWEEN :minBudget AND :maxBudget) " +
-//                    "OR (:minBudget BETWEEN p.minBudget AND p.maxBudget) " +
-//                    "OR (:maxBudget BETWEEN p.minBudget AND p.maxBudget)) ");
-//        }
-//        if (duration != null) {
-//            queryBuilder.append("AND p.ExpectedDuration <= :duration ");
-//        }
-//        if (status != null) {
-//            queryBuilder.append("AND p.status = :status ");
-//        }
-//
-//        String sortDirection = "DESC";
-//        if (Objects.equals(sortDes, false)) {
-//            sortDirection = "ASC";
-//        }
-//        if(sortBy != null){
-//            queryBuilder.append("ORDER BY ");
-//        }
-//        if (ProjectSortTypes.NoOfOffers.equals(sortBy)) {
-//            queryBuilder.append("offer_count ").append(sortDirection);
-//        } else if(ProjectSortTypes.CreateDate.equals(sortBy)){
-//            queryBuilder.append("p.").append("createDate").append(" ").append(sortDirection);
-//        } else if(ProjectSortTypes.Budget.equals(sortBy)){
-//            queryBuilder.append("p.").append("ExpectedDuration").append(" ").append(sortDirection);
-//        } else if(ProjectSortTypes.Duration.equals(sortBy)){
-//            queryBuilder.append("p.").append("minBudget").append(" ").append(sortDirection);
-//        }
-//
-//        String query = queryBuilder.toString();
-//
-//        // Replace parameters in the query string
-//        query = query.replace(":namePattern", namePattern != null ? namePattern : "")
-//                .replace(":categoryIds", categoryIds != null ? categoryIds.stream().map(String::valueOf).collect(Collectors.joining(",")) : "")
-//                .replace(":skillIds", skillIds != null ? skillIds.stream().map(String::valueOf).collect(Collectors.joining(",")) : "")
-//                .replace(":minBudget", minBudget != null ? minBudget.toString() : "")
-//                .replace(":maxBudget", maxBudget != null ? maxBudget.toString() : "")
-//                .replace(":duration", duration != null ? duration.toString() : "")
-//                .replace(":status", status != null ? "'" + status.name() + "'" : "");
+        // Filter by name pattern
+        projects = projects.stream()
+                .filter(project -> project.getName().contains(namePattern))
+                .collect(Collectors.toList());
 
-        return projectMapper.entityToDetailsResponse(projectRepository.findAll());
+        // Filter by category IDs
+        if (categoryIds != null && !categoryIds.isEmpty()) {
+            List<Project> filteredProjects = new ArrayList<>();
+            for (Project project : projects) {
+                if (categoryIds.contains(project.getProjectCategory().getId())) {
+                    filteredProjects.add(project);
+                }
+            }
+            projects = filteredProjects;
+        }
+
+        // Filter by skill IDs
+                if (skillIds != null && !skillIds.isEmpty()) {
+                    List<Project> filteredProjects = new ArrayList<>();
+                    for (Project project : projects) {
+                        for (Skill skill : project.getProjectSkill()) {
+                            if (skillIds.contains(skill.getId())) {
+                                filteredProjects.add(project);
+                                break;
+                            }
+                        }
+                    }
+                    projects = filteredProjects;
+                }
+
+        // Filter by budget
+        if (minBudget != null && maxBudget != null) {
+            projects = projects.stream()
+                    .filter(project -> project.getMinBudget() >= minBudget && project.getMaxBudget() <= maxBudget)
+                    .collect(Collectors.toList());
+        }
+
+        // Filter by duration
+        if (duration != null) {
+            projects = projects.stream()
+                    .filter(project -> project.getExpectedDuration() == duration)
+                    .collect(Collectors.toList());
+        }
+
+        // Filter by status
+        if (status != null) {
+            projects = projects.stream()
+                    .filter(project -> project.getStatus() == status)
+                    .collect(Collectors.toList());
+        }
+
+        if (sortBy != null) {
+            projects = projects.stream()
+                    .sorted((p1, p2) -> {
+                        if (sortDes) {
+                            return getSortValue(p2, sortBy).compareTo(getSortValue(p1, sortBy));
+                        } else {
+                            return getSortValue(p1, sortBy).compareTo(getSortValue(p2, sortBy));
+                        }
+                    })
+                    .collect(Collectors.toList());
+        }
+
+        // Convert the projects to ProjectDetailsResponse objects
+
+        return projectMapper.entityToDetailsResponse(projects);
     }
+
+    private Comparable getSortValue(Project project, ProjectSortTypes sortBy) {
+        switch (sortBy) {
+            case CreateDate:
+                return project.getCreateDate();
+            case Duration:
+                return project.getExpectedDuration();
+            case Budget:
+                return project.getMinBudget(); // or project.getMaxBudget() depending on your requirement
+            case NoOfOffers:
+                return project.getOfferCount();
+            default:
+                throw new UnsupportedOperationException("Unsupported sort type");
+        }}
 
     public ProjectDetailsResponse get(Long id) {
         return projectMapper.entityToDetailsResponse(projectRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found")));

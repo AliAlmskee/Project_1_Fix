@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 //package com.project1.firebase;
 //
 //import com.google.firebase.messaging.FirebaseMessaging;
@@ -22,7 +21,6 @@
 //        System.out.println("Successfully sent message: " + response);
 //    }
 //}
-=======
 package com.project1.firebase;
 
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -49,4 +47,3 @@ public class FCMService {
         System.out.println("Successfully sent message: " + response);
     }
 }
->>>>>>> ca423deedfae5d7b33e5c8ac49d9beba6f438d26
