@@ -54,7 +54,6 @@ public class ProjectService {
     public List<ProjectDetailsResponse> getFilteredProjects(String namePattern, List<Long> categoryIds, List<Long> skillIds,
                                                             Long minBudget, Long maxBudget, Long duration, ProjectStatus status,
                                                             ProjectSortTypes sortBy, Boolean sortDes) {
-        System.out.println("AAAAAAAAAAAAAA");
         List<Project> projects = projectRepository.findAll();
 
         // Filter by name pattern
@@ -109,17 +108,17 @@ public class ProjectService {
                     .collect(Collectors.toList());
         }
 
-//        if (sortBy != null) {
-//            projects = projects.stream()
-//                    .sorted((p1, p2) -> {
-//                        if (sortDes) {
-//                            return getSortValue(p2, sortBy).compareTo(getSortValue(p1, sortBy));
-//                        } else {
-//                            return getSortValue(p1, sortBy).compareTo(getSortValue(p2, sortBy));
-//                        }
-//                    })
-//                    .collect(Collectors.toList());
-//        }
+        if (sortBy != null) {
+            projects = projects.stream()
+                    .sorted((p1, p2) -> {
+                        if (sortDes) {
+                            return getSortValue(p2, sortBy).compareTo(getSortValue(p1, sortBy));
+                        } else {
+                            return getSortValue(p1, sortBy).compareTo(getSortValue(p2, sortBy));
+                        }
+                    })
+                    .collect(Collectors.toList());
+        }
 
         // Convert the projects to ProjectDetailsResponse objects
 
