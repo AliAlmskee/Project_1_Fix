@@ -56,11 +56,13 @@ public class ProjectService {
                                                             ProjectSortTypes sortBy, Boolean sortDes) {
         List<Project> projects = projectRepository.findAll();
 
-        // Filter by name pattern
-        projects = projects.stream()
-                .filter(project -> project.getName().contains(namePattern))
-                .collect(Collectors.toList());
 
+        // Filter by name pattern
+        if(namePattern!=null) {
+            projects = projects.stream()
+                    .filter(project -> project.getName() != null && project.getName().contains(namePattern))
+                    .collect(Collectors.toList());
+        }
         // Filter by category IDs
         if (categoryIds != null && !categoryIds.isEmpty()) {
             List<Project> filteredProjects = new ArrayList<>();
@@ -107,7 +109,7 @@ public class ProjectService {
                     .collect(Collectors.toList());
         }
 
-        if (sortBy != null) {
+        if (sortBy != null && sortDes != null) {
             projects = projects.stream()
                     .sorted((p1, p2) -> {
                         if (sortDes) {
@@ -164,10 +166,12 @@ public class ProjectService {
         Project project = projectMapper.toEntity(createProjectRequest);
         project.setCreateDate(Date.from(Instant.now()));
         project.setStatus(ProjectStatus.open);
-        project = projectRepository.save(project);
-        Project project1 = projectRepository.findById(project.getId()).orElseThrow();
-        entityManager.refresh(project1);
-         return projectMapper.entityToDetailsResponse(project1);
+        project = projectRepository.saveAndFlush(project);
+        entityManager.refresh(project);
+        return projectMapper.entityToDetailsResponse(project);
+
+
+
     }
     public ProjectDetailsResponse update(Long projectId, UpdateProjectRequest updateProjectRequest) throws ResponseStatusException{
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found"));
