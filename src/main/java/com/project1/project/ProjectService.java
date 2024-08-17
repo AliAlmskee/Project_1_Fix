@@ -56,6 +56,7 @@ public class ProjectService {
                                                             ProjectSortTypes sortBy, Boolean sortDes) {
         List<Project> projects = projectRepository.findAll();
 
+
         // Filter by name pattern
         if(namePattern!=null) {
             projects = projects.stream()
@@ -108,7 +109,7 @@ public class ProjectService {
                     .collect(Collectors.toList());
         }
 
-        if (sortBy != null) {
+        if (sortBy != null && sortDes != null) {
             projects = projects.stream()
                     .sorted((p1, p2) -> {
                         if (sortDes) {
