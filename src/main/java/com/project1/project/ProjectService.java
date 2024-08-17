@@ -131,6 +131,7 @@ public class ProjectService {
         return projectMapper.entityToDetailsResponse(projectRepository.findAllByWorker(WorkerProfile.builder().id(workerId).build()));
     }
 
+    @Transactional
     public ProjectDetailsResponse create(CreateProjectRequest createProjectRequest) {
         //TODO check wallet  : not needed because until itis a prroved i donot need the money
         Integer userId = auditAware.getCurrentAuditor().orElseThrow(() -> new RuntimeException("Auditor ID not found"));
