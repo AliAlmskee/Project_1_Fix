@@ -81,9 +81,10 @@ public class RateService {
             sum+= totalRate;
         }
         Integer count = rates.size();
+        Double avg = count == 0? 0: sum/count;
         return ProfileRatesDTO.builder()
                 .count(count)
-                .avg(sum/count)
+                .avg(avg)
                 .rates(rateMapper.EntityToDto(rates))
                 .count1(counts[0])
                 .count2(counts[1])

@@ -11,6 +11,8 @@ import com.project1.project.data.*;
 import com.project1.skill.Skill;
 import com.project1.transaction.TransactionService;
 import com.project1.user.Permission;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,8 @@ public class ProjectService {
     private final OfferRepository offerRepository;
     private final ApplicationAuditAware auditAware;
     private final TransactionService transactionService;
+    @PersistenceContext
+    private EntityManager entityManager;
 //    public List<ProjectWithOfferCountResponse> getAllFiltered(
 //            String search, List<Long> categories,
 //            List<Long> skills, Long minBudget,
@@ -161,6 +165,7 @@ public class ProjectService {
         project.setStatus(ProjectStatus.open);
         project = projectRepository.save(project);
         Project project1 = projectRepository.findById(project.getId()).orElseThrow();
+        entityManager.refresh(project1);
          return projectMapper.entityToDetailsResponse(project1);
     }
     public ProjectDetailsResponse update(Long projectId, UpdateProjectRequest updateProjectRequest) throws ResponseStatusException{

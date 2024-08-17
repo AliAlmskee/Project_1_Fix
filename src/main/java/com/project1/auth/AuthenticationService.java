@@ -86,7 +86,8 @@ public class AuthenticationService {
     {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "role is not correct");
     }
-
+    user.setDevice_token(request.getDevice_token());
+    repository.save(user);
     int code = sendVerificationSMS(user);
     return ResponseEntity.ok("A code has been sent to your phone: " + code);
 

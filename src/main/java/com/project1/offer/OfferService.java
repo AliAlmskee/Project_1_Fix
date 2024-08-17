@@ -3,6 +3,7 @@ package com.project1.offer;
 import com.google.firebase.internal.FirebaseService;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.project1.auditing.ApplicationAuditAware;
+import com.project1.chatRoom.ChatRoomService;
 import com.project1.firebase.FCMService;
 import com.project1.offer.data.*;
 import com.project1.profile.WorkerProfile;
@@ -37,6 +38,7 @@ public class OfferService {
     private final ProjectService projectService;
     private final TransactionService transactionService;
     private final FCMService fcmService;
+    private final ChatRoomService chatRoomService;
     @PersistenceContext
     private EntityManager entityManager;
     public List<OfferResponse> getByProject(Long projectId) {
@@ -106,6 +108,7 @@ public class OfferService {
         offerRepository.save(offer);
         projectService.updateInternalFromOffer(id, ProjectStatus.inProgress, offer.getWorker().getId());
         fcmService.sendNotification("Offer Accepted", "One of your offers has been accepted.", offer.getWorker().getUser().getDevice_token());
+        chatRoomService.createChatId(offer.getWorker().getUser().getId().toString(), offer.getProject().getClient().getUser().getId().toString());
         return Map.of("message", "Offer Accepted");
     }
     public Map<String, String> reject(Long id) throws FirebaseMessagingException {
