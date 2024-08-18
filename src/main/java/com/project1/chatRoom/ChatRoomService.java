@@ -38,6 +38,9 @@ public class ChatRoomService {
     public String createChatId(String senderId, String recipientId) {
         var chatId = String.format("%s_%s", senderId, recipientId);
 
+        if(chatRoomRepository.existsByChatId(chatId)){
+            return chatId;
+        }
         ChatRoom senderRecipient = ChatRoom
                 .builder()
                 .chatId(chatId)
@@ -58,6 +61,10 @@ public class ChatRoomService {
         return chatId;
     }
     private ChatRoom createChat(String senderId, String recipientId) {
+        Optional<ChatRoom> exists = chatRoomRepository.findBySenderIdAndRecipientId(senderId, recipientId);
+        if(exists.isPresent()){
+            return exists.get();
+        }
         var chatId = String.format("%s_%s", senderId, recipientId);
 
         ChatRoom senderRecipient = ChatRoom

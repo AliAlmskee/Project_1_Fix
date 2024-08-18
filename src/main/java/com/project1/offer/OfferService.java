@@ -58,7 +58,7 @@ public class OfferService {
         offer = offerRepository.saveAndFlush(offer);
         Offer offer1 = offerRepository.findById(offer.getId()).orElseThrow();
         entityManager.refresh(offer);
-        fcmService.sendNotification("New Offer", "A new offer was made on your project!", offer.getProject().getClient().getUser().getDevice_token());
+//        fcmService.sendNotification("New Offer", "A new offer was made on your project!", offer.getProject().getClient().getUser().getDevice_token());
         return offerMapper.entityToResponse(offer);
     }
 
@@ -107,7 +107,7 @@ public class OfferService {
         offerRepository.updateStatusOfSameProject(OfferStatus.dropped, id);
         offerRepository.save(offer);
         projectService.updateInternalFromOffer(id, ProjectStatus.inProgress, offer.getWorker().getId());
-        fcmService.sendNotification("Offer Accepted", "One of your offers has been accepted.", offer.getWorker().getUser().getDevice_token());
+//        fcmService.sendNotification("Offer Accepted", "One of your offers has been accepted.", offer.getWorker().getUser().getDevice_token());
         chatRoomService.createChatId(offer.getWorker().getUser().getId().toString(), offer.getProject().getClient().getUser().getId().toString());
         return Map.of("message", "Offer Accepted");
     }
@@ -121,7 +121,7 @@ public class OfferService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Offer should be pending when rejected");
         }
         updateInternal(id, OfferStatus.rejected);
-        fcmService.sendNotification("Offer Rejected", "One of your offers has been rejected.", offer.getWorker().getUser().getDevice_token());
+//        fcmService.sendNotification("Offer Rejected", "One of your offers has been rejected.", offer.getWorker().getUser().getDevice_token());
         return Map.of("message", "Offer Rejected");
     }
 
