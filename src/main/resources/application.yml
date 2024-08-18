@@ -34,3 +34,6 @@ logging:
 sms:
   api_key: fSQk2mTtRTmF1Mj_kIyuZ2:APA91bEK1SZLGDpa60EGSrujNP56uDaIhEv-BMknmKYJxiiYt4ZL2v0gr9ykrpAzeY43foidftst3eIzqPVbl1JW34WNX8fr7xMrnMuAoIKcgYU0NsVz8AnVTWRfP95-IZ8cjK0NhpIt
   url: https://www.traccar.org/sms/
+
+server:
+  port: 8082
